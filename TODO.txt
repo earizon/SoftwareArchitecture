@@ -1,0 +1,1481 @@
+● RavenDB: Pioneering Data Management with an Innovative Open-Source
+https://linuxsecurity.com/features/features/ravendb-pioneering-data-management-with-an-innovative-open-source-approach 
+The release of version 5.0.2 introduced two key features: time series 
+support  and document compression. Time series support enables users 
+to track time series data such as stock price, heart rate or location 
+and document compression analyzes documents to identify commonalities 
+between them, creating a dictionary that is used to compress data 
+efficiently between documents. The new document compression feature 
+has cut cloud storage costs in version 5.0.2 by an impressive 50%. 
+
+
+● Analyzing each line of 133 GBs of code in 16 seconds? 
+  That’s why I love BigQuery [[scalability]]
+https://hoffa.medium.com/400-000-github-repositories-1-billion-files-14-terabytes-of-code-spaces-or-tabs-7cfe0b5dd7fd
+SELECT ext, tabs, spaces, countext, LOG((spaces+1)/(tabs+1)) lratio
+FROM (
+  SELECT REGEXP_EXTRACT(sample_path, r'\.([^\.]*)$') ext, 
+         SUM(best='tab') tabs, SUM(best='space') spaces, 
+         COUNT(*) countext
+  FROM (
+    SELECT sample_path, sample_repo_name, IF(SUM(line=' ')>SUM(line='\t'), 'space', 'tab') 
+    WITHIN RECORD best, COUNT(line)
+    WITHIN RECORD c
+    FROM (
+      SELECT LEFT(SPLIT(content, '\n'), 1) line, sample_path, sample_repo_name 
+      FROM [fh-bigquery:github_extracts.contents_top_repos_top_langs]
+      HAVING REGEXP_MATCH(line, r'[ \t]')
+    )
+    HAVING c>10 # at least 10 lines that start with space or tab
+  )
+  GROUP BY ext
+)
+ORDER BY countext DESC
+LIMIT 10016.0s elapsed, 133 GB processed
+
+
+● Multi.Region Kafka: [[{kafka]]
+https://www.infoq.com/news/2021/01/uber-multi-region-kafka/
+[[}]]
+
+● CMAK (previously known as Kafka Manager) is a tool for managing 
+  Apache Kafka clusters:
+https://github.com/yahoo/CMAK
+
+  - Manage multiple clusters
+  - Easy inspection of cluster state (topics, consumers, offsets, 
+    brokers, replica distribution, partition distribution)
+  - Run preferred replica election
+  - Generate partition assignments with option to select brokers to use
+  - Run reassignment of partition (based on generated assignments)
+  - Create a topic with optional topic configs (0.8.1.1 has different configs than 0.8.2+)
+  - Delete topic (only supported on 0.8.2+ and remember set delete.topic.enable=true in broker config)
+  - Topic list now indicates topics marked for deletion (only supported on 0.8.2+)
+  - Batch generate partition assignments for multiple topics with option to select brokers to use
+  - Batch run reassignment of partition for multiple topics
+  - Add partitions to existing topic
+  - Update config for existing topic
+  - Optionally enable JMX polling for broker level and topic level metrics.
+  - Optionally filter out consumers that do not have ids/ owners/ & offsets/ directories in zookeeper.
+
+● AWS OpenSearch (OOSS fork of Elastic Search):
+  https://www.zdnet.com/article/aws-as-predicted-is-forking-elasticsearch/
+- In a blog post, AWS explained that since Elastic is no longer making 
+  its search and analytic engine Elasticsearch and its companion data 
+  visualization dashboard Kibana available as open source, AWS is 
+  taking action. "In order to ensure open source versions of both 
+  packages remain available and well supported, including in our own 
+  offerings, we are announcing today that AWS will step up to create 
+  and maintain an ALv2-licensed fork of open-source Elasticsearch and 
+  Kibana." 
+    AWS's crew also pointed out that they're "equipped and prepared to 
+  maintain it ourselves if necessary. AWS brings years of experience 
+  working with these codebases, as well as making upstream code 
+  contributions to both Elasticsearch and Apache Lucene, the core 
+  search library that Elasticsearch is built on—with more than 230 
+  Lucene contributions in 2020 alone." 
+
+● Cloudian brings enterprise-grade S3-compatible object storage to 
+  VMware’s vSAN Data Persistence platform through VMware Cloud 
+  Foundation with Tanzu, supporting both modern Kubernetes and 
+  traditional IT applications. Customers can deploy Cloudian HyperStore 
+  on VMware vSphere clusters and leverage underlying vSAN disks for 
+  unified storage of object data.
+  
+  The integrated solution will allow both DevOps and IT operators to 
+  modernize their storage infrastructure to run stateful services 
+  on-prem and in the cloud with high velocity scaling, simplified IT 
+  Ops, and lower TCO.
+
+  Use cases include:
+  - Storage for cloud-native apps / Kubernetes
+  - Secure backup and recovery target
+  - Warm and cold storage for Splunk
+  - File-tiering from primary storage to active archive
+
+  Learn more at Cloudian.com/VMware.
+
+
+● A command-line tool to produce layered drawings of directed graphs.
+  https://github.com/tldr-pages/tldr/blob/master/pages/common/dot.md
+  https://en.wikipedia.org/wiki/DOT_%28graph_description_language%29
+
+● Apache Kafka producer and consumer tool. 
+  https://github.com/edenhill/kafkacat.
+  https://github.com/tldr-pages/tldr/blob/master/pages/common/kafkacat.md
+
+● 101, DON'Ts, Avoid caching when possible:
+  "There are only two hard things in Computer Science: 
+   cache invalidation and naming things"
+   Phil Karlton
+  https://www.maestralsolutions.com/angular-application-state-management-you-do-not-need-external-data-stores/
+  ... Unless you have hundreds of thousands of users or some strict 
+  requirements, you should calculate trade-offs carefully, development 
+  is much more expensive than hardware. Syncing data on the client 
+  bypassing the server can be really ungrateful and cause subtle errors 
+  easily. Instead, try optimizing the server-client communication, let 
+  your server tell what data needs to be updated. This post has an 
+  interesting sight about, give it a read.
+  https://hackernoon.com/goodbye-redux-26e6a27b3a0b
+
+● https://www.infoq.com/news/2021/05/airbnb-himeji/
+  Airbnb recently described how it built Himeji, a scalable centralized 
+  authorization system. Himeji stores permissions data and performs 
+  permission checks as a central source of truth. It uses a sharded and 
+  replicated in-memory cache to improve performance and lower latencies 
+  and has served checks in production for about a year. Its throughput 
+  has scaled up from 0 in March 2020 to 850k entities/sec in March 2021 
+  while maintaining 99.999% availability and 12-millisecond latency at 
+  the 99 percentile.
+● https://www.javacodegeeks.com/2015/10/nosql-vs-sql.html
+
+● https://www.javacodegeeks.com/2016/02/apache-hadoop-tutorial.html
+
+● Apache Arrow [[data_architecture,scalability,HPC,]]
+  https://arrow.apache.org/
+  Apache Arrow defines a language-independent columnar memory format   
+  for flat and hierarchical data, organized for efficient analytic 
+  operations on modern hardware like CPUs and GPUs. The Arrow memory 
+  format also supports zero-copy reads for lightning-fast data access 
+  without serialization overhead.
+
+● High-Performance Batch Processing Using Spark+Spring Batch [[spark,batch,spring,java,scala]]
+https://dzone.com/articles/using-apache-spark-and-spring-batch-for-processing?edition=598293
+
+● Authentication Service Auth0:
+  https://www.youtube.com/channel/UCUlQ5VoIzE_kFbYjzUwHTKA
+
+● REST-driven data mng.: [[{data.management,_PM.low_code,radarradar,,_PM.TODO]]
+@[https://slime.aitnologies.es]
+• Manage your data following the REST principles. Data first
+• Let data describe the exposed backend, just push new data to view 
+  its endpoints.
+• Low code. Forget the boilerplate. Implement only your business logic
+• Start free, upgrade later
+• Quick start:
+  $ docker run -d -p 5000:5000 \             
+      -e security:adminpassword=slimeAdmin \ 
+      aitnologies/slime:community            
+
+• Slime features:
+  • Data  : store and retrieve json data along its relationships.
+  • Search: query data using (extended) GraphQL.
+  • Logic : implement business logic using server-JS 
+  • DevOps: serverless (aws lambda) functions for simplified deployments.
+  • Admin : configurable user administration and  data access.
+            including invitation links to registering users from 
+            external apps.
+[[}]]
+
+● Observability is about inferring the internal state of an app    [[101]]
+  from its external outputs.
+  Manageability is about changing internal state and output from 
+  external inputs.
+  In both cases, the application artifact is never changed. 
+  It's immutable.
+  
+  The Observability Engineering team at Twitter identifies four pillars 
+  of observability:
+  Monitoring: Monitoring is about measuring specific aspects of an 
+  application to get information on its overall health and identify 
+  failures.
+  (e.g:  export to Prometheus of relevant metrics about the 
+  application).
+  
+  Alerting/visualization: When a failure is identified while monitoring 
+  an application, an alert should be triggered, and some action should 
+  be taken to handle it.  (email, grafana, ...)
+  
+  Distributed systems tracing infrastructure: trace the data flowing
+    through the different subsystems. (e.g: Spring Cloud Sleuth integrated with Jaeger)
+  
+  Log aggregation/analytics: Keeping track of the main events in an
+    application is critical to infer the software’s behavior and debug 
+    it if something goes wrong.
+  
+    In a cloud nativesystem, logs should be aggregated and collected to
+  provide a better picture of the system behavior and have the possibility
+  of running analytics to mine information from thosedata.
+  E.g: ELK (Elastic, Logstash, Kibana) or  EFK (Elastic, Fluentd, Kibana)
+
+● Pinterest Switches from OpenTSDB to Their Own Time Series Database
+@[https://www.infoq.com/news/2018/09/pinterest-goku-timeseries-db]
+
+● https://facebook.github.io/prophet/
+  Prophet: TSDB forecasting library (wrapper around Stan), particularly
+  approachable place to use Bayesian Inference for forecasting use cases
+  general purpose.
+  - Prophet is a procedure for forecasting time series data based on an
+    additive model where non-linear trends are fit with yearly, weekly, and daily
+    seasonality, plus holiday effects. It works best with time series that have
+    strong seasonal effects and several seasons of historical data. Prophet is
+    robust to missing data and shifts in the trend, and typically handles outliers well.
+
+● https:// technologyconversations.com/2015/09/08/service-discovery-zookeeper-vs-etcd-vs-consul/
+
+● https://www.infoq.com/news/2019/05/hashicorp-consul-1.5.0
+
+● https://en.wikipedia.org/wiki/Worse_is_better  101
+   As long as the initial program is basically good, it will take much 
+  less time and effort to implement initially and it will be easier to 
+  adapt to new situations. Porting software to new machines, for 
+  example, becomes far easier this way.
+
+● File format comparative: Avro, JSON, ORC , Parquet 
+  https://www.slideshare.net/HadoopSummit/file-format-benchmark-avro-json-orc-parquet
+
+● TypeDB:  [[{graph_networks,_PM.low_code,data.analytics.sql,_doc_has.comparative,qa,_PM.TODO]]
+@[https://github.com/graknlabs/grakn]
+· previously known as Grakn?
+· Growing interest in Google Trends [2021]
+ @[https://trends.google.com/trends/explore?date=all&q=grakn]
+· strongly-typed database with a rich and logical type system
+  empowering to tackle complex problems with higher level of expressivity.
+· TypeQL used as query language.
+· It allows to model your domain based on logical and object-oriented principles
+  introducing [Entity, relationship, attribute types, type hierarchies, roles, rules]
+  as opossed to low-level join-tables, columns, documents, vertices, edges, and properties.
+Used among others by Bayer, Roche, IBM, Capgemini, AstraZeneca, Rolls-Royce, ...
+@[https://github.com/bayer-science-for-a-better-life/grami]
+
+- TypeDB strict type-checking errors validates inserts and queries 
+  data as well as logical validations of meaningless queries.
+- TypeDB optimises alse the query's execution.
+- reasoning engine enables type-inference and rule-inference
+  that creates logical abstractions of data allowing the
+  discovery of facts and patterns that would otherwise be
+  too hard to find; and complex queries become much simpler.
+
+   person     sub entity,         ← Entity
+     owns name,
+     plays employment:employee;
+   
+   company    sub entity,         ← Entity
+     owns name,
+     plays employment:employer;
+   
+   employment sub relation,       ← Entity-Relationship
+     relates employee,
+     relates employer;
+   
+   name sub attribute,
+     value string;
+
+   student   sub person;   ← Type Hierarchy
+   undergrad sub student;  ← Type Hierarchy
+   postgrad  sub student;  ← Type Hierarchy
+   teacher   sub person;
+   supervisr sub teacher;
+   professor sub teacher;
+
+   $person    isa person   , has name "Leonardo";
+   $character isa character, has name "Jack";
+   $movie     isa movie;
+   (actor: $person, character: $character, movie: $movie)  ← N-ary relations (vs just binary ones)
+              isa cast;
+
+
+    $alice              isa person, has name "Alice"; ← Nested Relations
+    $bob                isa person, has name "Bob";
+    $mar ($alice, $bob) isa marriage;
+    $city               isa city;
+    ($mar, $city)       isa located;
+    ... 
+    $city isa city, has name "London";
+
+   
+- TypeDB's API is provided through a gRPC client providing stateful objects,
+  Sessions and Transactions.
+  Java Example: (Similar code for Python and NodeJS)
+  try (TypeDBClient client = TypeDB.coreClient("localhost:1729")) {
+      try (TypeDBSession session = client.session("my-typedb", DATA)) {
+          try (TypeDBTransaction tx = session.transaction(WRITE)) {
+              tx.query().insert(TypeQL.insert(var().isa("person")));
+              tx.commit();
+          }
+          try (TypeDBTransaction tx = session.transaction(READ)) {
+              Stream<ConceptMap> answers = tx.query().match(TypeQL.match(var("x").isa("person")));
+          }
+      }
+  }
+
+- ACID guarantees up to Snapshot Isolation.
+[[}]]
+
+● Vitess: DDBB clustering system for horizontal scaling of  [[scalability]]
+  MySQL through generalized sharding.
+  https://github.com/vitessio/vitess 11.500 Starts in Github !!!
+
+  By encapsulating shard-routing logic, Vitess allows application code 
+  and database queries to remain agnostic to the distribution of data 
+  onto multiple shards. With Vitess, you can even split and merge 
+  shards as your needs grow, with an atomic cutover step that takes 
+  only a few seconds.
+  
+  Vitess has been a core component of YouTube's database infrastructure 
+  since 2011, and has grown to encompass tens of thousands of MySQL 
+  nodes.
+  
+  For more about Vitess, please visit vitess.io.
+  
+  Vitess has a growing community. You can view the list of adopters 
+  here.
+
+● Citus: Scale-Out Clustering and Sharding for PostgresSQL  [[scalability]]
+  https://www.xaprb.com/blog/citus/
+  I wrote yesterday about Vitess, a scale-out sharding solution for 
+  MySQL. Another similar product is Citus, which is a scale-out 
+  sharding solution for PostgreSQL. Similar to Vitess, Citus is 
+  successfully being used to solve problems of scale and performance 
+  that have previously required a lot of custom-built middleware.
+  
+  Citus solves the following problems for users:
+  - Sharding. Citus handles all of the sharding, so applications do not 
+    need to be shard-aware.
+  - Multi-tenancy. Applications built to colocate multiple customers’ 
+    databases on a shared cluster—like most SaaS applications—are 
+    called multi-tenant. Sharding, scaling, resharding, rebalancing, and 
+    so on are common pain points in modern SaaS platforms, all of which 
+    Citus solves.
+  - Analytics. Citus is not exclusively an analytical database, but it 
+    certainly is deployed for distributed, massively parallel analytics 
+    workloads a lot. Part of this is because Citus supports complex 
+    queries, building upon Postgres’s own very robust SQL support. 
+    Citus can shard queries that do combinations of things like 
+    distributed GROUP BY and JOIN together.
+  
+  · Citus is not middleware: it’s an extension to Postgres that 
+    turns a collection of nodes into a clustered database. This means 
+    that all of the query rewriting, scatter-gather MPP processing, etc 
+    happens within the PostgreSQL server process, so it can take 
+    advantage of lots of PostgreSQL’s existing codebase and 
+    functionality.
+  
+  · Citus runs on standard, unpatched PostgreSQL servers. The only 
+    modification is installing the extensions into the server. This is a 
+    unique and extremely important advantage: most clustered databases 
+    that are derived from another database inevitably lag behind and get 
+    stuck on an old version of the original database, unable to keep up 
+    with the grueling workload of constantly refactoring to build on new 
+    releases. Not so for Citus, which doesn’t fork Postgres—it 
+    extends it with Postgres’s own extension mechanisms. This means 
+    that Citus is positioned to continue innovating on its own software, 
+    while continuing to benefit from the strong progress that the 
+    PostgreSQL community is delivering on a regular cadence too.
+
+● Facebook developed Akkio, a new data placement service (DPS) that   [[scalability,distributed]]
+  operates on trillions of small entities to determine how and when to 
+  move information in order to optimize retrieval speed for people 
+  across the globe, using the minimum required number of copies. 
+  Developed over the last three-plus years and leveraging Facebook’s 
+  unique software stack, Akkio is now in limited production and 
+  delivering on its promise with a 40 percent smaller footprint, which 
+  resulted in a 50 percent reduction of the corresponding WAN traffic 
+  and an approximately 50 percent reduction in perceived latency.
+
+● Zuul is an L7 application gateway 
+  https://github.com/Netflix/zuul
+  Zuul provides capabilities for dynamic routing, monitoring, resiliency, 
+  security, and more.
+  https://dzone.com/articles/microservices-journey-from-netflix-oss-to-istio-se
+
+● Funcitonal UI:
+  https://www.infoq.com/articles/functional-UI-introduction-no-framework/
+
+● Design, Deploy and Depict powerful architectures
+  https://www.brainboard.co/ 
+
+● 5 Most Notable Open Source Centralized Log Management Tools
+  https://www.tecmint.com/open-source-centralized-linux-log-management-tools/ 
+
+
+● SQLite is not a toy database | Anton Zhiyanov
+  https://antonz.org/sqlite-is-not-a-toy-database/ 
+
+● 3GraphQL Reference Guide: Building Flexible and Understandable APIs
+  https://www.infoq.com/articles/GraphQL-ultimate-guide/ 
+
+● Netflix Open Sources Their Domain Graph Service Framework:
+  GraphQL for Spring Boot
+  https://www.infoq.com/news/2021/02/netflix-graphql-spring-boot 
+
+● GraphQL vs REST:
+https://hackernoon.com/graphql-vs-rest-how-to-choose-one-over-the-other
+  Conclusion
+  GraphQL is great for applications where related and nested data are 
+  fetched because you can use the full power of its query 
+  language. GraphQL is also well suited for mobile development as 
+  bandwidth usage is optimized by avoiding over-fetching and 
+  under-fetching. But after weighing the pros and cons, we see that 
+  GraphQL is not always the best option. If you need a clear and 
+  convenient API without overhead, or you want to use HTTP capabilities 
+  like caching or authentication, you should choose REST.
+
+
+● Crucial, WD y Samsung son pillados vendiendo SSDs de inferior [[storage.hardware]]
+  rendimiento sin informar en las especificaciones
+  https://www.msn.com/es-es/noticias/tecnologia/crucial-wd-y-samsung-son-pillados-vendiendo-ssds-de-inferior-rendimiento-sin-informar-en-las-especificaciones/ar-AANPiaR
+
+● Best Practices for Data Pipeline Error Handling in Apache NiFi [[data_architecture,nifi.qa]]
+  https://dzone.com/articles/best-practices-for-data-pipeline-error-handling-in?edition=676391 
+
+● Gorilla: A fast, scalable, in-memory time series database [[scalability]]
+  https://blog.acolyer.org/2016/05/03/gorilla-a-fast-scalable-in-memory-time-series-database/ 
+
+● MicroStream 5.0 is Now Open Source
+  https://www.infoq.com/news/2021/09/microstream-5-is-open-source/
+
+● Practical API Design Using gRPC at Netflix:
+  https://www.infoq.com/news/2021/09/practical-api-design-netflix/?itm_source=oficina24x7.com
+
+● PayPal Adopts GraphQL: Gains Increased Developer Productivity
+  https://www.infoq.com/news/2021/10/paypal-graphql/
+
+  Today, GraphQL is being used by several production apps across 
+  PayPal. It is now a default pattern to use GraphQL for building new 
+  UI apps. Many existing apps are in the process of migrating to 
+  GraphQL. GraphQL is being used by common platforms such as Identity, 
+  Payments, and Compliance to provide a consistent experience across 
+  all PayPal products. Our API developers have started using GraphQL to 
+  build APIs. Braintree released its public GraphQL API.
+  
+  Kapoor reports that PayPal sees many advantages with using GraphQL. A 
+  primary benefit is developer productivity. Tools like GraphiQL and 
+  Playground help increase productivity by allowing developers to play 
+  around with the API and explore documentation. Increased 
+  productivity, in turn, helps shipping faster. Kapoor elaborates:
+  We were able to get rid of a lot of plumbing that made it harder to 
+  provide feature updates and keep feature parity. Before, we had to 
+  ship out an SDK in every language that our merchant worked in. Now, 
+  we can provide one single GraphQL endpoint that merchants can 
+  integrate with no matter which language they use.
+
+● Version Vector:
+  https://martinfowler.com/articles/patterns-of-distributed-systems/version-vector.html 
+
+● What's New in Grafana v7.4 
+  https://grafana.com/docs/grafana/latest/whatsnew/whats-new-in-v7-4/ 
+
+● Indestructible Storage in the Cloud with Apache Bookkeeper  [[storage.bookkeeper,comparative,]]
+  WARN: Not to be confused with Zookeeper (configuration and discovery) DDBB !!!
+  https://www.infoq.com/articles/storage-cloud-apache-bookkeeper/ 
+
+  At Salesforce, we required a storage system which could work with two 
+  kinds of streams, one stream for write-ahead logs and one for data. 
+  But we have competing requirements from both of the streams. The 
+  write-ahead log stream should be low latency for writes and high 
+  throughput for reads. The data stream should have high throughputs 
+  for writes, but have low random read latency. 
+  
+  After researching what open source had to offer, we settled upon two 
+  finalists: Ceph and Apache BookKeeper. With the requirement that the 
+  system be available to our customers, scale to massive levels and 
+  also be consistent as a source of truth, we needed to ensure that the 
+  system can satisfy aspects of the CAP Theorem for our use case.
+  
+   While Ceph provided Consistency and Partition Tolerance, the read 
+  path can provide Availability and Partition Tolerance with unreliable 
+  reads. There’s still a lot of work required to make the write path 
+  provide Availability and Partition Tolerance. We also had to keep in 
+  mind the immutable data requirement for our deployments.
+  
+   We determined Apache BookKeeper to be the clear choice for our use 
+  case. It’s close to being the CAP system we require because of its 
+  append only/immutable data store design and a highly replicated 
+  distributed log. Other key features:...
+
+● LAKE-HOUSE: A NEW GENERATION OF OPEN PLATFORMS THAT UNIFY   [[data_architecture,Storage,BigData,Spark,scalability]]
+  DATA WAREHOUSING AND ADVANCED ANALYTICS
+
+  FIRST GENERATION ─────────────────────    SECOND GENERATION ───────────────────    THIRD GENERATION
+                    Data     Machine                        Data      Machine        ─────────────────────────────────────
+   BI    Reports    Science Learning        BI    REPORTS   Science   Learning       https://delta.io/
+      ^              ^         ^            ^     ^         ^         ^              OOSS project enableing building a Lakehouse 
+      │              ·         ·            |     |         |         |              Architecture on top of existing S3, ADLS,
+  Data Warehouses    ·         ·            |     |         |         |              GCS, HDFS, ....
+  ^                  ·         ·            |     |         |         |
+  │                  ·         ·            |     |         |         |
+                     ·         ·            ───-v-────────────────────────────────
+  ETL ─┐             ·         ·            ETL │  metadata, Caching, Index Layer
+  ^    │             ·         ·            ────┴──────────────────────────────── 
+  │    v             ·         ·            
+  DATA LAKE                                 DATA LAKE
+  ─────────────────────────────────────     ──────────────────────────────────────
+      ^              ·         ·                        ^ 
+      │              ·         ·                        | 
+  ─────────────────────────────────────     ─────────────────────────────────────      
+  (UN/SEMI/)STRUCTURED DATA                 (UN/SEMI/)STRUCTURED DATA
+
+
+  http://cidrdb.org/cidr2021/papers/cidr2021_paper17.pdf
+  Michael Armbrust1, Ali Ghodsi1,2, Reynold Xin1, Matei Zaharia1,3
+  1Databricks, 2UC Berkeley, 3Stanford University
+
+  ABSTRACT:
+  This paper argues that the data warehouse architecture as we know
+  it today will wither in the coming years and be replaced by a new
+  architectural pattern, the Lakehouse, which will 
+    (i) be based on open direct-access data formats, such as Apache Parquet
+   (ii) have first-class support for machine learning and data science, and 
+  (iii) offer state-of-the-art performance.
+
+    Lakehouses can help address several major challenges with data 
+  warehouses, including data staleness, reliability, total cost of 
+  ownership, data lock-in, and limited use-case support. We discuss how 
+  the industry is already moving toward Lakehouses and how this shift 
+  may affect work in data management.  We also report results from a 
+  Lakehouse system using Parquet that is competitive with popular cloud 
+  data warehouses on TPC-DS.
+
+  6 Conclusion
+  We have argued that a unified data platform architecture that im-
+  plements data warehousing functionality over open data lake file
+  formats can provide competitive performance with today’s data
+  warehouse systems and help address many of the challenges facing
+  data warehouse users. Although constraining a data warehouses’s
+  storage layer to open, directly-accessible files in a standard format
+  appears like a significant limitation at first, optimizations such as
+  caching for hot data and data layout optimization for cold data can
+  allow Lakehouse systems to achieve competitive performance. We
+  believe that the industry is likely to converge towards Lakehouse
+  designs given the vast amounts of data already in data lakes and
+  the opportunity to greatly simplify enterprise data architectures.
+
+  Acknowledgements
+  We thank the Delta Engine, Delta Lake, and Benchmarking teams at
+  Databricks for their contributions to the results we discuss in this
+  work. Awez Syed, Alex Behm, Greg Rahn, Mostafa Mokhtar, Peter
+  Boncz, Bharath Gowda, Joel Minnick and Bart Samwel provided
+  valuable feedback on the ideas in this paper. We also thank the
+  CIDR reviewers for their feedback
+
+● Idempotency HTTP Header:[[{standards,payments,api_management,qa,protocol,_PM.TODO]]
+@[https://tools.ietf.org/id/draft-idempotency-header-01.html]
+By J. Jena ( PayPal, Inc.), S. Dalal
+
+• request header carrying an idempotency key in order to make
+  non-idempotent HTTP methods such as POST or PATCH  fault-tolerant .
+  e.g.: 
+  Idempotency-Key: "8e03978e-40d5-43e8-bc93-6894a57f9324"
+                   └──────────────────┬─────────────────┘
+          Value must be unique for each different payload.
+• Idempotent method: In mathematics and computer science is a method
+  that can be applied multiple times without changing the result beyond.
+  Calling once or ten times must give the same result and it is an
+  important property in building a fault-tolerant HTTP API. 
+• Problem context:
+  client sends POST request to server and gets a timeout.
+  Q: Is resource actually created or not?
+  Q: Can client retry (safely) the request?
+  Note, duplicate records for requests involving any kind of money 
+  transfer MUST NOT be allowed.
+[[}]]
+
+● hasura/graphql-engine:  [[{_PM.low_code]]
+https://github.com/hasura/graphql-engine
+
+- accelerates API development 10x 
+- Autogenerate GraphQL or REST APIs with 
+  built in authorization from (ddbb) data, instantly.
+- powerful queries with Built-in filtering / pagination / pattern 
+  search / bulk insert / update / delete mutations
+- Works with existing, live databases. 1-minute setup for 
+  ready-to-use GraphQL API
+- Realtime: Convert any GraphQL query to a live query by using 
+  subscriptions
+- Merge remote schemas: Access custom GraphQL schemas for business 
+  logic via a single GraphQL Engine endpoint. 
+- Extend with Actions: Write REST APIs to extend Hasura’s schema with 
+  custom business logic.
+- Trigger webhooks or serverless functions: On Postgres 
+  insert/update/delete events 
+- Scheduled Triggers: Execute custom business logic at specific 
+  points in time using a cron config or a one-off event.
+- Fine-grained access control: Dynamic access control that integrates 
+  with your auth system (eg: auth0, firebase-auth)
+- Admin UI & Migrations: Admin UI & Rails-inspired schema migrations
+- Supports PostgreSQL (and its flavours), MS SQL Server, Big Query. 
+  more databases coming soon.
+[[}]]
+
+
+● Dapr  [[{_PM.low_code,sidecar}]]
+
+
+● Time-Sensitive Networking:
+@[https://en.wikipedia.org/wiki/Time-Sensitive_Networking]
+ The standards define mechanisms for the time-sensitive transmission of data over Ethernet networks. 
+
+● Kafka Topicmappr:
+  Topicmappr replaces and extends the kafka-reassign-partition tool bundled with Kafka.
+   It allows for minimal movement broker replacements, cluster storage 
+   rebalancing/partition bin-packing, leadership optimization, many-at-once topic management,
+   and more—all with rack awareness support.
+   https://github.com/DataDog/kafka-kit
+
+● registry: gRPC+HTTP API service for Kafka that allows granular resource 
+   (topics, brokers) lookup and management with custom tagging support.
+
+● autothrottle: service that automatically paces Kafka replication/recovery throttle rates,
+  powered with metrics using the Datadog API.
+
+● metricsfetcher: utility to fetch metrics via Datadog API for Kafka storage rebalancing
+  and partition mapping with topicmappr.
+
+● Director's Decision on DID 1.0 Proposed Recommendation Formal Objections: [[identity]]
+  https://www.w3.org/2022/06/DIDRecommendationDecision.html 
+
+● Raft Engine: a Log-Structured Embedded Storage Engine for Multi-Raft Logs in TiKV
+  https://www.infoq.com/articles/raft-engine-tikv-database/
+
+● NoSQL Database Comparison: MongoDB vs. DynamoDB vs. Couchbase
+  https://www.couchbase.com/nosql-database-cloud-comparison 
+
+● Kestra: a Scalable OOSS Orchestration and Scheduling Platform
+  https://www.infoq.com/news/2022/03/kestra-orchestration-platform/ 
+
+● Federated GraphQL with Apollo
+  https://www.infoq.com/presentations/graphql-major-league-baseball/ 
+
+● When NOT to use Apache Kafka? - Kai Waehner
+  https://www.kai-waehner.de/blog/2022/01/04/when-not-to-use-apache-kafka/ 
+
+● Google (Apigee) recognized by Gartner as a Magic Quadrant Leader once again
+  Google Cloud’s Apigee continues to position itself highest on ability 
+  to execute. We believe this is through its support for customers 
+  pursuing digital strategies.
+  
+  Access your complimentary copy of the 2021 Gartner Magic Quadrant for 
+  Full Life Cycle API Management to get a comprehensive analysis of the 
+  API management marketplace, including:
+
+  How API management is evolving to drive digital transformation programs for enterprises
+  Detailed evaluation criteria for the ability to execute and completeness of vision
+  Why Google (Apigee) continues to be recognized as a Leader in the 
+  2021 Magic Quadrant for Full Life Cycle API Management
+
+● Why is Kafka fast (see image diagram)  [[scalability]]
+  https://pbs.twimg.com/media/FOi-gjZVgAQdG9B?format=jpg&name=900x900
+  * READ WITHOUT ZERO-COPY:
+    procuder -> Kafk.Application buffer: writes dataKafka.Application buffer -> OS BUffer: writer to RAM
+    OS Buffer -> Disk : (Periodically) sync to disk
+    Disk -> OS Buffer: Load dataOS Buffer -> kakfa.application buffer: copy dataKafa.app buffer -> Socket Buffer: Copy data
+    Socket Buffer -> NIC Buffer: Copy data 
+    NIC Buffer -> Consumer: Send to consumer
+
+
+  * READ WITH ZERO COPY:
+    Producer -> Kakfa : write dataKafka.OS BUffer: wirte to RAM
+    OS Buffer - NIC Buffer: Direct Copy !!!!
+    NIC Buffer: Send to consumer
+
+● 2 Billion MySQL Records:
+  https://dzone.com/articles/2-billion-mysql-records
+  Handling 2 billion MySQL records is actually possible. Sure, you'll 
+  need a monster server, and zero indexes or foreign keys during 
+  import, but it is possible.
+  
+● Real-Time Exactly-Once Event Processing at Uber with Apache Flink,
+  Kafka, and Pinot
+  https://www.infoq.com/news/2021/11/exactly-once-uber-flink-kafka/
+
+● Event Driven Architectures of Scale
+  https://www.infoq.com/podcasts/event-driven-architectures-scale/
+
+● Sift Architecture: data arxhitecture How to Build a Directed Acyclic Graph (DAG)
+  Towards Open Options Chains Part IV
+  https://hackernoon.com/how-to-build-a-directed-acyclic-graph-dag-towards-open-options-chains-part-iv 
+
+● What Happened to HornetQ, the JMS That Shattered Records?
+  https://dzone.com/articles/hornetq-stings-competition?edition=743706 
+  "This system is a very high‑performance journal, which is basically 
+  written in 99‑percent Java.  But we also have a small layer of native 
+  code that's accessed by JNI.  And what this does is, when you're 
+  running on Linux, it detects that you're running on Linux, and then 
+  it automatically enables a bit of native code, which allows us to 
+  pass into Linux asynchronous file IO.  And basically, what this does 
+  is it allows us to get much faster persistence than would be possible 
+  in pure Java."
+   In spite of HornetQ's incredible speed, however, it failed to surpass 
+  its biggest competitor. Near the end of 2014, the codebase for 
+  HornetQ was donated to the Apache ActiveMQ community. Today, it 
+  exists as an Active MQ subproject called Artemis.
+   ActiveMQ was able to correct the issues that lead to its defeat in 
+  those benchmark tests, adding new features and improved 
+  functionality. It can be integrated with the Apache Camel Framework, 
+  making it possible to read and write messages between the two 
+  systems. 
+   Artemis, the ActiveMQ subproject that’s specifically based on 
+  HornetQ’s code, is intended to be a next-generation ActiveMQ broker. 
+  It currently serves as a successor to the ActiveMQ classic. According 
+  to Apache’s Artemis roadmap, it could eventually serve as the next 
+  significant version of ActiveMQ.
+
+● Redia commander: joeferner/redis-commander: Redis management tool written in node.js
+  https://github.com/joeferner/redis-commander 
+
+● scgupta.link/datastores
+
+- Data Type                                      AWS         AZURE        GCP              Cloud Agnostic
+  - structured   
+    use case: ACID TXs     -> Relational         RDS         SQL DB       SQl,
+                                                                          Cloud
+                                                                           Spanner
+ 
+    use case: Analytics    -> Columnar         RedShift      Synapse      BigQuery         Snowflake,
+                                                                                           ClickHouse, Druid
+                                                                                           Kudu, Pinot,
+  - semi-structured   
+    Use Case: Dictionary   -> Key/Value        DynamoDB      CosmosDB     Datastore        Redis,ScyliaDB,Ignite
+    Use Case: cache        -> in-memory        Elastic       Cache/       Memory-          Redis, Mecached,
+                                               Cache(Redis)  (Redis)       store           Hazelcast,Ignite
+
+    Use Case: 2D key-value -> wide column      Keyspaces     CosmosDB     BigTable         HBase, Cassandra, 
+                                                                                           ScyllaDB,
+
+    Use Case: Time Series  -> Time Series      Timestream    CosmosDB     BigTable,        OpenTSDB,
+                                                                          BigQuey          InflusDB,
+                                                                                           ScyllaDB
+
+    Use Case: Audit Trail  -> Immutable        Quantum       A.SQL        ???              
+                              Ledger           Ledger DDB    DDBB 
+                                               (QLDB)        Leder
+
+    Use Case: Location and -> Geospatial       Keyspaces     CosmosDB     BigTable         Solr, PostGIS,
+              geo-entities                                                BigQuery         ...
+
+    Use Case: Entity-      -> Graph            Neptune       CosmosDB     JanusGraph       Neo4J,
+              RelationShip                                                + BigTable       OrientDB,
+                                                                                           Giraph
+
+    Use Case: Nested Objects -> Document       DocumentDB    CosmosDB     Firestore        MongoDB, 
+              (XML, JSON)                                                                  CouchBase, Solr, ...
+
+  - unstructured   
+    Use Case: Full text    -> Text Search      Elastic       Cognitive    Search APIs      ElasticSearch,
+               search                           Search,      Search       on Datastores    Solr, Elassandra
+                                               cloudSearch,
+
+    Use Case: Blob         -> Blob             S3            Blob Storage Cloud Storage    HDFS, MinIO,
+
+
+● InfluxDB (Elas.Search Alt for TimeSeries):[[{elk,db_engine.timeseries.influxdb,_PM.ext_resource]]
+@[https://logz.io/blog/influxdb-vs-elasticsearch/]
+
+• awesome influxdb:
+https://github.com/PoeBlu/awesome-influxdb
+A curated list of awesome projects, libraries, tools, etc. related to InfluxDB
+Tools whose primary or sole purpose is to feed data into InfluxDB.
+
+- accelerometer2influx - Android application that takes the x-y-z axis metrics 
+   from your phone accelerometer and sends the data to InfluxDB.
+- agento - Client/server collecting near realtime metrics from Linux hosts
+- aggregateD - A dogstatsD inspired metrics and event aggregation daemon for 
+  InfluxDB
+- aprs2influxdb - Interfaces ham radio APRS-IS servers and saves packet data 
+  into an influxdb database
+- Charmander - Charmander is a lab environment for measuring and analyzing 
+  resource-scheduling algorithms
+- gopherwx - a service that pulls live weather data from a Davis Instruments 
+  Vantage Pro2 station and stores it in InfluxDB
+- grade - Track Go benchmark performance over time by storing results in 
+  InfluxDB
+- Influx-Capacitor - Influx-Capacitor collects metrics from windows machines 
+  using Performance Counters. Data is sent to influxDB to be viewable by grafana
+- Influxdb-Powershell - Powershell script to send Windows Performance counters 
+  to an InfluxDB Server
+- influxdb-logger - SmartApp to log SmartThings device attributes to an 
+  InfluxDB database
+- influxdb-sqlserver - Collect Microsoft SQL Server metrics for reporting to 
+  InfluxDB and visualize them with Grafana
+- k6 - A modern load testing tool, using Go and JavaScript
+- marathon-event-metrics - a tool for reporting Marathon events to InfluxDB
+- mesos-influxdb-collector - Lightweight mesos stats collector for InfluxDB
+- mqforward - MQTT to influxdb forwarder
+- node-opcua-logger - Collect industrial data from OPC UA Servers
+- ntp_checker - compares internal NTP sources and warns if the offset between 
+  servers exceeds a definable (fraction of) seconds
+- proc_to_influxdb - Console app to observe Windows process starts and stops 
+  via InfluxDB
+- pysysinfo_influxdb - Periodically send system information into influxdb (uses 
+  python3 + psutil, so it also works under Windows)
+- sysinfo_influxdb - Collect and send system (linux) info to InfluxDB
+- snmpcollector - A full featured Generic SNMP data collector with Web 
+  Administration Interface for InfluxDB
+- Telegraf - (Official) plugin-driven server agent for reporting metrics into 
+  InfluxDB
+- tesla-streamer - Streams data from Tesla Model S to InfluxDB (rake task)
+- traffic_stats - Acquires and stores statistics about CDNs controlled by 
+  Apache Traffic Control
+- vsphere-influxdb-go - Collect VMware vSphere, vCenter and ESXi performance 
+  metrics and send them to InfluxDB
+[[}]]
+
+● MFA OOSS  [[{aaa.mfa]]
+https://opensource.com/article/20/3/open-source-multi-factor-authentication 
+Open source alternative for multi-factor authentication: privacyIDEA 
+[[}]]
+
+● Chrony (NTP replacement): [[{distributed.101,protocol.ntp,computing.infraestructure,_doc_has.comparative,]]
+@[https://www.infoq.com/news/2020/03/ntp-chrony-facebook/]
+Facebook’s Switch from ntpd to chrony for a More Accurate, Scalable NTP Service
+[[}]]
+
+● Apache Beam: [[{architecture.batch,architecture.event_stream]]
+• Apache Beam provides an advanced unified programming model, allowing 
+  you to implement batch and streaming data processing jobs that can 
+  run on any execution engine.
+• Allows to execute pipelines on multiple environments such as Apache 
+  Apex, Apache Flink, Apache Spark among others.
+[[}]]
+
+● Apache Ignite: [[{architecture.olap,architecture.oltp,db_engine.rdbm,architecture.realtime,scalability]]
+• Apache Ignite is a high-performance, integrated and distributed 
+  in-memory platform for computing and transacting on large-scale data 
+  sets in real-time, orders of magnitude faster than possible with 
+  traditional disk-based or flash technologies.
+• Can be used to dramatically increase RDBMS (SQL) Online Analytics Processing (OLAP)
+  and Online Transaction Processing (OLTP).
+@[https://www.gridgain.com/resources/papers/accelerate-mysql-olap-oltp-use-cases]
+[[}]]
+
+● Apache PrestoDB: [[{sql,data.analytics,big_data.prestodb,scalability]]
+@[https://prestodb.io/]
+- distributed SQL query engine originally developed by Facebook.
+- running interactive analytic queries against data sources of
+  all sizes ranging from gigabytes to petabytes.
+- Engine can combine data from multiple sources (RDBMS, No-SQL, 
+  Hadoop) within a single query, and it has little to no performance 
+  degradation running. Being used and developed by big data giants 
+  like, among others,  Facebook, Twitter and Netflix, guarantees a 
+  bright future for this tool.
+- Designed and written from the ground up for interactive 
+  analytics and approaches the speed of commercial data warehouses 
+  while scaling to the size of organizations like Facebook. 
+- NOTE: Presto uses Apache Avro to represent data with schemas.
+  (Avro is "similar" to Google Protobuf/gRPC)
+[[}]]
+
+● Google Colossus FS:  [[storage.cloud,distributed,scalability]]
+@[https://www.systutorials.com/3202/colossus-successor-to-google-file-system-gfs/]
+
+
+● Mattermost+Discourse: [[comparative]]
+  CERN, cambia el uso de Facebook Workplace por Mattermost y Discourse
+  https://www.linuxadictos.com/cern-cambia-el-uso-de-facebook-workplace-por-mattermost-y-discourse.html 
+
+● EventQL:  [[{architecture.event_stream]]
+  eventql/eventql: Distributed "massively parallel" SQL query engine
+  https://github.com/eventql/eventql 
+[[}]]
+
+● n-gram index: [[scalability,BigData.101]]
+ "...Developed an indexing and search software, mostly in C. 
+  The indexer is multi-threaded and computes a n-gram index 
+  - stored in B-Trees - on hundreds of GB of data generated
+  every day in production. The associated search engine is also
+  a multi-threaded, efficient C program."
+
+- In the fields of computational linguistics and probability, an n-gram 
+  is a contiguous sequence of n items from a given sample of text or 
+  speech. The items can be phonemes, syllables, letters, words or base 
+  pairs according to the application. The n-grams typically are 
+  collected from a text or speech corpus. When the items are words, 
+  n-grams may also be called shingles[clarification needed].
+
+● Fallacies of distributed computing:
+@[https://en.wikipedia.org/wiki/Fallacies_of_distributed_computing]
+The fallacies are[1]
+    The network is reliable;
+    Latency is zero;
+    Bandwidth is infinite;
+    The network is secure;
+    Topology doesn't change;
+    There is one administrator;
+    Transport cost is zero;
+    The network is homogeneous.
+
+- The effects of the fallacies:
+  - Software applications are written with little error-handling on 
+    networking errors. During a network outage, such applications may 
+    stall or infinitely wait for an answer packet, permanently consuming 
+    memory or other resources. When the failed network becomes available, 
+    those applications may also fail to retry any stalled operations or 
+    require a (manual) restart.
+  - Ignorance of network latency, and of the packet loss it can cause, 
+    induces application- and transport-layer developers to allow 
+    unbounded traffic, greatly increasing dropped packets and wasting 
+    bandwidth.
+  - Ignorance of bandwidth limits on the part of traffic senders can 
+    result in bottlenecks.
+  - Complacency regarding network security results in being blindsided 
+    by malicious users and programs that continually adapt to security 
+    measures.[2]
+  - Changes in network topology can have effects on both bandwidth and 
+    latency issues, and therefore can have similar problems.
+  - Multiple administrators, as with subnets for rival companies, may 
+    institute conflicting policies of which senders of network traffic 
+    must be aware in order to complete their desired paths.
+  - The "hidden" costs of building and maintaining a network or subnet 
+    are non-negligible and must consequently be noted in budgets to avoid 
+    vast shortfalls.
+  - If a system assumes a homogeneous network, then it can lead to the 
+    same problems that result from the first three fallacies.
+  
+
+● Time Series + Spark:
+   https://github.com/AmadeusITGroup/Time-Series-Library-with-Spark
+
+● NATS:[[{architecture.messaging,qa,kafka,mqtt,01_PM.low_code]]
+  NATS is simple and secure messaging made for developers and 
+  operators who want to spend more time developing modern applications 
+  and services than worrying about a distributed communication system.
+
+  Extracted from:
+  https://docs.baseline-protocol.org/baseline-protocol/packages/messaging
+  NATS is currently the default point-to-point messaging provider and 
+  the recommended way for organizations to exchange secure protocol 
+  messages. NATS was chosen due to its high-performance capabilities, 
+  community/enterprise footprint, interoperability with other systems 
+  and protocols (i.e. Kafka and MQTT) and its decentralized 
+  architecture.
+  
+  The Importance of Messaging (https://docs.nats.io/)
+  Developing and deploying applications and services that communicate 
+  in distributed systems can be complex and difficult. However there 
+  are two basic patterns, request/reply or RPC for services, and event 
+  and data streams. A modern technology should provide features to make 
+  this easier, scalable, secure, location independent and observable.
+
+  DISTRIBUTED COMPUTING NEEDS OF TODAY:
+  A modern messaging system needs to support multiple communication 
+  patterns, be secure by default, support multiple qualities of 
+  service, and provide secure multi-tenancy for a truly shared 
+  infrastructure. A modern system needs to include:
+  - Secure by default communications for microservices, edge 
+    platforms and devices
+  - Secure multi-tenancy in a single distributed communication 
+    technology
+  - Transparent location addressing and discovery
+  - Resiliency with an emphasis on the overall health of the system
+  - Ease of use for agile development, CI/CD, and operations, at scale
+  - Highly scalable and performant with built-in load balancing and 
+    dynamic auto-scaling
+  - Consistent identity and security mechanisms from edge devices to 
+    backend services
+  
+  NATS is simple and secure messaging made for developers and 
+  operators who want to spend more time developing modern applications 
+  and services than worrying about a distributed communication system.
+  - Easy to use for developers and operators
+  - High-Performance
+  - Always on and available
+  - Extremely lightweight
+  - At Most Once and At Least Once Delivery
+  - Support for Observable and Scalable Services and Event/Data 
+    Streams
+  - Client support for over 30 different programming languages
+  - Cloud Native, a CNCF project with Kubernetes and Prometheus 
+    integrations
+  
+  Use Cases
+  NATS can run anywhere, from large servers and cloud instances, 
+  through edge gateways and even IoT devices. Use cases for NATS 
+  include:
+  - Cloud Messaging
+    - Services (microservices, service mesh)
+    - Event/Data Streaming (observability, analytics, ML/AI)
+  - Command and Control
+    - IoT and Edge
+    - Telemetry / Sensor Data / Command and Control
+  - Augmenting or Replacing Legacy Messaging Systems
+  [[}]]
+
+● Serverless Architecture:[[{architecture.serverless,_PM.low_code,computing.kubernetes]]
+· Also known as (AWS non official name) "Lambda" architecture.
+· LinkedIn drops Lambda Arch to remove complexity                         [[comparative]]
+@[https://www.infoq.com/news/2020/12/linkedin-lambda-architecture/]
+───────────────────────
+· OpenFaas (k8s):
+@[https://www.openfaas.com/]
+· Serverless Functions, Made Simple.                                  [_PM.low_code]
+  OpenFaaS makes it simple to deploy both functions and existing code to Kubernetes.
+[[}]]
+
+● CliG Dev: [[{_PM.low_code,qa.ui,qa.usability]]
+@[https://clig.dev/]
+Command Line Interface Guidelines
+[[}]]
+
+● Debezium: Reacting to RDBM row changes: [[{enterprise_patterns,db_engine.rdbm,architecture.event_stream,distributed,kafka]]
+- Debezium is a set of distributed services that captures row-level 
+  database changes so that applications can view and respond to them. 
+  Debezium connectors record all events to a Red Hat AMQ Streams Kafka 
+  cluster. Applications use AMQ Streams to consume change events.
+
+- See also: 
+  https://developers.redhat.com/articles/2021/07/30/avoiding-dual-writes-event-driven-applications#
+
+- @[https://developers.redhat.com/blog/2020/12/11/debezium-serialization-with-apache-avro-and-apicurio-registry/]
+[[}]]
+
+
+● Apache AirFlow: [[{_PM.low_code,integration,ui,cloud,cloud,monitoring]]
+   https://dzone.com/articles/apache-airflow-20-a-practical-jump-start?edition=676391
+- community driven platfom to programmatically author, schedule and monitor workflows. 
+
+- It is NOT a data streaming solution. Tasks do not move data from one to the other
+- Workflows are expected to be mostly static or slowly changing with workflows expected
+  to look similar from a run to the next.
+
+- "Batteries included" for lot of external apps:
+    Amazon                Elasticsearch                                Opsgenie     Vertica
+    Apache Beam           Exasol                                       Oracle       Yandex
+    Apache Cassandra      Facebook                                     Pagerduty    Zendesk
+    Apache Druid          File Transfer Protocol (FTP)                 Papermill
+    Apache HDFS           Google                                       Plexus
+    Apache Hive           gRPC                                         PostgreSQL
+    Apache Kylin          Hashicorp                                    Presto
+    Apache Livy           Hypertext Transfer Protocol (HTTP)           Qubole
+    Apache Pig            Internet Message Access Protocol (IMAP)      Redis
+    Apache Pinot          Java Database Connectivity (JDBC)            Salesforce
+    Apache Spark          Jenkins                                      Samba
+    Apache Sqoop          Jira                                         Segment
+    Celery                Microsoft Azure                              Sendgrid
+    IBM Cloudant          Microsoft SQL Server (MSSQL)                 SFTP
+    Kubernetes            Windows Remote Management (WinRM)            Singularity
+    Databricks            MongoDB                                      Slack
+    Datadog               MySQL                                        Snowflake
+    Dingding              Neo4J                                        SQLite
+    Discord               ODBC                                         SSH
+    Docker                OpenFaaS                                     Tableau
+                                                                       Telegram
+
+- See also:
+  · https://github.com/BasPH/data-pipelines-with-apache-airflow
+[[}]]
+
+● Jailer SQL "Explorer":[[{SQL,_PM.low_code,data_architecture.management]]
+@[https://github.com/Wisser/Jailer]
+• Jailer Database:  tool for database subsetting and relational data browsing.
+• The Subsetter exports consistent, referentially intact row-sets 
+  from relational databases, generates topologically sorted SQL-DML, 
+  DbUnit datasets and hierarchically structured XML.
+• The Data Browser allows bidirectional navigation through the 
+  database by following foreign-key-based or user-defined relationships.
+
+FEATURES
+• Exports consistent and referentially intact row-sets from your      [[qa.testing]]
+  productive database and imports the data into your development and 
+  test environment.
+• Improves database performance by removing and archiving obsolete   [[qa]]
+  data without violating integrity.
+• Generates topologically sorted SQL-DML, hierarchically structured 
+  XML and DbUnit datasets.
+• Data Browsing. Navigate bidirectionally through the database by 
+  following foreign-key-based or user-defined relationships.
+• SQL Console with code completion, syntax highlighting and 
+  database metadata visualization.
+• A demo database is included with which you can get a first 
+   impression without any configuration effort.
+[[}]]
+
+● zstd fast lossless compression[[{storage.compression]]
+Storage: Release Zstandard v1.4.7
+https://github.com/facebook/zstd/releases/tag/v1.4.7 
+Zstandard, or zstd as short version, is a fast lossless compression 
+algorithm, targeting real-time compression scenarios at zlib-level 
+and better compression ratios. It's backed by a very fast entropy 
+stage, provided by Huff0 and FSE library.
+[[}]]
+
+● New Object Storage Protocol Could Mean the End for POSIX: [[{storage.101]]
+https://www.enterprisestorageforum.com/cloud-storage/object-storage-protocol-could-mean-the-end-for-posix.html
+[[}]]
+
+● Kafka: Removing Zookeeper Dependency: kafka.zookeeper,_PM.TODO
+https://www.infoq.com/podcasts/kafka-zookeeper-removing-dependency/
+
+● Noclassified Identity Technologies [[{architecture.identity]]
+• Modern Authentication (OpenID Connect, Oauth, SAML 2.0)
+• Microsoft EMS, Azure Log Analytics Server, Active Directory, 
+• Kerberos, Tiering ModelMicrosoft PKI (HSM, Certificate Management), 
+• Venafi CMSZero Trust Concept, B2B Guest Concept
+[[}]]
+
+● Dual graph: [[{db_engine.graph_db]]
+ - Wikipedia
+https://en.m.wikipedia.org/wiki/Dual_graph
+https://en.m.wikipedia.org/wiki/Glossary_of_graph_theory_terms 
+[[}]]
+
+● eDelivery Message exchange protocol:[[{messaging.standards]]
+- ISO approves eDelivery Message exchange protocol as International Standard
+@[https://ec.europa.eu/cefdigital/wiki/display/CEFDIGITAL/2020/07/24/ISO+approves+eDelivery+message+exchange+protocol+as+International+Standard]
+[[}]]
+
+● CAI: standard to protect images:[[{data_architecture.media.images,standards,year.2019,qa.standards]]
+- Content Authenticity Initiative
+- Today, at Adobe MAX 2019, in collaboration with The New York Times 
+  Company and Twitter, we announced the Content Authenticity Initiative 
+  (CAI) to develop an industry standard for digital content attribution.
+[[}]]
+
+● Eclipse APP4MC:[[{computing.IoT,qa.standards,architecture.embedded]]
+@[https://www.eclipse.org/app4mc/]
+Eclipse APP4MC is a platform for engineering embedded multi- and 
+many-core software systems. The platform enables the creation and 
+management of complex tool chains including simulation and 
+validation. As an open platform, proven in the automotive sector by 
+Bosch and their partners, it supports interoperability and 
+extensibility and unifies data exchange in cross-organizational 
+projects. Multi- and Many-Core Development Process Support The 
+Amalthea platform allows users to distribute data and tasks to the 
+target hardware platforms, with the focus on optimization of timing 
+and scheduling. It addresses the need for new tools and techniques to 
+make effective use of the level of parallelism in this environment.
+[[}]]
+
+● RedHat Node.js Ref. Arch.: #[nodejs_ref_arch]
+[[{architecture.event_stream,architecture.messaging,architecture.serverless,cloud,]]
+[[ cache,api,aaa,aaa.mfa,devops,data.graphql,distributed.ha,kafka,monitoring,redis]]
+@[https://github.com/nodeshift/nodejs-reference-architecture]
+
+  Functional Components           Development                     Operations
+  =====================           ===========                     ==========
+  Web Framework                   Building good containers        Health Checks
+  Template Engines                Static Assets                   Monitoring/Metrics
+  Message Queuing                 Keeping up to date                Monitoring
+  Internationalization            Code Quality                      Metrics Collection
+  Accessibility                     Code Consistency                Distributed Tracing
+  API Definition                    Testing                       Problem Determination
+  GraphQL                           Code Coverage                 Logging
+  Databases                       References to CI/CD             Rollout
+  Authen+Author                   Npm                             Deployment
+  Data Caching                      Npm Proxy/Priv.Registry         Containers
+  Scaling and Multi-threading       Npm Publishing                  Serverless
+  Consuming Services                Package Development           Load-balancing
+  Node versions/images            Secure Development Process      Failure Handling
+  Transactions_handling
+[[}]]
+
+● Apache Calcite: [[{data.analytics.sql,scalability,]]
+" The foundation for your next high-performance database "
+• Industry-standard SQL parser, validator and JDBC driver:
+• Query optimization:
+  Represent your query in relational algebra, transform using planning 
+  rules, and optimize according to a cost model.
+• "Any data, anywhere"
+  Connect to third-party data sources, browse metadata, and optimize by 
+  pushing the computation to the data.
+[[}]]
+
+
+
+● Search UI: React+ElasticSearch "site search" accelerator: [[{db_engine.search,_PM.low_code]]
+  https://github.com/ProjectOpenSea/search-ui
+  https://www.elastic.co/enterprise-search/search-ui?size=n_6_n
+• React Library for the fast development of modern, engaging search experiences
+  quickly without re-inventing the wheel.
+• Use it with Elastic App Search or Elastic Site Search to have a 
+  search experience up and running in minutes.
+[[}]]
+
+● NVMe @ Let's Encrypt [[{storage.NVMe]] 
+   https://letsencrypt.org/2021/01/21/next-gen-database-servers.html 
+   AMD’s latest generation of EPYC processors come with 128 PCIe lanes - 
+   more than double what Intel offers (they're PCIe v4!!!)
+   This is enough to pack a 2U server full of NVMe drives (24 in our case).
+   Once you have a server full of NVMe drives, you have to decide how
+   to manage them.
+    Our previous generation of database servers used hardware RAID (RAID-10 config),
+    ... but THERE IS NO EFFECTIVE HARDWARE RAID for NVMe, so we needed
+    another solution. 
+     One option was software RAID (Linux mdraid), but we got several recommendations
+    for OpenZFS and decided to give it a shot. We’ve been very happy with it!
+     There wasn’t a lot of information out there about how best to set up and
+    optimize OpenZFS for a pool of NVMe drives and a database workload, so we want
+    to share what we learned. You can find detailed information about our setup in 
+    this GitHub repository.
+
+● From Josh Goldenhar  (2021-01) VP of Product Marketing Lightbits Labs
+  - NVMe drives are 15.36 and 30TB, with 64TB and larger just around the corner. 
+  - join our next webinar with Intel and Kioxia:
+   "Can Your Server Handle the Size of Your SSDs?"
+  
+  I will discuss how this increase in capacity coupled with the 
+  impending move to PCIe Gen 4 gives these drives more performance, and 
+  often more capacity than can be utilized by a single server.  Even if 
+  you can use the capacity locally, this makes the blast radius of a 
+  failure potentially huge and common native Linux data protection 
+  schemes like RAID 5/6 a struggle with performance, especially 
+  rebuilds.
+
+● Intel Optane DC performance: 
+  http://mikaelronstrom.blogspot.com/2020/02/benchmarking-5-tb-data-node-in-ndb.html?m=1
+  Through the courtesy of Intel I have access to a machine with 6 TB of Intel
+  Optane DC Persistent Memory. This is memory that can be used both as
+  persistent memory in App Direct Mode or simply used as a very large
+  DRAM in Memory Mode.
+  
+  Slides for a presentation of this is available at slideshare.net.
+  
+  This memory can be bigger than DRAM, but has some different characteristics
+  compared to DRAM. Due to this different characteristics all accesses to this
+  memory goes through a cache and here the cache is the entire DRAM in the
+  machine.
+  
+  In the test machine there was a 768 GB DRAM acting as a cache for the
+  6 TB of persistent memory. When a miss happens in the DRAM cache
+  one has to go towards the persistent memory instead. The persistent memory
+  has higher latency and lower throughput. Thus it is important as a programmer
+  to ensure that your product can work with this new memory.
+  
+  What one can expect performance-wise is that performance will be similar to
+  using DRAM as long as the working set is smaller than DRAM. As the working
+  set grows one expects the performance to drop a bit, but not in a very significant
+  manner.
+  
+  We tested NDB Cluster using the DBT2 benchmark which is based on the
+  standard TPC-C benchmark but uses zero latency between transactions in
+  the benchmark client.
+  
+  This benchmark has two phases, the first phase loads the data from 32 threads
+  where each threads loads one warehouse at a time. Each warehouse contains
+  almost 500.000 rows in a number of tables.
+[[}]]
+
+● API MANAGEMENT:
+@[https://www.datamation.com/applications/top-api-management-tools.html]
+
+● Behaviour Driven Development (BDD):
+- Cucumber, ...
+@[https://cucumber.io/docs/guides/10-minute-tutorial/]
+
+● Infra vs App Monitoring: [[{tracing.101,architecture.decoupled,computing.kubernetes]]
+<pre zoom labels="
+See also @[http://www.oficina24x7.com/JAVA/java_map.html#mdc_summary]
+BºInfrastructure Monitoring:º
+  - Prometheus + Grafana
+    (Alternatives include Monit, Datadog, Nagios, Zabbix, ...)
+
+BºApplication distributed tracing/Monitoring (End-to-End Request Tracing)º
+  - Jaeger (OpenTracing compatible), Zipkin, New Relic
+    (Alternatives include AppDynamics, Instana, ...) 
+  -ºtrack operations inside and across different systemsº.
+  - Check for example how an incomming request affected to the web
+    server, database, app code, queue system, all presented along 
+    a timeline.
+  - Especially valuable in distributed systems.
+  - It complements logs and metrics:
+    - App.request metrics warns about latencies in remote requests
+      while local traces just do at local isolated systems. 
+    - Logs on each isolated system can explain why such system is "slow".
+    - Infra. monitoring warn about scarcity of CPU/memory/storage resources.
+  - See also notes on Spring Cloud Sleuth @[../JAVA/java_map.html] that
+    offers an interface to different tracing tech.stacks. (Jaeger,...)
+
+  • Related: https://github.com/dapr/dapr 
+    Dapr: portable, event-driven, runtime for building distributed
+          applications across cloud and edge.  
+  
+    ...by letting Dapr’s sidecar take care of the complex challenges such 
+    as service discovery, message broker integration, encryption, 
+    observability, and secret management, you can focus on business logic 
+    and keep your code simple.
+    ...  usually a developer must add some code to instrument an 
+    application for this purpose send collected data to external 
+    monitoring tool ...  Having to maintain this code adds another
+    burden sometimes requiring understanding the monitoring tools' 
+    APIs, additional SDKs ... different cloud providers offer 
+    different monitoring solutions.
+    • Observability with Dapr:
+    • When building an application which leverages Dapr building blocks 
+      to perform service-to-service calls and pub/sub messaging, Dapr 
+      offers an advantage with respect to distributed tracing. Because this 
+      inter-service communication flows through the Dapr sidecar, the 
+      sidecar is in a unique position to offload the burden of 
+      application-level instrumentation.
+    • Distributed tracing
+      Dapr can be configured to emit tracing data, and because Dapr does so 
+      using widely adopted protocols such as the Zipkin protocol, it can be 
+      easily integrated with multiple monitoring backends.
+
+BºLogging How Toº:
+  → Start by adding logs and infra monitoring
+    → add application monitoring:
+      ( requires support from programming languages/libraires, developpers and devOps teams)
+      - instrument code (Jaeger)
+      - add tracing to infrastructure components 
+        - load balancers
+      → deploy App tracing system itself. 
+        (Ex.: Jaeger server, ...)
+ 
+Bº(Bulk) Log Managementº
+  - Elastic Stack
+    (Alternative include Graylog, Splunk, Papertrail, ...)
+[[}]]
+
+● Jaeger (App.Monit):
+@[https://www.jaegertracing.io/]
+@[https://logz.io/blog/zipkin-vs-jaeger/]
+- Support 
+- Support for Open Tracing instrumentation libraries
+  like @[https://github.com/opentracing-contrib].
+- K8s Templates and Operators supported.                          [k8s]
+@[https://developers.redhat.com/blog/2019/11/14/tracing-kubernetes-applications-with-jaeger-and-eclipse-che/]
+  
+- Jaeger addresses next problems:
+  - end-to-end distributed transaction monitoring/tracing.
+    troubleshooting complex distributed systems.
+  - performance and latency optimization.
+  - root cause analysis.
+  - service dependency analysis.
+  - distributed context propagation.
+
+ º"... As on-the-ground microservice practitioners are quickly realizing, theº
+ º majority of operational problems that arise when moving to a distributedº
+ º architecture are ultimately grounded in two areas: networking andº
+ º observability. It is simply an orders of magnitude larger problem to networkº
+ º and debug a set of intertwined distributed services versus a singleº
+ º monolithic application..."º
+
+  Jaeger Log Data Architecture Schema:
+  (Based on OpenTracing)
+@[https://www.jaegertracing.io/docs/1.21/architecture/]
+@[https://github.com/opentracing/specification/blob/master/specification.md]
+
+  ºSPANº                    ºTRACEº:
+   (logical work-unit)       - data/execution path 
+   ----------------            through system components
+   - operation name            (sort of directed acyclic
+   - start time                 graph of spans).
+   - duration.
+   - Spans may be nested
+     and ordered to model 
+     causal relationships.
+
+     Unique ID → │A│
+     (Context)    └─│B│
+                  └─│C│─│D│
+                  └········│E│
+                   ^^^^^^^^
+                   barrier waiting for 
+                   │B│,│C│ results
+     
+
+     ········→ time line →··············· 
+                                          ┐
+     ├─────────────  SPAN A ────────────┤ │TRACE
+       ├──── SPAN B ───┤                  │
+       ├─ SPAN C ─┤                       │
+                  ├─ SPAN D ─┤            │
+                             ├─ SPAN E ─┤ │
+                                          ┘
+   
+   
+• Jaeger Components Schema:
+
+  BºDATA INPUTº
+    Application                             jaeger-collector
+    └→ App Instrumetation                ┌→ (Go Lang)
+       └→ OpenTracing API                ·  + memory-queue ·┐
+          └→ Jaeger-client ···→ Jaeger ··┘                  · 
+                                agent                       ·
+                              (Go lang)                     ·
+                                                            ·
+                                             Data Store  ←··┘
+                                            (Cassandra,
+                                             Elastic Search,
+                                             Kafka, Memory)
+                                                ^  ^
+                                                ·  ·
+  BºDATA QUERY (App. Monit)º                    ·  ·
+                                                ·  ·
+    Jaeger-UI    ←····→  jaeger-query ←·········┘  ·
+    (Web React)          (GO lang)                 ·
+     (Alt.1)                                       ·
+                                                   ·
+       Spark ······································┘
+     (Alt.2) 
+
+
+● DISRUPTOR:
+  <a href="http://lmax-exchange.github.io/disruptor/files/Disruptor-1.0.pdf">Disruptor</a>
+  <a xsmall href="http://prisconapoli.github.io/development/2015/08/01/Disruptor">See also</a>
+  <a href="https://lmax-exchange.github.io/disruptor/">lmax-exchange.github.com</a>
+
+  <a href="https://dzone.com/articles/when-disruptor-not-good-fit">When Disruptor is not good fit</a>
+
+
+● Solr (ElasticSearch Alternative)</span>[[{db_engine.search.solr,_doc_has.comparative,_PM.TODO]]
+@[http://lucene.apache.org/solr/]
+- blazing-fast, search platform built on Apache Lucene
+- Doesn't include analytics engine like ElasticSearch
+[[}]]
+
+● linux Kernel netconsole @ Facebook: monitoring at scale:
+@[http://www.serverwatch.com/server-news/linuxcon-how-facebook-monitors-hundreds-of-thousands-of-servers-with-netconsole.html]
+  """ ... Facebook had a system in the past for monitoring that used syslog-ng,
+   but it was less than 60 percent reliable.  In contrast, Owens stated
+   that 'netconsole' is highly scalable and can handle enormous log volume with 
+  greater than 99.99 percent reliability.  """
+
+  - https://www.kernel.org/doc/Documentation/networking/netconsole.txt
+    kernel module loggin kernel 'printk' messages over UDP.
+    Use cse: allow debugging like 'disk logging fails', 'serial consoles are impractical'.
+    
+    As a built-in (vs module),  'netconsole' initializes immediately 
+    after NIC cards and will bring up the specified interface 
+    as soon as possible. Earlier kernel panics are missed but most 
+    of the boot process is saved.
+
+  - What Facebook Looks for in Server Error Messages:
+    ... error messages that could indicate a broader server issue...
+
+    - "softlookup":  error message triggered when a work queue locks up a CPU for 20 seconds or more.
+      It's always a bug and something that should be fixed.
+
+    - page allocation failures: (hung tasks that can be triggered on severely overloaded boxes).
+
+    - filesystem errors: to help find issues in storage hardware.
+
+ - Owens has publicly posted the information on how to set up a netconsole-based monitoring environment.
+
+● FIVE CONSISTENCY MODELS natively supported by the Azure Cosmos DB SQL API [[{]]
+(SQL API is default API):
+- native support for wire protocol-compatible APIs for 
+  popular databases is also provided including
+ ºMongoDB, Cassandra, Gremlin, and Azure Table storageº.
+  RºWARN:º These databases don't offer precisely defined consistency
+    models or SLA-backed guarantees for consistency levels.
+    They typically provide only a subset of the five consistency
+    models offered by A.Cosmos DB.
+- For SQL API|Gremlin API|Table API default consistency level
+  configured on theºA.Cosmos DB accountºis used.
+
+• Cassandra vs Cosmos DB: 
+  Cassandra 4.x       Cosmos DB           Cosmos DB
+                      (multi-region)      (single region)
+  ONE, TWO, THREE     Consistent prefix   Consistent prefix
+  LOCAL_ONE           Consistent prefix   Consistent prefix
+  QUORUM, ALL, SERIAL Bounded stale.(def) Strong
+                      Strong in Priv.Prev
+  LOCAL_QUORUM        Bounded staleness   Strong
+  LOCAL_SERIAL        Bounded staleness   Strong
+
+• MongoDB 3.4 vs Cosmos DB
+
+MongoDB 3.4         Cosmos DB           Cosmos DB
+                    (multi-region)      (single region)
+Linearizable        Strong              Strong
+Majority            Bounded staleness   Strong
+Local               Consistent prefix   Consistent prefix
+[[}]]
+
+● (@[https://www.allthingsdistributed.com/2019/12/power-of-relationships.html])
+  "...Because developers ultimately just want to do graphs, you 
+   can choose to do fast Apache TinkerPop Gremlin traversals for
+   property graph or tuned SPARQL queries over RDF graphs..."
+
+

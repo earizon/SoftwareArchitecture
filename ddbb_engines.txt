@@ -1,0 +1,1077 @@
+keywords: API management,authentication authorization access,cache,cassandra,
+          cloud,consistency,data architecture,data integration,db engine,
+          distributed,elasticsearch,enterprise pattern,etcd,event stream,kafka,
+          log collect,low code,messaging,monitoring,multifactor authentication,
+          quality assurance,redis,serverless,service registry,storage,time series,
+          troubleshooting,wide column store,
+
+
+
+
+● EVENTUAL/STRONG CONSISTENCY MODELS  IN DISTRIBUTED DB : [[{db_engine.101,distributed,consensus,02_doc_has.comparative]]
+  CONTEXT: DATABASE WITH MULTIPLE REPLICAS:
+  
+  - REDUNDANCY OF DATA INTRODUCES RELIABILITY.
+  
+  - Replica N receives a write-request from external 
+    client and DDBB replication consensus need to discover
+    a STRATEGY TO PROPAGATE THE WRITE-REQUEST to the rest
+    of replicas to become consistent.
+  
+  - CONSISTENCY: It means that a READ-REQUEST for an data 
+    to any of the nodes should return the same data.
+  
+  - EVENTUAL CONSISTENCY: Data read by each node will become 
+    consistent EVENTUALLY in an defined or probabilistic time.
+    - Eventual Consistency offers LOW RESPONSE LATENCY for
+      writes-requests at the risk of returning stale data.
+    - STALE-DATA: Data read that is NOT yet consistent.
+  
+  - STRONG CONSISTENCY: 
+    - WRITE REQUESTS (and READ-REQUESTS) do NOT return until
+      all the new data for the latest WRITE-REQUEST has been
+      propagated to all nodes.
+      - Strong Consistency avoid state data responses at the
+        cost of higher latency.
+[[}]]
+
+[[{db_engine.101,02_doc_has.comparative]]
+● DB ENGINES TYPES
+  - DATA TOPOLOGY MODELS COMPARED: [[{db_engine.101,02_doc_has.diagram,02_doc_has.comparative]]
+    Different engine types are more/less friendly to different DATA TOPOLOGY MODELS and 
+    different data topologies are more/less friendly to different data storage/retrieval patterns.
+
+  - In the next chart each data-node (o,O) can internally be:
+    - structured (defined fields and field-size)
+    - unstructured
+
+    ┌─ LINEAR ────────────────────────────────────    ┌─ KEY─VALUE ─────────────────────────────────
+    | o -> o -> o -> o -> o -> o                      | o -- O 
+    |                                                 | o -- O        
+    |                                                 | o -- O        
+                                                      | ...           
+
+    ┌─ COLUMNAR DATA ────────────────────────────     ┌─ DIRECTED ACYCLIC GRAPH ─────────────────────
+    | o -- O O O O ... O                              | O→O→O...   
+    | o -- O O O O ... O                              |  ↘         
+    | o -- O O O O ... O                              |   O→O      
+    | ...                                             |    ↘       
+    |                                                 |   O→O      
+    |                                                 |    ↘       
+    |                                                 |     O      
+    
+    ┌── RELATIONAL-STRUCTURED ───────────────────     ┌─ GRAPH ─────────────────────────────────────
+    | Table1   Table2  Table3                         | O··>O<··┐        
+    |   O ··┐   O <·┐   O                             | ·   v   ·        
+    |   O   ·   O <···> O                             | · ┌ O   ·        
+    | O   └·> O   └·> O                               | · v     ·
+    | (Less powerful than Graph,                      | · O ···>O
+    | easier to mantain)                              | ·   ↘            
+                                                      | └···> O          
+
+ [[}]]
+
+  - See also: 
+  @[https://db-engines.com/]
+  @[https://db-engines.com/en/ranking]
+  @[https://dzone.com/articles/rant-there-is-no-nosql-data-storage-engine]
+
+● DB ENGINES TYPES: RDBMS  [[{db_engine.rdbm,data.analytics.sql,]]
+- support E-R data model.
+- all inserts in a table must match the table schema.
+  (vs dangerous schemaless noSQL engines).
+- row   : minimum insert unit in a table.
+- column: minimum update unit.
+- basic operations defined on tables|relations through SQL:
+  ================ 
+  - CRUD: CREATE/READ/UPDATE/DELETE
+  - algebra set ops: UNION|INTERSECT|DIFFERENCE
+  - subset selection defined by filters
+  - Projection of subset of table columns
+  - JOIN: combination of: [Cartesian_product,selection,projection]
+  - TX ACID control
+- Most widely used db engine.
+
+- Incomplete but still persistent list of implementation:
+  - PostgreSQL, through extensions support also other engine types like time-series or graphs
+  - Oracle
+  - MySQL (and MariaDB OOSS fork)
+  - http://myrocks.io
+    - network protocol compatible with MySQL
+    - Built on top of key-value RocksDB.
+    - Optimized for SSD/Memory.
+  - SQLite : C Embedded/Server SQL engine.
+    DQLite : DQLite stands for (d)istributed SQLite.
+  - H2: JVM embedded|server with disk
+        disk|RAM memory only ddbbs.
+  - TiDB:
+    - MySQL compatible
+    - RAFT-distributed
+    - "infinite" horizontal scalability [[{scalability}]]
+    - strong consistency
+    - HA
+  - Microsoft SQL Server
+  - IBM DB2
+  - Hive  (JAVA)
+    - WARN: No Foreign keys, NO ACID
+    - Eventual Consistency
+    - data warehouse software facilitates reading, writing, [[BigData]]
+      and managing large datasets residing in distributed 
+      storage using SQL.(Hadoop HDFS, S3...) with support for Spark.
+    - supports analysis of large datasets
+    - SQL-like DML and DDL statements
+    - JDBC, ODBC, Thrift
+
+  - SQL MUST-KNOWN "SUMMARY":
+    BEGINNER:                 INTERMEDIATE:                          ADVANCED:
+    ========================  ================================       =======================
+    · Types of SQL            · LIKE, AND/OR and DISTINCT            · JOINT ... UNIONS ...
+    · Table, Rows and Colums  · NULLs and Dates                      · OVER ... PARTITION BY ...
+    · SELECT ... FROM ...     · COUNT, SUM, AVG ...                  · STRUCT ... UNNEST ..
+        WHERE ...             · GROUP BY ... HAVING...               · Reguar Expresions
+        ORDER BY ...          · Alias, Sub-queries and WITH ...AS ..
+[[}]]
+
+● DB ENGINES TYPES: GRAPH DBMS [[{db_engine.graph_db,02_doc_has.comparative]]
+- Most general data modeling type. 
+- Represent data in graph structures of nodes (entities) and edges(relations).
+- Graph represent the most general topology. Any state of any real/mathematical model can be
+  represented as entities (graph-nodes) and relationship (graph-edges) among them.
+  - A graph can be seen as hyper-relational or as no SQL, depending on the usage/evolution 
+    of the data/graph.
+- RELATIONS ARE ARE FIRST CLASS CITIZENS (vs foreign keys in SQL ddbbs, 
+  "Relational DDBBs lack relationships, some queries are very easy, some
+   others require complex joins" ).
+- MODELING UNKNOWN OR HIGHLY EVOLVING SCHEMAS IS EASIER THAN IN SQL/RDBMs.
+  AND ARE RESILLIENT TO MODEL/SCHEMA CHANGES.
+- Properties should  be considered in graph DDBBs engine:
+  └ UNDERLYING STORAGE:
+    - native optimized graph storage  (Neo4j,...)
+    - Non native (serialization to relational/Document/key-value/...  ddbbs.
+  └ PROCESSING ENGINE:
+    * index-free adjacency: ("true graph ddbb"), connected  nodes  physically
+      "point"  to  each  other  in  the  database.
+      MUCH FASTER WHEN DOING GRAPH-LIKE QUERIES. Query performance           [[{02_doc_has.comparative,scalability]]
+      remains (aproximately) constant in "many-joins" scenarios, while RDBMs
+      degrades exponentially with JOINs. [[}]]
+      Time is proportional to the size of the path/s traversed by the query,
+      (vs subset of the overall table/s).
+      (usually) they DON'T provide indexes on all nodes.
+      - Direct access to nodes based on attribute values is not possible
+        or slower.
+    * NON-INDEX-FREE ADJACENCY: External indexes are used to link nodes.
+      - Lower memory use
+
+          Native |·Infi.Graph        ·OrientDB ·Neo4j
+                 |·Titan             ·Affinity ·*dex
+           ^^^^^ |
+           Graph |
+      Processing |                   ·Franz Inc
+           vvvvv |                   ·Allegro Graph
+                 |·FlockDB           ·HyperGraphDB
+                 └---------------------------------
+              non         ← Graph  →      Native
+              Native        Storage
+
+- Graph Engines can execute graph algorithms against large datasets. 
+  Example algorithms include:
+  - Idetify clusters or "main-nodes" in data.
+  - Answer "how many average relationships do node have"
+  - Find "paths" to get from one node to another.
+- Graph Engines can be independent of the underlying storage or not.
+  They can be classified by:
+  - in-memory/single machine (Cassovary,...)
+  - Distributed: Pegasys, Giraph, ... Most of the based on the white-paper
+    "PREGEL: A SYSTEM FRO LARGE-SCALE GRAPH PROCESSING" (2010 ACM)
+    ┌ https://dl.acm.org/doi/10.1145/1807167.1807184 ─────────────┐
+    │Many practical computing problems concern large graphs. ...  │
+    │billions of vertices, trillions of edges ... In this paper we│
+    │present a computational model suitable for this task. "      │
+    └─────────────────────────────────────────────────────────────┘
+
+- GraphQL ISO standard Work in place integrating the 
+  ideas from  openCypher (Neo4j contribution), PGQL, GSQL,
+  and G-CORE languages.
+  - @[https://www.gqlstandards.org/]
+- OpenCypher support:
+  - Neo4jDB        - Cypher for Spark/Gremin
+  - AgensGraph     - Mengraph
+  - RedisGraph     - inGraph
+  - SAPHANA Graph  - Cypher.PL
+
+- PRIMARY IMPLEMENTATIONS CLASSIFICATION OF GRAPH DB ENGINES  [[{02_doc_has.comparative]]
+  include PROPERTY GRAPHS (PG) and "triple store" graphs.
+  - PG resemble conventional data structures in an isolated
+    application or use case, whereas RDF are originally designed
+    to support interoperability and interchange across 
+    independently developed applications.
+  - both consisting of nodes/"vertices" and directed edges/"links". 
+  - Both allow key/value attributes for nodes.
+  └ GRAPHS-PROPERTY GRAPHS (PG):
+    - also allow key/value attribues for edges.
+    - no open standards exist for schema definition,
+      query languages, or data interchange formats. 
+  └ W3C RESOURCE DESCRIPTION FRAMEWORK (RDF):
+    - Node key/value properties treated as extra node-edges.
+      (techniques exists to express edge properties in RDF).
+    - graphs can be represented as edges or "triples":
+      edge triple = ( starting point, label    , end point)  or
+      edge triple = (subject        , predicate, object   )
+      (Also called "triple stores")
+    - RDF forms part of (a suite of) standardized W3C specs.
+      built on other web standards, collectively known as
+      SEMANTIC WEB, OR LINKED DATA including:
+      - schema languages (RDFS and OWL)
+      - declarative query language (SPARQL)
+      - serialization formats
+      - Supporting specifications:
+        - mapping RDBMs to RDF graphs
+      - standardized framework for inference
+        (ex, drawing conclusions from data)
+    - Example implmentation: Eclipse rdf4j: https://rdf4j.org/
+      OOSS modular Java framework for working with RDF data
+      parsing/storing/inferencing/querying of/over such data.
+      - easy-to-use API.
+      - can be connected to all leading RDF storage solutions.
+        with Two out-of-the-box RDF databases (in-memory and 
+        native store).
+      - connect with SPARQL endpoints to leverage the power
+        of Linked Data and Semantic Web.
+        with SPARQL 1.1 query and update language
+      - The framework offers a large scala of tools 
+        repositories using the exact same API as for local access.
+      - supports mainstream RDF file formats: [[{standards]]
+        - RDF/XML, Turtle, N-Triples, N-Quads, TriG and TriX,
+          JSON-LD(https://en.wikipedia.org/wiki/JSON-LD)[[}]]
+      - Used for example in semanticturkey:
+        http://semanticturkey.uniroma2.it/doc/dev/
+
+  - RDF(Triple stores) vs Property-Graphs:
+    @[https://www.youtube.com/watch?v=t1Mn178sEYg]
+  
+    RDF: w3c recomendation for data exchange.               LPG: Label Property Graph (Neo4j, ...)
+    ===========================================             ===========================================
+    · Developed in the "beginnings" of Web to add           · Developed in Sweden (2000 - 2007)
+      semantics to web.                                     · (e)fficient (graph native) storage
+    · Specialized RDF stores (triple/quad) stores           · (f)ast query and traversal
+      arises, also called "Semantic Graph Databases".       · (h)umane model: Close to the way we think [[{qa.UX]]
+                                                            · understand and reason about the world. [[}]]
+                                                            · LPG can also be used as an efficient storage 
+                                                              mechanism for RDF data.
+    
+    · Based on the notion of statement:                     · LPG focus on objects (vs RDF statements)
+      statement == triplet [subject,predicate,object]         
+      ej:                                                     ej:  
+      subject      predicate     object                       
+      =========    ==========   =======                       
+      ppl://ann ·· is a ········ person      ┐             ┌─ "There is a person that is described by 
+      ppl://ann ·· user ID is ·· @ann       ─┴·············┴─  her name: Ann, her user ID: @ann, and 
+                                                               unique ID: ppl://ann "  
+      ppl://ann ·· name is ····· Ann Smith  ················· "There is a person with a unique ID: ppl://dan"
+      ppl://dan ·· likes ······· ppl://ann  ················· "Dan likes Ann"
+     "...BASICALLY IT IS AN ATOMIC DECOMPOSITION OF 
+        THE DATA MODEL AROUND FACTS/CLAIMS"
+    
+    · Vertices:                                             · Vertices:
+      Every statement produces 2 vertices                     Unique ID + set of key-value pairs
+      - Some are uniquely identified by URIs: Resources     
+      - Some are property values: Literals.                 
+    · Edges:                                                · Edges:
+      Every statement produces an edge.                       Unique Id + set of key-value pairs
+      Uniquely identified by URIs.                          
+    · VERTICES OR EDGES HAVE NO INTERNAL STRUCTURE          · VERTICES AND EDGES DO HAVE INTERNAL STRUCTURE
+    
+    · Query Language: SparQL                                · Query Language: Cypher
+    
+      prefix  ms: <http://myschma.me/>
+      prefix rdf: <http://www ...  #> 
+    
+      SELECT ?who             ······························  MATCH (who)-[:LIKES]->(a:Person)
+      {                                                       WHERE a.name CONTAINS 'Ann'
+        ?a rdf:type ms:Person .                               RETURN who
+        ?a ms:name ?asName .
+        FILTER regex(?asName, 'Ann')
+        ?who ms:likes ?a .
+      }
+    
+    · RDF Stores (vs RDF model) is highly indexed,          · Native GraphDBs (Neo4j,...?) excel with highly
+      causing "JOIN" problems.                                dynamic datasets and transactions UC where 
+                                                              data integrity is key
+    
+    · RDF has no inference capabilities                     · Graph native can have inference capabilities
+      ºSemantics on RDF are just RULES called ONTOLOGIESº,    e.g.:
+      an  ºoptional layerºon top of RDF data.                  Philip owns a        Mercedes
+      """ ... They are difficult to debug and reasoning        Juan   is married to Mercedes 
+       with ontology languages is intractable/                
+       undecidable"""                                          The inference engine can deduce that 1st
+                                                               Mercedes is an instance of a car, and the
+                                                               2nd is an instance of a person
+[[}]]
+
+- Incomplete but still persistent list of implementations:
+  - Neo4j
+  - JanusGraph
+  - DataStax
+  - MarkLogi
+  - AGE: @[https://www.postgresql.org/about/news/2050/]
+    - multi-model graph database extension for PostgreSQL 
+    - Support for Subset of Cypher Expressions through
+      @[https://www.opencypher.org/]
+  - AWS Neptune
+  - Azure Cosmos DB
+  - Datastax Enterprise
+  - OrientDB
+  - ArangoDB
+
+- Incomplete but still persistent list of Graph Explotation Software:
+  - Visualization: Gephi, Cytoscape, LinkUrious
+  - APIs: Apache TinkerPop @[http://tinkerpop.apache.org/]
+    OOSS, vendor-agnostic, graph computing framework.
+    When a data system is TinkerPop-enabled, users are able
+    to model their domain as a graph and analyze that graph
+    using the Gremlin graph traversal language. 
+    ...Sometimes an application is best served by an in-memory, 
+    transactional graph database. Sometimes a multi-machine
+    distributed graph database will do the job or perhaps the
+    application requires both a distributed graph database for
+    real-time queries and, in parallel, a Big(Graph)Data processor
+    for batch analytics. 
+  - Processing Systems:
+    - Spark, Apache Giraph, Oracle Labs PGX,
+  - Storage:
+    - Hadoop, Neo4j, Apache HBase, Cassandra.
+
+• Queries Scalability Challenges for Graph Databases: [[{scalability]]
+@[https://dzone.com/articles/do-graph-databases-scale]             
+CONTEXT: 
+  - Vertices can have an arbitrary amount of edges 
+  - vertex1 -> edge -> vertex2 -> ... Paths can be  of arbitrary depth.
+  
+  - Query algorithms may include traversals, pattern matching,
+    shortest path, distributed graph processing like community
+    detection, connected components, or centrality but most of 
+    them have one thing in common: THE NATURE OF THE SUPERNODE
+    AND NETWORK HOP PROBLEM. 
+  
+- Challenge 1, Celebrity nodes:
+  node with unusually high amounts of incoming or outgoing edges. 
+  Options to minimize the impact include:
+  - Option 1: Splitting Up Supernodes in a large number of edges
+              by a certain attribute (country of followers, ...)
+  - Option 2: Vertex-Centric Indexes, storing information of an
+    edge together with information about the node. E.g:
+    - date/time : "when someone started to follow a supernode"
+    - follower's country: 
+    Such attributes might provide filtering needed to effectively
+    use a vertex-centric index.
+
+- Challenge 2, NETWORK "HOPs": (not solved by most graph databases).
+   On single instance ddbb, all data resides locally (probably in
+  main memory).  Lookups takes ~ 100ns.
+   In a sharding/cluster scenario, data during graph traversal
+  might reside on different machines. 
+  EVEN ON MODERN GBIT NETWORKS AND SERVERS BEING IN THE SAME RACK,
+  A LOOKUP OVER THE NETWORK IS AROUND 5000X MORE EXPENSIVE COMPARED
+  TO AN IN-MEMORY LOOKUP. 
+  DB Server 1 -> node -> edge -> node2 ->  ... -> node3 -> ...
+
+  Smarter Way to Approach the Problem :
+  - PRE-CONDITION: you already have some knowledge about the data
+    and customize sharding according to it. 
+  e.g. SmartGraph feature of ArangoDB can help in doing that. 
+[[}]]
+[[}]]
+
+● DB ENGINES TYPES:  KEY-VALUE DBMS [[{db_engine.key_value,02_doc_has.comparative]]
+- SIMPLEST form of DBMS (other than CSV-like systems 
+  that are mostly a low level storage pattern than a real
+  DB engine).
+- store pairs of [key, value].
+- Commonly use for caching (WARM: Remember that caching is ussually an 
+  antipattern that is difficult to implement properly, and not desired if 
+  not serving hundreds of thousands of users simultaneously).
+- HIGH PERFORMANCE.
+- not adequate for complex apps.
+- "value" is not ussually "big" (compared to wide-column DDBBs, ...),
+- designed for low-level software tasks (vs high-data-layer apps).
+- extended forms allows to sort by keys, enabling range-queries.
+- Can evolve to document stores and wide column stores.
+
+- Incomplete but still persistent list of implementations:
+  └ Redis: Cache/RAM-Memory oriented.
+  · - Not strong cluster consistency like etcd/Consul/Zookeeper.
+  · - Compared to etcd:              [[{02_doc_has.comparative]]
+  ·   - 'etcd' is designed with high availability and read-consistency 
+  ·     through node-failures in mind, being distributed by default
+  ·     focusing on the "quality of data".
+  ·   - redis is designed with scalability and fast in-memory 
+  ·     key-values search in mind.
+  ·   - etcd is persisted to disk by default. Redis is not.
+  ·     (but logs and snapshots are possible).
+  ·   - 'etcd' read performance is good for most purposes, but 
+  ·     1-2 orders of magnitude lower than redis. Write gap is 
+  ·     even bigger.
+  · - Compared to memcache:
+  ·   - redis allows to manage typed data (lists, hashes, ...)
+  ·     supporting lot of different programming patterns out of
+  ·     the box, while memcached need custom coding. [[}]]
+  · - Redisson JAVA lib provides for distributed Java objects and
+  ·   services (BitSet, BloomFilter, Set, SortedSet, Map,
+  ·   ConcurrentMap, List, Queue, Deque, BlockingQueue, 
+  ·   BlockingDeque, ReadWriteLock, Semaphore, Lock, AtomicLong,
+  ·   CountDownLatch, Publish / Subscribe, RemoteService, 
+  ·   ExecutorService, LiveObjectService, ScheduledExecutorService) 
+  ·   on top of Redis server!
+  └ RocksDB: (by Facebook)
+  · - "Real" data (vs Cache) storage.
+  · - built on earlier work on LevelDB
+  · - Core building block for fast key-value server.
+  · - Focus: storing data on flash drives.
+  · - It has a Log-Structured-Merge-Database (LSM) design with
+  ·   flexible tradeoffs between Write-Amplification-Factor (WAF),
+  ·   Read-Amplification-Factor (RAF) and Space-Amplification-Factor (SAF).
+  · - It has MULTI-THREADED COMPACTIONS, making it ESPECIALLY SUITABLE     [[{scalability,BigData,01_PM.low_code]]
+  ·   FOR STORING MULTIPLE TERABYTES OF DATA IN A SINGLE LOCAL DDBB.
+  ·   IT CAN BE USED FOR BIG-DATA PROCESSING ON SINGLE-NODE INFRASTRUCTURE. [[}]]
+  · - Used for example by Geth/Besu/... and other Ethereum clients
+  ·   to store Big public blockchains locally.
+  └ Amazon DynamoDB 
+  └ Memcached 
+  ·
+  └ GUAVA CACHE 
+  · - NON-DISTRIBUTED easy-to-use Java library for data caching
+  ·   https://github.com/google/guava/wiki/CachesExplained
+  · - Similar to ConcurrentMap, the most fundamental difference is that 
+  ·   ConcurrentMap persists all elements that are added to it until they
+  ·   are explicitly removed, while a Cache is generally configured to
+  ·   evict entries automatically. In some cases a LoadingCache can be
+  ·   useful even if it doesn't evict entries, due to its automatic
+  ·   cache loading.
+  └ HAZELCAST
+  · - Designed for caching.
+  · - Looks to be "deprecated in favor of Redis+Redisson JAVA lib.
+  · - Java JCache compliant.
+  - LevelDB ("Ethereum State"): Non distributed, with
+    focus in local-storage persistence.
+  - TiKV (Rust)
+    - TiKV provides both raw and ACID-compliant transactional key-value API.
+      - widely used as storage layer for other DDBB engines like:
+        - TiDB   : OOSS MySQL compatible NewSQL DDBB that supporting
+                   Hybrid Transactional and Analytical Processing (HTAP) workloads.
+        - Zetta  : OOSS NoSQL DDBB supporting Transaction+Cloud-Spanner like API.
+        - Tidis  : Distributed NoSQL DDBB, providing a Redis protocol API
+                   (string, list, hash, set, sorted set), written in Go.
+        - JuiceFS: OOSS POSIX FS based on TiKV and S3. [[{BigData}]]
+[[}]]
+
+● DB ENGINES TYPES: SEARCH DBMS [[{db_engine.search]]
+- Optimized fork:
+  - complex search expressions
+  - Full text search 
+  - reducing words to stem
+  - Ranking and grouping of results
+  - Geospatial search
+  - Distributed search for high
+    scalability
+- Incomplete but still persistent list of implementations:
+  - Apache Lucene: Powerful search java Library used as the base for
+                   powerful solutions.
+  
+  - Elasticsearch: Both are built on top of Lucene.       [[{02_doc_has.comparative]]
+    Solr           adding server, cluster and escalability features.
+                   - When compared, Elasticsearch is simpler to use 
+                     and integrates with Kibana graphics.
+                   - Solr has better documentation. [[}]]
+  - Splunk        
+  - MarkLogic
+  - Sphinx
+  - Eclipse Hawk:
+    @[projects.eclipse.org/projects/modeling.hawk]
+    heterogeneous model indexing framework:
+    - indexes collections of models
+      transparently and incrementally into
+      NoSQL DDBB, which can be queried
+      efficiently.
+    - can mirror EMF, UML or Modelio
+      models (among others) into a Neo4j or
+      OrientDB graph, that can be queried
+      with native languages, or Hawk ones.
+      Hawk will watch models and update
+      the graph incrementally on change.
+[[}]]
+
+● DB ENGINES TYPES: Time Series  [[{db_engine.timeseries,02_doc_has.comparative]]
+- designed to efficiently collect, store and query TS. 
+- Ex use-case:
+  'SELECT SENSOR1_CPU_FREQUENCY / SENSOR2_HEAT'
+  (join two time series based on the overlapping areas of time providing
+   a new time-serie).
+- Time/space constrained data can be of two basic types:
+  - Point in time/space
+  - Region in time/space
+
+- Incomplete but still persistent list of implementations:
+  └ Timescale.com: PostgreSQL variant optimized for Time Series.
+  ·   by modifying the insert path, execution engine, and query planner
+  ·   to "intelligently" process queries across chunks.
+  └ Greykite LinkedIn 
+  · - Opensourced in 2021, https://www.infoq.com/news/2021/06/greykite-open-sourced/ 
+  · - Built to be flexible, intuitive and fast.
+  · - LinkedIn team demonstrated that it performed 4xbetter than FB's prophet [[{02_doc_has.comparative]]
+  ·   providing more accurate results for 1-day and 7-day forecasts.[[}]]
+  · - LinkedIn use-cases were resource-planning, performance-management,
+  ·   optimization and ecosystem insight generation. More concretely, a 
+  ·   couple of scenarios in which it is used at LinkedIn:
+  ·   - To provision sufficient infrastructure to handle peak traffic.
+  ·   - To set business metric targets and track progress for operational success.
+  ·   - To optimize budget decisions by forecasting growth of various markets.
+  ·   - To understand which countries are recovering faster or slower 
+  ·     after a shock like the COVID-19 pandemic.
+  └ QuestDB:
+  · - https://questdb.io/
+  · - RelationalModel.
+  · - PostgresSQL wire protocol.
+  · - "Query 1.6B rows in millisecs" [[{scalability}]]
+  · - Relational Joins + Time-Series Joins
+  · - Unlimited Transaction Size.
+  · - JAVA Embedded.
+  · - Telegraf TCP/UDP
+  └ InfluxDB
+  └ Kdb+
+  └ Graphite. Simple system that will just:
+  · - Store numeric time series data
+  · - Render graphs of this data
+  · It will NOT:
+  · - collect data (Carbon needed)
+  · - render graphs (external apps exists)
+  └ RRDtool
+  └ Prometheus (https://prometheus.io/)
+  · - Designed just for last "days" monitoring data. [[{scalability]]
+  ·   scalates through sharding and federation
+  ·   See also: "Cortex" an horizontally scalable, 
+  ·   highly available, multi-tenant, long term
+  ·   storage for Prometheus. [[}]]
+  · - DevOps/Kubernetes friendly.
+  · - monitoring metrics analyzer and PromQL-alerting.
+  · - Highly dimensional data model.
+  ·   Time series are identified by a metric name
+  ·   and a set of key-value pairs.
+  · - stores all data as TIME SERIES:
+  ·   streams of timestamped values belonging to
+  ·   same metric and same set of labeled dimensions.
+  · - Multi-mode data visualization.
+  · - Grafana integration.
+  · - Built-in expression browser.
+  · - PromQL Query language allowing to select and 
+  ·   aggregate time-series data in real time.
+  ·   - result can either be shown as graph, tabular
+  ·     data or consumed by external HTTP API.
+  └ Uber M3
+  · www.infoq.com/news/2018/08/uber-metrics-m3
+  · - Large Scale Metrics Platform
+  ·   """... built to replace Graphite+Carbon cluster,
+  ·   and Nagios for alerting and Grafana for
+  ·   dashboarding due to issues like poor 
+  ·   resiliency/clustering, operational cost to expand
+  ·   the Carbon cluster, and lack of replication.."""
+  · - Features:
+  ·   - cluster management, aggregation, collection,
+  ·     storage management, a distributed TSDB
+  ·   - M3QL query language (more "powerful" than PromQL).
+  ·   - tagging of metrics.
+  ·   - local/remote integration similar to Prometheus [[{scalability]]
+  ·     Thanos extension providing, cross-cluster 
+  ·     federation, unlimited storage and global querying
+  ·     across clusters, works. [[}]]
+  ·   - query engine: single global view without
+  ·     cross region replication.
+  └ Redis TimeSeries:
+    https://redislabs.com/redis-enterprise/redis-time-series/
+    simplify Redis ussage for time-series use-cases like
+    IoT, stock prices, and telemetry.
+    - See also:
+      https://www.infoq.com/articles/redis-time-series-grafana-real-time-analytics/
+      How to Use Redis TimeSeries with Grafana for Real-time Analytics
+
+- See also: TS Popularity:
+@[https://www.techrepublic.com/article/why-time-series-databases-are-exploding-in-popularity/]
+[[}]]
+
+● DB ENGINES TYPES: CONFIGURATION&SERVICE REGISTRY/DISCOVERY [[{db_engine.service_registry,02_doc_has.comparative]]
+- Specialized key/value DBMS:
+- TWO PROCESSES MUST EXISTS:
+  - SERVICE REGISTRATION PROCESS storing final-app-service (host,port,...)
+  - SERVICE DISCOVERY PROCESS:
+    - let final-app-services query the data
+- other aspects to consider:
+  - auto-delete of non-available services
+  - Support for replicated services
+  - Remote API is provided
+
+- Incomplete but still persistent list of implementations:
+  └ ZOOKEEPER
+  · - originated from Hadoop ecosystem.
+  ·   now core part of most cluster based Apache projects 
+  ·   (hadoop, kafka, solr,...)
+  · - data-format similar to file system.
+  · - cluster mode.
+  · - Disadvantages: complex, JVM, big number of dependencies
+  · - Still used by kafka for config but plans exists to replace it.
+  · @[https://issues.apache.org/jira/browse/KAFKA-6598]
+  · @[https://cwiki.apache.org/confluence/display/KAFKA/KIP-500%3A+Replace+ZooKeeper+with+a+Self-Managed+Metadata+Quorum] - 2019-11-06 -
+  └ 'etcd':
+  · - lightwight (GoLang), distributed and VERSIONED key/value store.
+  · - DevOps (GoLang) friendly. 
+  · - HTTPv2/gRPC remote API.
+  · - BASED ON PREVIOUS EXPERIENCES WITH ZOOKEEPER.
+  · - hierarchical config (similar to UNIX /etc config files).
+  · - reliable data persistence
+  · - very good doc
+  · - @https://coreos.com/blog/introducing-zetcd]
+  · - See etcd vs Consul vs ZooKeeper vs NewSQL
+  ·   comparative at:
+  · @[https://etcd.io/docs/v3.4.0/learning/why/]
+  ·   and:
+  · @[https://loneidealist.wordpress.com/2017/07/12/apache-zookeeper-vs-etcd3/]
+  · Disadvantages:
+  · - needs to be combined with few
+  ·   third-party tools for  serv.discover:
+  ·   - etcd-registrator: keep updated  list of docker containers
+  ·   - etcd-registrator-confd: keep updated config files
+  ·   - ...
+  · - Core-component of Kubernetes for cluster configuration.
+  └ Consul:
+  · - strongly consistent datastore
+  · - multidatacenter gossip protocol for dynamic clusters
+  · - hierarchical key/value store
+  · - adds the notion of app-service (and app-service-data).
+  ·   - "watches" can be used for:
+  ·     - sending notifications of data changes
+  ·     - (HTTP, TTLs , custom) health checks and output-dependent
+  ·       commands.
+  · - embedded service discovery:
+  ·   no need to use third-party one
+  ·   (like etcd). Discovery includes:
+  ·   - node         health checks
+  ·   - app-services health checks
+  ·   - ...
+  · - Consul provides a built in framework for service discovery.
+  ·   (vs etcd basic key/value + custom code)
+  ·   - Clients just register services and perform discovery using
+  ·     the DNS or HTTP interface.
+  · - out of the box NATIVE SUPPORT FOR MULTIPLE DATACENTERS.
+  · - template-support for config files.
+  · - Web UI: display all services and nodes, monitor health checks,
+  ·   switch from one datacenter to another.
+  └ doozerd [[{01_PM.backlog}]]
+ - See also Comparision chart:
+   https://coreos.com/etcd/docs/latest/learning/why.html
+[[}]]
+
+● DB ENGINES TYPES: WIDE_COLUMN STORES [[{db_engine.wide_column.101,scalability]]
+ (also called extensible record stores)
+- "SHORT OF" TWO-DIMENSIONAL KEY-VALUE STORES.
+  where key set as well as value can be "huge"
+  (thousands of columns per value).
+- Wide Column Stores can scale to ten of thousands of nodes but  [[{BigData]]
+  CONSISTENCY IS MOSTLY EVENTUAL / OPTIMISTIC, optimized for 
+  bigdata and analytical processes. [[}]]
+  - column names and record keys ARE NOT FIXED ("schema-free").
+- not to be confused with column oriented storage of RDMS.
+  Last one is an internal concept for improving performance storing
+  table-data column-by-column vs record-by-record).
+
+- Incomplete but still persistent list of implementations:
+  └ CASSANDRA
+  · - SQL-like SELECT, DML and DDL statements (CQL)
+  · - HANDLE LARGE AMOUNTS OF DATA ACROSS FARMS OF COMMODITY SERVERS, 
+  ·   providing high availability with no single point of failure. (p2p)
+  · - Allows for different replication strategies (sync/async for
+  ·   slow-secure/fast-less-secure) cluster replication.
+  · - LOGICAL INFRASTRUCTURE SUPPORT FOR CLUSTERS SPANNING MULTIPLE [[{qa.HA]]
+  ·   DATACENTERS IN DIFFERENT CONTINENTS. [[}]]
+  · - INTEGRATED WITH SPARK, KAFKA, ELASTICSEARCH.
+  ·
+  └ PostgreSQL + cstore_fdw extension: 
+  · columnar store extension for analytics use cases where data is loaded
+  · in batches.  Cstore_fdw’s columnar nature delivers performance by only
+  · reading relevant data from disk. It may compress data by 6 to 10 times
+  · to reduce space requirements for data archive.
+  └ SCYLLA!!! ("Cassandra++"):
+  · - compatible with Cassandra (same CQL and Thrift protocols, and same [[{02_doc_has.comparative]]
+  ·   SSTable file formats) with  higher throughputs+lower latencies (10x).
+  · - C++14 (vs Cassandra Java) 
+  · - custom network management that minimizes resources bypassing 
+  ·   the Linux kernel. No system call is required to complete a
+  ·   network request. Everything happens in userspace. [[}]]
+  · - Seastar async lib replacing threads.
+  · - sharded design by node:
+  ·   - each CPU core handles a data-subset.
+  ·   - authors claim to achieve much better performance on modern 
+  ·     NUMA SMP archs, and to scale very well with the number of cores:
+  ·     - UP TO 2 MILLION REQ/SEC PER MACHINE [[{scalability}]]
+  └ HBASE: Apache alternative to Google BigTable
+  · Internally uses skip-lists:
+  └ CosmosDB: REF: Google 
+  └ GOOGLE SPANNER: (BigTable subtitution)
+  @[https://cloud.google.com/spanner/]
+    - Features: Schema, SQL ,Consistency ,Availability ,Scalability ,Replication
+[[}]]
+
+● DB ENGINES TYPES: DOCUMENT STORES [[{db_engine.document_store,02_doc_has.comparative]]
+- also called document-oriented DBMS.
+- schema-free:
+  - different records may have different columns
+  - values of individual columns can have dif. types
+- Columns can be multi-value.
+- Records can have a nested structure
+- Often use internal notations, mostly JSON.
+- features: secondary indexes in (JSON) objects
+
+- Incomplete but still persistent list of implementations:
+- MongoDB @[#mongo_summary]
+  - Amazon DynamoDB
+  - Couchbase
+  - Cosmos DB
+  - CouchDB:
+    Note from https://www.xplenty.com/blog/couchdb-vs-mongodb/
+    -  CouchDB prioritizes availability, MongoDB prioritizes consistency.[[{02_doc_has.comparative]]
+    - Reviews: MongoDB seems to have somewhat better reviews than CouchDB. [[}]]
+  - PouchDB (web/mobile, CouchDB like JS lib for Web/Mobile). [[{]]  #[pouchdb_summary]
+    [[db_engine.document_store.pouchdb,architecture.mobile]]
+    [[architecture.serverless,storage.cloud,storage.distributed,db_engine.101]]
+    @[https://pouchdb.com/]
+    - "...PouchDB is an open-source JavaScript database inspired by 
+      Apache CouchDB that is designed to run well within the browser.
+    - Designed to help web developers build applications that work as
+      well offline as they do online.
+       IT ENABLES APPLICATIONS TO STORE DATA LOCALLY WHILE OFFLINE, THEN 
+      SYNCHRONIZE IT WITH COUCHDB AND COMPATIBLE SERVERS WHEN THE 
+      APPLICATION IS BACK ONLINE, KEEPING THE USER'S DATA IN SYNC NO MATTER 
+      WHERE THEY NEXT LOGIN...  [[}]]
+[[}]]
+
+
+● DB ENGINES TYPES: DATA(LOG) COLLECT [[{db_engine.log_collect,02_doc_has.comparative]]
+- Incomplete but still persistent list of implementations:
+  └ FluentD "Improved" logstat (https://www.fluentd.org/)
+    - data collector for unified logging layer
+    - increasingly used Docker, GCP, and Elasticsearch communities           
+    - https://logz.io/blog/fluentd-logstash   
+      FluentD vs Logstash compared            
+    - FEATURES ------------------------------
+      - unify data collection and consumption for better understanding of data.       
+  └ LOGSTASH: (The "L" in ELK)
+  · - OS DATA COLLECTOR
+  ·   osquery.readthedocs.io/en/stable/ [[{01_PM.TODO}]]
+  · - LOW-LEVEL instrumentation framework with system analytics 
+  ·   and monitoring both performant and intuitive.
+  · - osquery exposes an OS as a high-performance DDBB [[{01_PM.TODO}]]
+  ·   https://medium.com/palantir/osquery-across-the-enterprise-3c3c9d13ec55
+  ·   SQL RDMS:
+  ·   - SQL tables represent running processes, loaded kernel  [[{monitoring.OS]]
+  ·     modules, open network connections, browser plugins,
+  ·     hardware events. [[}]]
+  · - FEATURES:
+  ·   - File Integrity Monitoring (FIM).
+  ·   - DNS
+  ·   @[https://github.com/tldr-pages/tldr/blob/master/pages/common/logstash.md]
+  └ PROMETHEUS NODE EXPORTER:
+    - https://github.com/prometheus/node_exporter
+  └ COLLECTD
+  └ Dynatrace OneAgent
+  └ Datadog agent
+  └ New Relic agent
+  └ Ganglia gmond
+  └ Flume
+  └ Scribe
+  └ Kafka: "... When compared to log-centric systems like Scribe or Flume, Kafka 
+    offers equally good performance, stronger durability guarantees due to 
+    replication, and much lower end-to-end latency. .." 
+    REF: http://kafka.apache.org/uses
+  └ Loki: [[{db_engine.log_collect.prometheus,computing.kubernetes,cloud]]
+    https://grafana.com/loki
+    - logging backend, optimized for Prometheus and Kubernetes
+    - optimized to search, visualize and explore logs natively in Grafana
+  - See also: Spring cloud Sleuth:
+  @[http://www.oficina24x7.com/JAVA/java_map.html#spring_cloud_summary]
+  Distributed tracing for Spring Cloud compatible with Zipkin, HTrace log-based 
+  (e.g. ELK) tracing.  [[}]]
+[[}]]
+
+● Logreduce IA filter: [[{db_engine.search,db_engine.timeseries,db_engine.log_collect]]
+                       [[qa,security.monitoring,aaa,security.ia,02_PM.TODO.0]]
+  https://opensource.com/article/18/9/quiet-log-noise-python-and-machine-learning
+  https://pypi.org/project/logreduce/
+  - Quiet log noise with Python and machine learning
+[[}]]
+
+[[db_engine.101}]]
+
+● tbls https://github.com/k1LoW/tbls  [[{01_PM.TODO.0]]
+  - CI-Friendly (golang == docker-friendly) tool for documenting DDBBs.
+  FEATURES:
+  - Diff database. 
+  - Lint a database
+  - Measure document coverage.
+  - Continuous Integration.
+  - Visual Representation of relations.
+  - Suports PostgreSQL, MySQL/MariaDB, SQLite, BigQuery, CloudSpanner, 
+    Redshift, MS SQL Server, Amazon DynamoDB, Snowflake, MongoDB, 
+[[}]]
+
+
+● Materialize: Stream 2 PSQL:[[{_PM.low_code,architecture.event_stream]]
+                             [[db_engine.rdbm,qa.documentation,01_PM.TODO]]
+@[https://github.com/MaterializeInc/materialize]
+- Streaming database for real-time applications, accepting input data from  
+  Kafka, CSV files, ... to query them using SQL.  [[{kafka}]]
+- ask questions about live data.
+- Refreshed answers in millisecs.
+- Designed to help interactively explore streaming data.
+- perform data warehousing analytics against live relational data.
+- increase the freshness and reduce the load of dashboards/monitoring tasks.
+- provide correct/consistent answers with minimal latency.
+  (vs approximate answers/eventual consistency).
+- recast SQL92 queries as dataflows.
+- Support for a large fraction of PostgreSQL, and are actively working 
+  to support builting PostgreSQL functions.
+
+● schemaspy.org:
+• SchemaSpy is generates database to HTML documentation, including 
+  Entity Relationship diagrams. 
+
+• BASIC USSAGE:
+
+  INPUT       PROCESSING          OUTPUT
+  =========   =============       =================
+  running  →  schemaspy         → html report with:
+  ddbb        (+graphviz)         - table/view/columns 
+              └────┬────┘         - constrains/routines summary and stats.
+                   ·              -ºE/R diagram.º
+                   ·              - Orphan tables.
+                   ·              -ºanomalies.º
+                   · 
+      ┌────────────┴─────────────────────┐
+      (JDK and graphviz pre-installed)
+      $ java -jar schemaspy-6.1.0.jar   \
+            -t pgsql                    \
+            -dp postgresjdb.jar         \
+            -h $DDBB_HOST               \
+            -p $DDBB_PORT               \
+            -u $DDBB_USER               \
+            -p $PASS                    \
+            -o $OUTPUT_HTML_REPORT_DIR   
+
+● SchemaCrawler [[{01_PM.TODO]]
+- "Unix friendly" generating mermaid diagram output. [[}]]
+[[}]]
+
+● dqlite.io:[[{db_engine.rdbm.sqlite,architecture.distributed,architecture.embedded]]
+• Dqlite ("distributed SQLite") extends SQLite across a cluster of machines, with
+  automatic failover and high-availability to keep your application running. It
+  uses C-Raft, an optimised Raft implementation in C, to gain high-performance
+  transactional consensus and fault tolerance while preserving SQlite's
+  outstanding efficiency and tiny footprint.
+[[}]]
+
+● Dragon dist.GraphDB@FB:[[{db_engine.graph_db,distributed,_PM.TODO]]
+@[https://engineering.fb.com/2016/03/18/data-infrastructure/dragon-a-distributed-graph-query-engine/]
+- Facebook Graph load: 
+ ºmillions of writes and billions of reads per secondº.
+ ºthe information you see can’t be prepared in advance.º
+
+- Facebook graph DB evolution:
+  memcached → MySQL → TAO → Dragon + TAO. 
+                      └┬┘
+              (T)he (A)ssociation (O)bjects Server
+              "RAM cache" of MySQL ,...
+
+- A typical photo upload creates ~20(edges) writes to MySQL cached in RAM via TAO.
+
+- Inverted indexing is a popular technique also used at Facebook.  e.g.:
+
+      123 : Likes : Shakira     Shakira: LikedBy: 123
+      222 : Likes : Shakira     Shakira: LikedBy: 222
+      333 : Likes : Shakira     Shakira: LikedBy: 333
+            └─┬─┘                        └──┬──┘
+           Direct                       Inverted
+            Index                        Index
+
+
+- indexing imply faster reads, slower writes, not used for small sets.
+  Dragon optimies using partial indexing (skip indexing for small sets).
+ ºThe combination of partial indexing techniques and a richer query language º
+ ºsupporting filter/orderby operator allows us to index a system roughly 150x º
+ ºlarger while serving 90 percent of queries from the cache.º
+
+- Dragon isºbacked by a demand-filled, in-process key-value storeº, updated in 
+  real time and eventually consistent. 
+- It uses a number of optimization techniques to conserve storage, improve 
+  locality, and execute queries in 1/2ms with high availability and consistency.
+- Dragon push down many complex queries closer to storage by profitting from
+  knowledge about the social graph data and user's behaviour.
+[[}]]
+
+● OWL:[[{db_engine.graph_db,db_engine.rdf,_PM.TODO]]
+@[https://en.wikipedia.org/wiki/Web_Ontology_Language]
+
+https://www.w3.org/wiki/Ontology_editors
+
+The Web Ontology Language (OWL) is a family of knowledge 
+representation languages for authoring ontologies. Ontologies are a 
+formal way to describe taxonomies and classification networks, 
+essentially defining the structure of knowledge for various domains: 
+the nouns representing classes of objects and the verbs representing 
+relations between the objects. Ontologies resemble class hierarchies 
+in object-oriented programming but there are several critical 
+differences. Class hierarchies are meant to represent structures used 
+in source code that evolve fairly slowly (typically monthly 
+revisions) whereas ontologies are meant to represent information on 
+the Internet and are expected to be evolving almost constantly. 
+Similarly, ontologies are typically far more flexible as they are 
+meant to represent information on the Internet coming from all sorts 
+of heterogeneous data sources. Class hierarchies on the other hand 
+are meant to be fairly static and rely on far less diverse and more 
+structured sources of data such as corporate databases.[1]
+
+
+http://owlgred.lumii.lv/
+
+
+https://www.cognitum.eu/Semantics/FluentEditor/  
+[[}]]
+
+● RocksDB:[[{db_engine.key_value,scalability.distributed]]
+@[https://raw.githubusercontent.com/facebook/rocksdb/gh-pages-old/intro.pdf]
+
+- Local (embedded in library with no network latency) key-value
+  DDBB designed for high-performance:
+- Prefer in order: RAM → SSD (focus or RocksDB) → HD → Network Storage
+- Optimized for server loads (multiple clients reading/writing).
+- BASED ON LEVELDB, BUT 10X FASTER FOR WRITES, thanks to
+  new architecture, index algorithm (bloom filters, ...)
+- C++ library with up-to-date java wrappers.
+
+- WHAT RocksDB IS NOT?
+  - Not distributed.
+  - No failover.
+  - Not highly available. data lost if machine breaks
+    (But highly available architectures can be made on top
+    of it adding consensus protocols ... and loosing performance).
+
+- keys and values are byte streams.
+
+- common operations are:
+  - Get(key)
+  - NewIterator()
+  - Put(key, val)
+  - Delete(key)
+  - SingleDelete(key).
+
+- support for multi-operational transactions, both optimistic|pessimistic mode. 
+- RocksDB has a Write Ahead Log (WAL):
+  - Puts stored in an in-memory buffer called the memtable as
+    well as optionally inserted into WAL. On restart, it re-processes all
+    the transactions that were recorded in the log.
+- Data Checksuming to detect corruptions for each SST file block.
+  A BLOCK, ONCE WRITTEN TO STORAGE, IS NEVER MODIFIED.
+
+- Use cases:
+  - "Many". Amongst others, it is used as core storage engine for 
+    Facebook's Dragon, probably one of the biggest Graph DB in production.
+
+● ZippyDB:  [[{distributed]]
+@[https://www.infoq.com/news/2021/09/facebook-zippydb/]
+@[https://engineering.fb.com/2021/08/06/-data/zippydb/]
+- By Facebook Engineering.
+- Internally it uses RocksDB on each node as "storage engine".
+- general-purpose biggest key-value store @ Facebook.
+- in production for more than six years.
+- It offers flexibility to applications in terms tunable
+  durability/consistency/availability/latency.
+- Use cases:
+  - metadata for distributed filesystems.
+  - counting events.
+  - app and/or product data.
+
+- A ZippyDB deployment (named "tier") consists of compute+storage resources [[{qa.HA]]
+  SPREAD ACROSS SEVERAL REGIONS WORLDWIDE. [[}]]
+- Each deployment hosts multiple use cases in  MULTI-TENANT FASHION.
+- ZippyDB splits the data belonging to a use case into shards. [[{scalability]]
+  - Depending on configuration, it replicates each shard across 
+    multiple regions for fault tolerance, USING EITHER PAXOS OR ASYNC REPLICATION.
+     - A subset of replicas per shard is part of a quorum group, where data
+       is synchronously replicated  (high durability and availability).
+     - The remaining replicas, if any, are configured as followers using
+       asynchronous replication, allow applications to have many in-region replicas
+       to support low-latency reads with relaxed consistency while keeping the
+       quorum size small for lower write latency. [[}]]
+[[}]]
+[[}]]
+
+● Apache Rya:[[{db_engine.graph.rdf.rya,big_data.spark]]
+@[https://searchdatamanagement.techtarget.com/news/252472464/Apache-Rya-matures-open-source-triple-store-database]
+· Started by Adina Crainiceanu, associate professor of computer science at
+  the U.S.  Naval Academy. Initial research paper published in 2012
+· scalable cloud-based RDF triple store that supports fast-and-easy access to 
+  data through SPARQL queries.
+  built on top of Apache Accumulo®. (MongoDB back-end also implemented). 
+· Rya uses novel storage methods, indexing schemes, and query 
+  processing techniques that scale to BILLIONS OF TRIPLES ACROSS [[{scalability,BigData]]
+  MULTIPLE NODES. [[}]]
+· Rya's users include U.S. Navy (autonomous drones,...). 
+[[}]]
+
+● etcd Summary [[{db_engine.service_registry.etcd,db_engine.101]]
+- "etcd" name refers to UNIX "/etc" folder and "d"istributed system.
+- It is designed as a general substrate for large scale distributed systems. 
+  These are SYSTEMS THAT WILL NEVER TOLERATE SPLIT-BRAIN OPERATION and are 
+  WILLING TO SACRIFICE AVAILABILITY TO ACHIEVE THIS END (blocking write/read
+  requests from clients while the etcd cluster is synchronized) .
+   metadata is stored in a consistent and fault-tolerant way.,providing
+  key-value storage with best of class stability and reliability.
+
+@[https://github.com/etcd-io/etcd]
+@[https://etcd.io/docs/v3.4.0/]
+
+@[https://etcd.io/docs/v3.4.0/learning/]
+- target: 99.999999% reliably store INFREQUENTLY UPDATED DATA 
+- reliable watch queries.
+- MULTIVERSION persistent key-value store.
+- inexpensive snapshots.
+- watch history events ("time travel queries").
+- key-value store is effectively immutable unless 
+  store is compacted to shed oldest versions.
+
+LOGICAL VIEW:
+- flat binary key space:
+  - lexically sorted index on byte string keys so that
+    RANGE QUERIES ARE INEXPENSIVE.
+- Each key/key-space maintains multiple revisions starting at ver.1
+- revisions are indexed as well.
+  RANGING OVER REVISIONS WITH WATCHERS IS EFFICIENT.
+- generation: key life-span, from creation to deletion.
+  1 key ←→ 1+ generation.
+
+PHYSICAL VIEW:
+- data stored as key-value pairs in a persistent b+tree.
+- KEY OF KEY-VALUE PAIR IS A 3-TUPLE (revision, sub,     type)
+                                                ^        ^
+                                                Unique   (opt)
+                                                key-ID   special key-type
+                                                in rev.  (deleted key,..)
+
+@[https://jepsen.io/analyses/etcd-3.4.3]
+- In our tests, etcd 3.4.3 lived up to its claims for key-value operations: WE
+  OBSERVED NOTHING BUT STRICT-SERIALIZABLE CONSISTENCY FOR READS, WRITES, AND 
+  EVEN MULTI-KEY TRANSACTIONS, DURING PROCESS PAUSES, CRASHES, CLOCK SKEW, 
+  NETWORK PARTITIONS, AND MEMBERSHIP CHANGES. STRICT-SERIALIZABLE BEHAVIOR WAS 
+  THE DEFAULT FOR KEY-VALUE OPERATIONS; PERFORMING READS WITH THE SERIALIZABLE 
+  FLAG ALLOWED STALE READS, AS DOCUMENTED.
+
+@[https://etcd.io/docs/v3.4.0/learning/design-client/]
+- etcd v3+ is fully committed to (HTTPv2)gRPC.
+  For example: v3 auth has connection based authentication, 
+  rather than v2's slower per-request authentication.
+[[}]]

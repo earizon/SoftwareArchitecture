@@ -1,0 +1,115 @@
+Elastic Search ELK:
+● Elastic Search (db Engine) Summary: [[{db_engine.log_collect,elk,elk.logstash,elk.kibana,db_engine.search]]
+- ElasticSearch cluster solutions in practice means: 
+  - Deploy dozens of machines/containers.
+  - Server tuning
+  - mapping writing: i.e., - deciding how the data is:
+    - tokenized
+    - analyzed
+    - indexed
+    depending of user's requirements, internal limitations, and 
+    available hardware resources.
+
+- Elasticsearch is the central piece of ELK (Elastic Search, Logstash, and Kibana)
+- developed and maintained by Elastic.
+- Elasticsearch:
+  - Add clustering and enterprise features on top of the Apache Lucene Library.
+  - Originally designed for text-search indexation. 
+    New versions can be used as a general data indexing solution.
+    Extracted from: @[https://docs.sonarqube.org/latest/requirements/requirements/]
+    """ ...the "data" folder houses the Elasticsearch indices on which a huge amount
+        of I/O will be done when the server is up and running. Great read ⅋ write
+        hard drive performance will therefore have a great impact on the overall
+        server performance.
+    """
+
+● Cerebro: ELK admin GUI: [[{elk,01_PM.low_code,qa,troubleshooting,_PM.TODO]]
+@[https://www.redhat.com/sysadmin/cerebro-webui-elk-cluster]
+- OOSS (MIT License) elasticsearch web admin tool built using Scala,
+  Play Framework, AngularJS, and Bootstrap.
+- Elasticsearch comes as a set of blocks, and you—as a designer - are supposed
+  to glue them together. Yet, the way the software comes out of the box does not
+  cover everything. So, to me, it was not easy to see the cluster's heartbeat
+  all in one place. I needed something to give me an overview as well as allow me
+  to take action on basic things.
+  I wanted to introduce you to a helpful piece of software I found: Cerebro.
+[[}]]
+
+
+● Logstash (Collector) [[{]elk.logstash,data.collection,_PM.TODO]
+- pipeline to ingest/transform/load logs  into a store like Elastic Search
+  (It is common to replace Logstash with Fluentd)
+
+- https://github.com/logstash-plugins (extend Logstash's functionality).
+  - logstash-codec-protobuf  parsing Protobuf messages
+  - logstash-integration-kafka
+  - logstash-filter-elasticsearch
+  - amazon-s3-storage
+  - logstash-codec-csv
+  - ...
+
+- Logstash Alternatives: [[doc_has.comparative]]
+  - Graylog:
+    - log management tool based on Java, ElasticSearch and MongoDB.
+       Graylog can be used to collect, index and analyze 
+       any server log from a centralized location or distributed location. We can 
+       easily monitor any unusual activity for debugging applications and logs using 
+       Graylog. Graylog provides a powerful query language, alerting abilities, a 
+       processing pipeline for data transformation and much more. We also can extend 
+       the functionality of Graylog through a REST API and Add-ons.
+      - gaining popularity in the Go community with
+        the introduction of the Graylog Collector Sidecar
+        written in Go.
+      - ... it still lags far behind the ELK stack.
+      - Composed  under the hood of:
+        - Elasticsearch
+        - MongoDB
+        - Graylog Server.
+      - comes with alerting built into the open source version
+        and streaming, message rewriting, geolocation, ....
+      - Ex:
+      @[https://www.howtoforge.com/how-to-monitor-log-files-with-graylog-v31-on-debian-10/]
+
+  - Fluentd: It is not a global log aggregation system but a local one.
+    -  Adopted by the CNCF as Incubating project.
+    -  Recommended by AWS and Google Cloud.
+    -  Common replacement for Logstash
+        - It acts as a local aggregator to collect all node logs and send them off to central
+          storage systems.
+    -  500+ plugins for  quick and easy integrations with 
+       different data input/outputs.                      
+    -  common choice in Kubernetes environments due to: 
+       - low memory requirements (tens of megabytes)    
+         (each pod has a Fluentd sidecar)               
+       - high throughput.                               
+
+● Kibana (ELK UI) Summary: [[{elk.kibana,_doc_has.comparative,_PM.TODO]]
+- Analytical UI results extracted from ElasticSearch.
+- Kibana Alternatives:
+  - Grafana: lower level UI for infrastructure data visualization.
+             Directly can inject data from many sources.
+             Kibana must use logstash to inject from non-elasticsearch sources.
+  
+  - Tableau: Very simple to  use and ability to produce interactive visualizations.
+             - well suited to handling the huge and very fast-changing datasets 
+             - integrates with Hadoop, Amazon AWS, My SQL, SAP, Teradata, ....
+  - Qlikview: Tableau’s biggest competitor.
+  - FusionCharts: non free JavaScript-based charting and visualization package 
+                  90+ different chart types, 
+                  rather than having to start each new visualization from scratch, users
+                  can pick from "live" example templates.
+  - Highcharts:  non free. (It can be used freely as a trial, non-commercial or personal use).
+  - Datawrapper: increasingly popular choice to present charts and statistics.
+                 - simple, clear interface 
+                 - very easy to upload csv data and create straightforward charts, also maps,
+                   ...
+  - Plotly    : Plotly enables more complex and sophisticated visualizations, 
+                -  Integrats with analytics-oriented programming languages such as Python, R and Matlab. 
+                -  built on top of the open source d3.js.
+                -  Free/Non free licence.
+                -  support for APIs such as Salesforce.
+  
+  - Sisense    : full stack analytics platform but its visualization capabilities.
+                 simple-to-use drag and drop interface.
+                 Dashboards can then be shared across organizations.
+[[}]]

@@ -1,0 +1,349 @@
+INTERPLANETARY FILE SYSTEM (IPFS) [[{ipfs]]
+
+REF: https://blog.infura.io/post/an-introduction-to-ipfs
+
+- IPFS started in 2015 by Protocol Labs.
+- IPFS is the sum of: 
+  └ P2P-swarm protocol
+  · - transport layer agnostic: TCP, uTP, UDT, QUIC, TOR, even Bluetooth!!!.
+  · - IPFS rules determine how data move around on the network, in a similar 
+  ·   way to Kademlia (the  p2p distributed hash-table of BitTorrent protocol). 
+  · - to access a given object, IPFS will ask the entire network,
+  ·   "does anyone have the data that corresponds to this hash?"
+  ·   Then a node containing the corresponding hash will return the data.
+  ·
+  └  Global Merkle-DAG (Directed Acyclic Graph) of Objects
+        Merkle => hashes are cryptographically secure to collision 
+                  The probability for 2 objects with different Data
+                  to generate the same hash is 1 in trillions. 
+   
+     IPFS OBJECT:     
+     ──────────────── 
+     [ Data, Link[] ]    
+       └─┬─┘ └─┬┘
+         │     └···· [ Name, Hash-pointer, cumulative-size of linked IPFS object ]
+         │
+         └·········· blob of unstructured binary data of size < 256 kB
+
+   The IPFS-OBJECT IS CONTENT ADDRESSABLE:
+   Content-ID == cryptrographically-secure-hash-of(Data)
+   e.g Hash: "QmVtYjNij3KeyGmcgg7yVXWskLaBtov3UYL9pgcGK3MCWu",
+              ├┘
+              └ all hashes begin with "Qm" prefix that when 
+                base58-decoded to bytes translates to:
+                byte0: 0x12 => SHA256-hash-function  
+                byte1: 0x20 => 32 bytes hash-length
+                (In a future different hash-functions/lengths could be added)
+
+
+• IMPLEMENTING FILE-SYSTEMS ON TOP OF IPFS:
+  ========================================
+  - file name is NOT part of the IPFS object.
+    Path names will be the result of concatenating link.name + link.name + ...
+  - Two files with different names and the same content will map 
+    to a single IPFS object with ID == hash-of(content)
+
+  - SMALL FILES(< 256 kB) are directly mapped to a single IPFS object
+    whose data is file content (plus a small header and footer) and 
+    an empty array o links.
+
+    $ ipfs object get ${HASH_OF_SMALL_FILE}                    # Dump full object as JSON
+    { "Data": "\u0008\u0002\u0012\rHello World!\n\u0018\r",
+               └··IPFS header ····┘              └─IPFS─┘
+      "Links": []                                  footer 
+    }
+
+  - LARGE FILES(< 256 kB) are mapped to "a list_of_links" "pointing" to file-chunks(< 256kB), 
+    with each link having an empty-string name and with a minimal data specifying that
+    this object represents a large file.
+
+    $ ipfs object get ${HASH_OF_LARGE_FILE}                    # Dump full object as JSON
+    { 
+      "Data": "\u0008\u0002\u0018* \u0010 \u0010 \n",  <- IPFS metadata marking object as Large file 
+      "Links": [
+        {"Name": "", "Hash": "QmYS...", "Size": 262158}, <- link to chunk0
+        {"Name": "", "Hash": "QmQe...", "Size": 262158}, <- link to chunk1
+        ...                                                 ...
+      ]
+    }
+
+  - DIRECTORY STRUCTURES
+    Represented by a list-of-links to IPFS-objects representing files|directories.
+    names-of-the-link == names-of-files|directories
+
+    NOTE: more elaborated versioned file systems can be implemented easely by
+          following the Git approach for commits, where acommit object has 1+
+          links to parent commits and on extra link to a "tree" object pointing
+          to the file-system "root" of the current commit. 
+          Blockchains can naturally fit as IPFS implementations.
+
+
+● ipfs.io (go implementation) USAGE: (REF https://ipfs.io/docs/commands/) [[{]]
+
+  ~/.ipfs  <- Default path for IPFS repository if $IPFS_PATH Env Var is undefined.0
+
+  $ ipfs [OPTION FLAGS] $COMMAND ...
+
+  ● OPTIONS FLAGS:
+    --config path_to_config_file
+    --debug  bool
+    --help   (ipfs $subcmd --help for  subcmd info)
+    --local  bool (true: run locally, vs using daemon)
+    --api    $API (def.: /ip4/127.0.0.1/tcp/5001)
+  
+  ● BASIC COMMANDS                                       ● ADVANCED COMMANDS
+    init          Initialize ipfs local configuration      daemon        Start daemon
+    add path_to_file (Add file to IPFS)                    mount         Mount read-only mountpoint
+    cat "ref"     Show IPFS object data                    resolve       Resolve any type of name
+    get "ref"     Download IPFS objects                    name          Publish+resolve IPNS names
+    ls "ref"      List links from an object                key           Create and list IPNS name keypairs
+    refs "ref"    List hashes of links from an object      dns           Resolve DNS links
+                                                           pin           Pin objects to local storage
+  ● DATA STRUCTURE COMMANDS                                repo          Manipulate the IPFS repository
+    block         Interact with raw blocks in datastore    stats         Various operational stats
+    object        Interact with raw dag nodes              filestore     Manage the filestore (experimental)
+    files         Interact UNIX-like with objects
+    dag           Interact with IPLD documents 
+                  (experimental)
+  
+  ● (P2P) NETWORK COMMANDS                               ● TOOL COMMANDS
+    id            Show IPFS peers info                     config        Manage configuration
+    bootstrap     Add|remove bootstrap peers               version       Show IPFS version information
+    swarm         Manage connections to p2p network        update        Download+apply go-ipfs updates
+    dht           Query the DHT for values or peers        commands      List all available commands
+    ping          Measure latency-of-connection
+    diag          Print diagnostics
+ 
+[[}]] 
+
+● IPFS: "file Pinning" HOW-TO: [[{]]
+  https://docs.ipfs.tech/how-to/pin-files/
+
+  IPFS semantics (ipfs cat, ipfs get,...) makes object looks like "local"
+  with no need for intermediate step "retrieve this file from remote server".
+
+  Pinning tell IPFS to always keep a given object in well-defined node (localhost,...).
+  (vs just caching files locally for a time that will be garbage-collected at random). 
+
+  Objects added through ipfs add are PINNED RECURSIVELY BY DEFAULT. 
+
+  $ echo "ipfs rocks" > foo    
+  $ ipfs add foo               
+  > added QmRTV3h1jLcA... foo
+
+  $ ipfs pin ls --type=all       <- list all pinned objects in local storage.
+  > QmQPeNsJ... recursive           --type := all | recursive | direct | indirect
+  > QmRTV3h1... recursive
+  > QmQy6xmJ... indirect
+  > ...
+
+  $ ipfs pin rm $foo_hash        <-  unpin target object.
+  > unpinned QmRTV3h1j...
+
+  Three kinds of pins:
+  - Direct    pins: pin just a single block (and no others in relation to it).
+  - Recursive pins: pin a given block and all of its children.
+  - Indirect  pins: Pins result of a given block's parent being pinned recursively.
+
+  Pinned objects cannot  garbage-collected with '$ ipfs repo gc'
+[[}]]
+
+● Private IPFS Cluster  How-To: [[{]]
+REF: https://labs.eleks.com/2019/03/ipfs-network-data-replication.html
+     By Mykhailo Borysov, ELEKS Research and Development Manager
+
+- Private: only peers with shared SWARM KEY will have access.
+  - Each node specifies which other nodes it will connect to
+- Cluster: Provides data replication. (the other alternative for Data Replication is Filecoin).
+  In practice an IPFS-Cluster is the sum of:
+  - IPFS daemons.
+  - ipfs-cluster-ctl (CLI): manage nodes and data among the cluster, 
+    allocating, replicating and tracks pins across the cluster of IPFS daemons
+    using a LEADER-BASED CONSENSUS ALGORITHM RAFT TO COORDINATE STORAGE OF A PINSET,
+    distributing the set of data 
+  - ipfs-cluster-service application (different to the IPFS daemon) 
+    mostly used to initialise cluster peer and run its daemon.
+    across the participating nodes. 
+    WARN: The IPFS-Cluster daemon depends on IPFS daemon and should be started afterwards.
+
+    IPFS daemon                    IPFS-CLUSTER daemon
+    ===========                    ===================
+    4001 : Peer communication      9094 – HTTP API endpoint
+    5001 : API server              9095 – IPFS proxy endpoint
+    8080 : Gateway server          9096 – Cluster swarm (communication
+                                          between cluster nodes)
+
+
+   192.168.10.1 <- VM/Node0: Bootstrap Node
+   192.168.10.2 <- VM/Node1: 
+   192.168.10.3 <- VM/Node2: 
+
+PRESETUP) 
+- Go installed. (GOROOT, GOPATH, PATH)
+- latest version of go-ipfs installed (or compiled with Go)
+
+NEXT) install the Swarm key generation utility:
+   $ go get -u \                                    <- install package
+     github.com/Kubuxu/go-ipfs-swarm-key-gen/ipfs-swarm-key-gen
+   $ ipfs-swarm-key-gen & > ~/swarm.key             <- Generate key 
+   $ scp ~/swarm.key "userXX"@node{0,1,2}:~/.ipfs   <- Copy to all nodes
+   $ ipfs bootstrap rm -all                         <- REMOVE default bootstrap entries
+                                                       (in all nodes)
+
+   $ BOOTSTRAP_HASH="/ip4/${BOOTSTRAP_NODE_IP}/tcp/4001"    
+   $ BOOTSTRAP_HASH="${BOOTSTRAP_HASH}/ipfs"
+   $ BOOTSTRAP_HASH="${BOOTSTRAP_HASH}/${BOOSTRAP_PEER_ID}   generated through '$ ipfs init'  
+                                       └·················┴─ ('$ ipfs id' @ boostrap node) 
+
+   $ ipfs bootstrap add ${BOOTSTRAP_HASH}           <- Add to each node (including bootstrap 
+                                                       node itself)
+
+   $ export LIBP2P_FORCE_PNET=1                     <- FORCE PRIVATE MODE
+
+   $ edit ~/.ipfs/config:
+    "Addresses": {
+    - "API": "/ip4/127.0.0.1/tcp/5001",
+    + "API": "/ip4/192.168.10.1/tcp/5001",
+      "Announce": [],
+    - "Gateway": "/ip4/127.0.0.1/tcp/8080",
+    + "Gateway": "/ip4/192.168.10.1/tcp/8080",
+    + "Swarm": [
+    +   "/ip4/0.0.0.0/tcp/4001",
+    +   "/ip6/::/tcp/4001"
+    + ]
+    },
+
+   $ ipfs daemon                                   <- Finally, on each node, start the ipfs daemon
+   $ ipfs swarm peers  
+
+   TEST SETUP:
+   NODE 0:
+   $ echo "hello IPFS" > test.txt                                
+   QmZU...                                 Check at node 1/2/... like:
+   $ ipfs add file.txt                     $ ipfs cat QmZU...    
+                                           WARN: at this point content is just in NODE 0, 
+                                                 NOT YET REPLICATED, but accesible to node1/2/...
+
+   WARN: CHECK THAT FILE IS NOT ACCESIBLE IN A PUBLIC GATEWAY
+         https://ipfs.github.io/public-gateway-checker
+
+
+NEXT) Systemd integration:
+    ┌─ /etc/systemd/system/ipfs.service ──────────────
+    │ [Unit]
+    │ Description=IPFS Daemon
+    │ After=syslog.target network.target remote-fs.target nss-lookup.target
+    │ [Service]
+    │ Type=simple
+    │ ExecStart=/usr/local/bin/ipfs daemon --enable-namesys-pubsub
+    │ User=root
+    │ [Install]
+    │ WantedBy=multi-user.target
+    └─────────────────────────────────────────────────
+    $ sudo systemctl daemon-reload
+    $ sudo systemctl enable ipfs
+    $ sudo systemctl start ipfs
+    $ sudo systemctl status ipfs
+
+───────────────────────────────────────────────
+── SETUP IPFS-CLUSTER FOR DATA REPLICATION ────
+───────────────────────────────────────────────
+   
+  NOTE: There are two ways how to organize IPFS cluster:
+  1st) set a fixed peerset  : It will not be possible to "grow" the cluster.
+  2nd) set 1+bootstrap nodes: 
+
+    $ git clone \                                 <- Install from source  
+      https://github.com/ipfs/ipfs-cluster.git \     (alternatively dockerize, ...)
+      $GOPATH/src/github.com/ipfs/ipfs-cluster       Repeat in all nodes.
+    $ cd $GOPATH/src/github.com/ipfs/ipfs-cluster
+    $ make install
+    $ ipfs-cluster-service --version              <- Check installation is "OK"
+    $ ipfs-cluster-ctl --version
+
+    $ export CLUSTER_SECRET=$(                    <- Generate and set up 'CLUSTER_SECRET' ENV.VAR
+       od -vN 32 -An -tx1 /dev/urandom | \           Output will be similar to:
+       tr -d ' \n'                                   > 98eb46e1c56fdba420ec947512b8836d↲
+      )                                                1e6b46b38346ab8a78015b98244038f7
+                                                     copy it to all nodes (in ~/.bashrc, ...)
+                                                     ┌ KEY-POINT: Sharing the CLUSTER_SECRET ──┐
+                                                     │ allow peers to understand that they are │
+                                                     │ part of one IPFS-Cluster.               │
+                                                     └─────────────────────────────────────────┘
+
+    $ cluster-service init                        <- Init the cluster  (@node1/2/...
+    $ cluster-service daemon                      <- Start the cluster (@node1/2/...)
+    > ...IPFS Cluster is ready cluster.go:461        WARN: ipfs daemon must be running properly
+    > ipfs-cluster-service daemon 
+
+    $ ipfs-cluster-service init                   <- Bootstrap Node0
+    $ ipfs-cluster-service daemon --bootstrap     <- Bootstrap Node0
+    > /ip4/192.168.10.1/tcp/9096/↲
+      ipfs/QmZjSoXU...                            <- QmZ.. is the IPFS-Cluster peer ID
+                                                                 (vs IPFS peer ID)
+                                                     Fetch current value like:
+                                                     $ ipfs-cluster-service id 
+
+    $ ipfs-cluster-ctl peers ls                   <- check that we have two peers in the cluster.
+    > node1 & > ipfs-cluster-ctl peers ls
+    > QmYFYwnFUkjFhJcSJJGN72wwedZnpQQ4aNpAtPZt8g5fCd | Sees 1 other peers
+    > Addresses:
+    > - /ip4/127.0.0.1/tcp/10096/ipfs/QmYFYwnFUkjFhJcSJJGN72wwedZnpQQ4aNpAtPZt8g5fCd
+    > - /ip4/192.168.1.3/tcp/10096/ipfs/QmYFYwnFUkjFhJcSJJGN72wwedZnpQQ4aNpAtPZt8g5fCd
+    > IPFS: Qmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    > - /ip4/127.0.0.1/tcp/4001/ipfs/Qmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    > - /ip4/192.168.1.3/tcp/4001/ipfs/Qmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    > QmZjSoXUQgJ9tutP1rXjjNYwTrRM9QPhmD9GHVjbtgWxEn | Sees 1 other peers
+    > Addresses:
+    > - /ip4/127.0.0.1/tcp/9096/ipfs/QmZjSoXUQgJ9tutP1rXjjNYwTrRM9QPhmD9GHVjbtgWxEn
+    > - /ip4/192.168.1.2/tcp/9096/ipfs/QmZjSoXUQgJ9tutP1rXjjNYwTrRM9QPhmD9GHVjbtgWxEn
+    > IPFS: Qmbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+    > - /ip4/127.0.0.1/tcp/4001/ipfs/Qmbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+    > - /ip4/192.168.1.2/tcp/4001/ipfs/Qmbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+
+    NEXT) Systemd integration:
+    ┌ /etc/systemd/system/ipfs-cluster.service ──
+    │ [Unit]
+    │ Description=IPFS─Cluster Daemon
+    │ Requires=ipfs
+    │ After=syslog.target network.target remote-fs.target nss-lookup.target ipfs
+    │ [Service]
+    │ Type=simple
+    │ ExecStart=/home/ubuntu/gopath/bin/ipfs-cluster-service daemon
+    │ User=root
+    │ [Install]
+    │ WantedBy=multi-user.target
+    └─────────────────────────────────────────────
+    $ sudo systemctl daemon-reload 
+    $ sudo systemctl enable ipfs-cluster 
+    $ sudo systemctl start ipfs-cluster 
+    $ sudo systemctl status ipfs-cluster 
+
+NEXT) TESTING DATA-REPLICATION: 
+    $ ipfs-cluster-ctl add myfile.txt 
+    $ ipfs-cluster-ctl status CID
+    ( You should see that this file has been PINNED among all cluster nodes)
+[[}]]
+
+● Infura IPFS IaaS: [[{0_PM.low_code,storage.scalability,]]
+  - 74 million unique objects
+  - 4.5+TB of data transfer per day (as of 2020-09)
+
+  $ ipfs object get QmarHSr9aSNaPSR6G9KFPbuLV9aEqJfTk1y9B8pdwqK4Rq
+  {"Data": "Hello World!",
+   "Links": [
+    { "Name": "AnotherName",
+      "Hash": "QmVtYjNij3KeyGmcgg7yVXWskLaBtov3UYL9pgcGK3MCWu",
+      "Size": 18},
+    {"Name": "SomeName",
+     "Hash": "QmbUSy8HCn8J4TMDRRdxCbK2uCCtkQyZtY6XYv3y7kLgDC",
+     "Size": 58}],
+  }
+[[}]]
+
+
+● TODO: 
+  https://docs.ipfs.tech/concepts/file-systems/#mutable-file-system-mfs
+  https://docs.ipfs.tech/concepts/file-systems/#unix-file-system-unixfs
+  https://nft.storage/
+[[ipfs}]]

@@ -1,0 +1,44 @@
+● csvkit: [[{db_engine.wide_column,_PM.low_code]]
+• csvkit: suite of command-line tools for converting to and working with CSV.
+• By default, it sniffs CSV formats to deduces whether commas/tabs/spaces 
+  delimit fields, performs type inference (converts text to numbers, dates,
+  booleans, etc.). 
+  The inference system can be tunned.
+
+ $º$ in2csv data.xls ˃ data.csv   º ← Convert Excel → CSV
+                                   
+ $º$ in2csv data.json ˃ data.csv  º ← Convert JSON → CSV
+                                   
+ $º$ csvcut -n data.csv           º ← Print column names
+                                   
+ $º$ csvcut -c col_a,col_c \      º ← Select a subset of columns
+ $º    data.csv ˃ new.csv         º
+                                   
+ $º$ csvcut -c col_c,col_a \      º ← Reorder cols:
+ $º    data.csv ˃ new.csv         º
+                                   
+ $º$ csvgrep -c phone_number \    º ← Find rows with matching cells:
+ $º    -r "555-555-\d{4}" \       º
+ $º    data.csv ˃ new.csv         º
+                                   
+ $º$ csvjson data.csv ˃ data.json º ← Convert to JSON
+                                   
+ $º$ csvstat data.csv             º ← Generate summary statistics
+                                   
+ $º$ SQL=""                       º
+ $º$ SQL="${SQL} SELECT name"     º
+ $º$ SQL="${SQL}   FROM  data "   º
+ $º$ SQL="${SQL}   WHERE age ˃ 30 º"
+ $º$ csvsql --query "${SQL}" \    º← Query with SQL
+ $º      data.csv ˃ new.csv       º
+                                   
+                                   
+ $º$ csvsql \                     º← IMPORT INTO PostgreSQL
+ $º    --db postgresql:///... \   º
+ $º    --insert data.csv          º
+                                   
+ $º$ sql2csv \                    º← EXPORT FROM PostgreSQL
+ $º    --db postgresql:///.. \    º
+ $º    --query "select * from data" \ º
+ $º     ˃ new.csv                 º
+[[}]]

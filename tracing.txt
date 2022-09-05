@@ -1,0 +1,96 @@
+● OBSERVABILITY = LOGING + MONITORING + TRACING [[101]]
+
+[[{]]
+<span title>Distributed Tracing</span>
+<pre zoom labels="tracing.distributed,db_engine.log_collect.prometheus,qa.standards,_PM.TODO">
+<span title>OpenTelemetry</span>
+@[https://opentelemetry.io/]
+- Emerging suite of standards for (Cloud Native) Observability.
+- integration with modern observability SaaS providers like
+  Honeycomb, Datadog, Stackdriver, ...
+
+• OpenTelemetry Announces Roadmap for Metrics Specification:
+@[https://www.infoq.com/news/2021/03/opentelemetry-metrics-roadmap/]
+  The OpenTelemetry project announced its roadmap for its metrics 
+  specification. The roadmap includes a stable metrics API/SDK, metrics 
+  data model and protocol, and compatibility with Prometheus.
+</pre>
+
+
+<pre zoom labels="tracing.distributed,_PM.low_code,_PM.TODO">
+<span xsmall TODO>Zipkin</span>
+@[https://zipkin.io/]
+</pre>
+<span title>Testing</span>
+
+<pre zoom labels="testing,distributed.qa,_PM.TODO">
+<span xsmall>Genesis Distributed Testing</span>
+@[https://docs.whiteblock.io/introduction_to_testing.html]
+The following are types of tests one can perform on a distributed system:
+- Functional Testing is conducted to test whether a system performs as it was 
+  specified or in accordance with formal requirements
+- Performance Testing tests the reliability and responsiveness of a system 
+  under different types of conditions and scenarios
+- Penetration Testing tests the system for security vulnerabilities
+- End-to-End Testing is used to determine whether a system’s process flow 
+  functions as expected
+- Fuzzing is used to test how a system responds to unexpected, random, or 
+  invalid data or inputs
+
+Genesis is a versatile testing platform designed to automate the tests listed 
+above, making it faster and simpler to conduct them on distributed systems 
+where it was traditionally difficult to do so. Where Performance, End-to-End, 
+and Functional testing comprise the meat of Genesis’ services, other types of 
+testing are enabled through the deployment of services and sidecars on the 
+platform.
+
+End-to-End tests can be designed by applying exit code checks for process 
+completion, success, or failure in tasks and phases, while Performance tests 
+can be conducted by analyzing data from tests on Genesis that apply a variety 
+of network conditions and combinations thereof. Functional tests can use a 
+combination of tasks, phases, supplemental services and sidecars, and network 
+conditions, among other tools.
+
+These processes and tools are further described in this documentation.
+</pre>
+<pre zoom labels="distributed.qa,_PM.TODO">
+<span xsmall>Jepsen Project</span>
+@[https://jepsen.io/]
+Jepsen is an effort to improve the safety of distributed databases, queues, 
+consensus systems, etc. We maintain an open source software library for systems 
+testing, as well as blog posts and conference talks exploring particular 
+systems’ failure modes. In each analysis we explore whether the system lives 
+up to its documentation’s claims, file new bugs, and suggest recommendations 
+for operators.
+
+Jepsen pushes vendors to make accurate claims and test their software 
+rigorously, helps users choose databases and queues that fit their needs, and 
+teaches engineers how to evaluate distributed systems correctness for 
+themselves.
+</pre>
+
+
+
+[[}]]
+
+● Grafana 9 Brings Big Improvements to Alerting and User Experience  @ma 
+  https://www.infoq.com/news/2022/07/grafana-9-released/ 
+    Changes to the alerting experience, trialed as an option in earlier 
+  versions of Grafana, have now been made the default, leading to 
+  several improvements:
+    Alerts are now streamlined and simplified across multiple data 
+  sources and Grafana deployments. 
+    Alerts are now available based on a single rule, regardless of 
+  whether they are tied to a specific panel or dashboard. This removes 
+  a limitation that was previously in place.
+    Alerts can now be multi-dimensional - so a single alert can 
+  be triggered by more than one item triggering the rule.    
+    Grouping and routing of alerts are also improved, with 
+  notification policies allowing admins to bundle alerts together - 
+  preventing a potential storm of notifications when multiple alerts 
+  fire.    
+   Granular alert muting and silencing are also now possible, allowing
+  admins to prevent notifications at certain times (such as weekends), and to 
+  turn off notifications for an already existent alert temporarily.
+
+

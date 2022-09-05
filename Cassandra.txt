@@ -1,0 +1,259 @@
+● Cassandra 101  [[{db_engine.wide_column.cassandra,db_engine.101,]]
+  WARN: 
+- Why It's a Poor Choice For a Metadata Database for Object Stores
+@[https://blog.min.io/the-trouble-with-cassandra-based-object-stores/]
+  - Cassandra excels at supporting write-heavy workloads,
+  - Cassandra have limitations when supporting read-heavy workloads
+    due to its eventual consistency model and lack of transactions,
+    multi-table support like joins, subqueries can also limit its usefulness.
+  - Object storage needs are far simpler and different from what Cassandra
+    is built for.
+  - WARN: Because the implications of employing Cassandra as a object
+    storage metadata database were not properly understood, many object
+    storage vendors made it a foundational part of their architecture. 
+    keeping them from ever moving past simple archival workloads.
+  - NOTE: It is not unusual to see Cassandra clusters
+    with 100+ nodes in production enviroments.
+
+Cassandra whitepaper:
+- DISTRIBUTED KEY-VALUE (of KEY-VALUE) STORE.
+- developed at Facebook.
+- data and processing spread out across many commodity servers
+- highly available service without single point of failure
+  allowing replication even across multiple data centers.
+- Possibility to choose synchronous/asynchronous replication
+  for each update.
+- fully distributed DB, with no master DB.
+- Reads are linearly scalable with the number of nodes.
+  It scalates (much)better cassandra that comparables systems
+  like hbase,voldermort voldtdb redis mysql
+  Writes are linearyly scalable?
+
+- based on 2 core technologies:
+  - Google's Big Table
+  - Amazon's Dynamo
+
+- 2 versions of Cassandra:
+  - Community Edition  : distributed under the Apache™ License
+  - Enterprise Edition : distributed by Datastax
+
+- Cassandra is a BASE system (vs an ACID system):
+  BASE == (B)asically (A)vailable, (S)oft state, (E)ventually consistent)
+  ACID == (A)tomicity, (C)onsistency, (I)solation, (D)urability.
+
+  - BASE implies that the system is optimistic and accepts that 
+    the database consistency will be in a state of flux
+  - ACID is pessimistic and it forces consistency at the end
+    of every transaction.
+
+                   ┌·> 1  Replication
+                   ·      Strategy
+                   v
+                   1
+cluster 1 ←→ 1+ Keyspace 1 ←→ N Column Family   ←→ 0+ Row
+             └┬┘                └─────┬─────┘
+         Typically
+         just one               sharing similar   - collection of
+                                structure           sorted columns.
+
+  ┌─ CQL lang. used to access data.
+┌─┴───────────────────────────────────────────────────────────────┐
+│  KEYSPACE:  container for app.data, similar to a RDMS schema    │
+│             ┌─────────────────────────────────────────────────┐ │
+│             │ Column Family 1                                 │ │
+│             └─────────────────────────────────────────────────┘ │
+│             ┌─────────────────────────────────────────────────┐ │
+│             │ Column Family 2                                 │ │
+│             └─────────────────────────────────────────────────┘ │
+│               ...                                               │
+│ ┌─────────┐ ┌─────────────────────────────────────────────────┐ │
+│ │Settings │ │ Column Family N      Col    Col2  ...  ColN     │ │
+│ ├─────────┤ │                      Key1   Key2  ...  KeyN     │ │
+│ │*Replica.│ │ ┌────────┐ ┌──────────────────────────────────┐ │ │
+│ │ Strategy│ │ │Settings│ │RowKey1│Val1_1│Val2_1│   │ValN_1│ │ │ │
+│ └─────────┘ │ │        │ │RowKey2│Val2_2│Val2_2│   │ValN_2│ │ │ │
+│             │ └────────┘ │         ...                      │ │ │
+│             │            └──────────────────────────────────┘ │ │
+│             └─────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────┘
+                            RowKey := Unique row UID
+                                      Used also to sharde/balance
+                                      load across NODES.
+                            ValX_Y := value || value collection
+
+     BASIC INFRASTRUCTURE ARCHITECTURE:
+     ──────────────────────────────────
+  *NODE: (Cassandra peer instance)                *RACK:
+   - data storage (on File System                  - Set of nodes
+     or HDFS)
+   - The data is balanced across nodes
+     based on the RowKey f each Column Family.
+   - Commit log to ensure
+     data durability.
+     - Sequentially written                    automatically
+                                               replicated throughout
+               ┌── Node "N" choosen            cluster
+               │   based on RowKey                 ↑
+               ↓                                ┌──┴───┐
+  Input → Commit Log → Index+write →(memTable → Write to    ──→ SSTable
+          @Node N      to memTable   full)      SSTable         Compaction
+                          └──┬───┘              └──┬───┘        └───┬────┘
+             - in-memory structure   - (S)orted (S)tring Table  - Periodically consolidates
+             - "Sort-of" write-back    in File System or HDFS     storage by discarding
+               cache                                              data marked for deletion
+                                                                  with a tombstone.
+                                                                - repair mechanisms exits
+                                                                  to ensure consistency
+                                                                  of cluster
+
+  *DATACENTER:                 *CLUSTER:
+  - Logical Set of Racks.       - 1+ Datacenters
+  - Ex: America, Europe,...     - full set of nodes
+  - Replication set at            which map to a single
+    Data Center bounds            complete token ring
+  
+• Cassandra CQL:
+  - similar syntax to SQL
+  - works with table data.
+  - Available Shells: cqlsh | DevCenter | JDBC/ODBC drivers
+
+• Cassandra Coordinator Node:
+  - Node where client connects for a read/write request
+    acting as a proxy between the client and Cassandra
+    internals.
+
+• Cassandra Key Components:
+ Gossip
+    A peer-to-peer communication protocol in which nodes periodically exchange
+state information about themselves and about other nodes they know about. This
+is similar to hear-beat mechanism in HDFS to get the status of each node by the
+master.
+
+    A peer-to-peer communication protocol to share location and state
+information about the other nodes in a Cassandra cluster. Gossip information is
+also stored locally by each node to use immediately when a node restarts.
+
+    The gossip process runs every second and exchanges state messages with up
+to three other nodes in the cluster. The nodes exchange information about
+themselves and about the other nodes that they have gossiped about, so all
+nodes quickly learn about all other nodes in the cluster.
+
+    A gossip message has a version associated with it, so that during a gossip
+exchange, older information is overwritten with the most current state for a
+particular node.
+
+    To prevent problems in gossip communications, use the same list of seed
+nodes for all nodes in a cluster. This is most critical the first time a node
+starts up. By default, a node remembers other nodes it has gossiped with
+between subsequent restarts. The seed node designation has no purpose other
+than bootstrapping the gossip process for new nodes joining the cluster. Seed
+nodes are not a single point of failure, nor do they have any other special
+purpose in cluster operations beyond the bootstrapping of nodes.
+
+Note: In multiple data-center clusters, the seed list should include at least
+one node from each data center (replication group). More than a single seed
+node per data center is recommended for fault tolerance. Otherwise, gossip has
+to communicate with another data center when bootstrapping a node. Making every
+node a seed node is not recommended because of increased maintenance and
+reduced gossip performance. Gossip optimization is not critical, but it is
+recommended to use a small seed list (approximately three nodes per data
+center).
+
+DATA DISTRIBUTION AND REPLICATION:
+
+How data is distributed and factors influencing replication.
+
+In Cassandra, Data is organized by table and identified by a primary key, which
+determines which node the data is stored on. Replicas are copies of rows.
+
+Factors influencing replication include:
+Virtual nodes (Vnodes):
+
+Assigns data ownerommended for production. It defines a node’s data center
+and rack and uses gossip for propagating this information to other nodes.
+
+There are many vtypes of snitches like dynamic snitching, simple snitching,
+RackInferringSnitch, PropertyFileSnitch, GossipingPropertyFileSnitch,
+Ec2Snitch, Ec2MultiRegionSnitch, GoogleCloudSnitch, CloudstackSnitch.
+
+TODO:
+https://rene-ace.com/cassandra-101-understanding-what-is-cassandra/
+- Seed node
+- Snitch purpose
+- topologies
+- Coordinator node,
+- replication factors,
+- ...
+<span xsmall TODO>Cassandra+Spark</span>
+@[https://es.slideshare.net/chbatey/1-dundee-cassandra-101]
+
+<span xsmall>Similar projects</span>
+- Voldermort: developed by Linked-In.
+@[https://www.project-voldemort.com/voldemort/]
+
+• What's new:
+- Cassandra 4.0 (2020-10)
+@[https://cassandra.apache.org/doc/latest/new/]
+  - Support for Java 11
+  - Virtual Tables
+  - Audit Logging
+    - All successful/failed login attempts
+    - All database command requests to CQL.
+      - high performant live query logging 
+      - useful for live traffic capture and traffic replay.
+      - Chronicle-Queue used to rotate a log of queries
+  - Full Query Logging (FQL)
+  - Improved Internode Messaging
+  - Improved Streaming
+    - Streaming is the process used by nodes of a cluster to exchange data
+      in the form of SSTables.
+  - Transient Replication (experimental)
+
+• Cassandra cstat: Orchestration Tool by Spotify
+@[https://github.com/spotify/cstar]
+
+@[www.infoq.com/news/2018/10/spotify-cstar]
+""" ... Cstar emerged from the necessity of running shell commands 
+   on all host in a Cassandra cluster .... 
+    Spotify fleet reached 3000 nodes. Example scripts were:  
+    - Clear all snapshots 
+    - Take a new snapshot (to allow a rollback)
+    - Disable automated puppet runs
+    - Stop the Cassandra process
+    - Run puppet from a custom branch of our git repo
+      in order to upgrade the package
+    - Start the Cassandra process again
+    - Update system.schema_columnfamilies to the JSON format
+    - Run `nodetool upgradesstables`, which depending on
+      the amount of data on the node, could take hours to
+      complete
+    - Remove the rollback snapshot
+"""
+   $ pip3 install cstart
+
+   REF: @[https://github.com/spotify/cstar]
+   """Why not simply use Ansible or Fabric?
+   Ansible does not have the primitives required to run things in a topology aware 
+   fashion. One could split the C* cluster into groups that can be safely executed 
+   in parallel and run one group at a time. But unless the job takes almost 
+   exactly the same amount of time to run on every host, such a solution would run 
+   with a significantly lower rate of parallelism, not to mention it would be 
+   kludgy enough to be unpleasant to work with.
+   Unfortunately, Fabric is not thread safe, so the same type of limitations apply. 
+   All involved machines are assumed to be some sort of UNIX-like system like
+   OS X or Linux with python3, and Bourne style shell."""
+
+
+• Dynamo vs Cassandra[[{02_doc_has.comparative]]
+  https://sujithjay.com/data-systems/dynamo-cassandra/
+  Dynamo vs Cassandra : Systems Design of NoSQL Databases
+  
+  State-of-the-art distributed databases represent a distillation of 
+  years of research in distributed systems. The concepts underlying any 
+  distributed system can thus be overwhelming to comprehend. This is 
+  truer when you are dealing with databases without the strong 
+  consistency guarantee. Databases without strong consistency 
+  guarantees come in a range of flavours; but they are bunched under a 
+  category called NoSQL databases.  [[}]]
+[[}]]
+

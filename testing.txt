@@ -1,0 +1,39 @@
+● ZERO-CODE open source [[testing.101,REST,SOAP,Kafka]] @ma
+  https://github.com/authorjapps/zerocode  
+  zerocode open source makes it easy to create, change, orchestrate and 
+  maintain automated tests with the absolute minimum overhead for REST, 
+  SOAP, Kafka Real Time Data Streams and much more. Tests created in 
+  Zerocode Open Source can be easily shared between teams for 
+  reviewing, editing, and versioning. The platform incorporates the 
+  best feedback and suggestions from the community to make it 
+  incredibly powerful, and we’re seeing rapid adoption across the 
+  developer/tester community
+
+  Smart Projects Using Zerocode
+  - Vocalink (A Mastercard company) - REST API testing for 
+    virtualization software
+  - HSBC Bank - MuleSoft application REST API Contract testing, E2E 
+    Integration Testing, Oracle DB API testing, SOAP testing and 
+    Load/Stress aka Performance testing
+  - Barclays Bank - Micro-Services API Contract Validation for System 
+    APIs build using Spring Boot
+  - Home Office(GOV.UK) - Micro-Services REST API Contract testing, 
+    HDFS/HBase REST end point testing, Kafka Data-pipeline testing, 
+    Authentication testing
+  - Deloitte(Australia) - Kafka data pipeline end to end validations
+  - Yandex Search Engine(Russia) - Load and Stress Testing aka 
+    Performance Testing
+
+
+
+
+● Genesis: end-to-end testing:  @ma
+  Genesis: An End-To-End Testing & Development Platform For Distributed Systems
+  https://github.com/EntEthAlliance/genesis/branches
+  Outputting data to collect for later analysis is as simple as writing 
+  a JSON object to stdout. You can review the data we collect from each 
+  test on the test details page in the dashboard, build your own 
+  metrics and analytics dashboards with Kibana, and write your own 
+  custom data analysis and reports using Jupyter Notebooks.
+
+

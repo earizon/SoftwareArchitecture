@@ -1,0 +1,154 @@
+Big Data:
+<pre zoom labels="big_data.hadoop,storage.distributed,devops,_PM.low_code,">
+<span xsmall>Ambari: Hadoop Cluster Provision</span>
+@[https://projects.apache.org/project.html?ambari]
+Apache Ambari makes Hadoop cluster provisioning, managing, and monitoring dead simple.
+</pre>
+
+<pre zoom labels="architecture.event_stream,big_data.spark,architecture.olap,_PM.TODO">
+<span xsmall>Spark</span>
+@[http://spark.apache.org/]
+- General cluster computing framework 
+- initially designed around the concept of Resilient Distributed Datasets (RDDs).
+  - RDDs enable data reuse by persisting intermediate results in memory 
+    - Use case 1: fast computations for iterative algorithms.
+      - especially beneficial for work flows like machine learning 
+        (Bºsame operation may be applied over and over againº)
+    - Use case 2: clean and/or transform data.
+- Speed
+  - Run workloads 100x faster (compared to Hadoop?).
+  - Apache Spark achieves high performance for both batch
+    and streaming data, using a state-of-the-art DAG scheduler,
+    a query optimizer, and a physical execution engine.
+
+- Ease of Use
+  - Write applications quickly in Java, Scala, Python, R, and SQL.
+  - Spark offers over 80 high-level operators that make it easy to
+    build parallel apps. And you can use it interactively from the
+    Scala, Python, R, and SQL shells.
+    - Example PythonBºDataFrame APIº.
+      |Bºdfº=ºspark.read.jsonº("logs.json") ← automatic schema inference
+      |Bºdfº.where("age ˃ 21")
+      |    .select("name.first").show()
+
+
+- Generality
+  - Combine SQL, streaming, and complex analytics.
+  - Spark powers a stack of libraries including SQL and DataFrames,
+    MLlib for machine learning, GraphX, and Spark Streaming.
+    You can combine these libraries seamlessly in the same application.
+
+- Runs Everywhere
+  - Spark runs on Hadoop, Apache Mesos, Kubernetes, standalone,
+    or in the cloud. It can access diverse data sources.
+
+- You can run Spark using its standalone cluster mode, on EC2, on Hadoop YARN,
+  on Mesos, or on Kubernetes. Access data in HDFS, Alluxio, Apache Cassandra,
+  Apache HBase, Apache Hive, and hundreds of other data sources.
+
+- Common applications for Spark include real-time marketing campaigns, online
+  product recommendations, cybersecurity analytics and machine log monitoring.
+
+<hr/>
+<span xsmall>Apache Druid</span>
+- Complementary to Spark, Druid can be used to accelerate OLAP queries in Spark.
+  - Spark: indicated for BºNON-interactiveº latencies.
+  - Druid: indicated for Bº    interactiveº (sub-milisec) scenarios.
+    - Use-case:
+      - powering applications used by thousands of users where each query
+        must return fast enough such that users can interactively explore 
+        through data.
+  - Druid fully indexes all data, and Bºcan act as a middle layer between º
+  BºSpark and final appº.
+BºTypical production setupº:
+  
+  data → Spark processing → Druid → Serve fast queries to clients
+
+  More info at:
+  https://www.linkedin.com/pulse/combining-druid-spark-interactive-flexible-analytics-scale-butani
+</pre>
+
+<pre zoom>
+<span xsmall>Hadoop "vs" Spark</span>
+@[https://www.infoworld.com/article/3014440/big-data/five-things-you-need-to-know-about-hadoop-v-apache-spark.html]
+Hadoop is essentially a distributed data infrastructure:
+ -It distributes massive data collections across multiple nodes
+  within a cluster of commodity servers
+ -It also indexes and keeps track of that data, enabling
+  big-data processing and analytics far more effectively
+  than was possible previously.
+Spark, on the other hand, is a data-processing tool that operates on those
+distributed data collections; it doesn't do distributed storage.
+
+You can use one without the other:
+  - Hadoop includes not just a storage component, known as the
+  Hadoop Distributed File System, but also a processing component called
+  MapReduce, so you don't need Spark to get your processing done.
+  - Conversely, you can also use Spark without Hadoop. Spark does not come with
+  its own file management system, though, so it needs to be integrated with one
+  - if not HDFS, then another cloud-based data platform. Spark was designed for
+  Hadoop, however, so many agree they're better together.
+
+Spark is generally a lot faster than MapReduce because of the way it processes
+data. While MapReduce operates in steps, Spark operates on the whole data set
+in one fell swoop:
+   "The MapReduce workflow looks like this: read data from the cluster, perform
+    an operation, write results to the cluster, read updated data from the
+    cluster, perform next operation, write next results to the cluster, etc.,"
+    explained Kirk Borne, principal data scientist at Booz Allen Hamilton.
+    Spark, on the other hand, completes the full data analytics operations
+    in-memory and in near real-time:
+    "Read data from the cluster, perform all of the requisite analytic
+    operations, write results to the cluster, done," Borne said.
+Spark can be as much as 10 times faster than MapReduce for batch processing and
+p to 100 times faster for in-memory analytics, he said.
+  You may not need Spark's speed. MapReduce's processing style can be just fine
+if your data operations and reporting requirements are mostly static and you
+can wait for batch-mode processing. But if you need to do analytics on
+streaming data, like from sensors on a factory floor, or have applications that
+require multiple operations, you probably want to go with Spark.
+ Most machine-learning algorithms, for example, require multiple operations.
+
+Recovery: different, but still good.
+Hadoop is naturally resilient to system faults or failures since data
+are written to disk after every operation, but Spark has similar built-in
+resiliency by virtue of the fact that its data objects are stored in something
+called resilient distributed datasets distributed across the data cluster.
+"These data objects can be stored in memory or on disks, and RDD provides full
+recovery from faults or failures," Borne pointed out.
+</pre>
+<pre zoom labels="">
+<span xsmall>Hive</span>
+Data W.H. on top of Hadoop
+@[https://projects.apache.org/project.html?hive]
+- querying and managing utilities for large datasets
+  residing in distributed storage built on top of Hadoop
+- easy data extract/transform/load (ETL)
+ * a mechanism to impose structure on a variety of data formats*
+- access to files stored in Apache HDFS and other data storage
+  systems such as Apache HBase (TM)
+
+<span xsmall>HiveMQ Broker: MQTT+Kafka for IoT</span>
+@[https://www.infoq.com/news/2019/04/hivemq-extension-kafka-mqtt/]
+
+</pre>
+
+
+
+<span title>Data Science</span>
+
+<pre zoom labels="data.analytics,_PM.low_code,_PM.TODO" bgorange>
+<span xsmall bgorange>Orange</span>
+@[https://orange.biolab.si/screenshots/]
+Features:
+- Interactive Data Visualization
+- Visual Programming
+- Student's friendly.
+- Add-ons
+- Python Anaconda Friendly
+  $ conda config --add channels conda-forge
+  $ conda install orange3
+  $ conda install -c defaults pyqt=5 qt
+- Python pip  Friendly
+  $ pip install orange3
+</pre>

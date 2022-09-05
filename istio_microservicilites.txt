@@ -1,0 +1,768 @@
+● Summary from:
+  https://www.infoq.com/articles/microservicilities-istio/
+  by Alex Soto, Director of Developer Experience at Red Hat
+  reviewed by Michael Redlich, Java Queue Lead Editor
+- Services in a microservices architecture may be developed in 
+  different languages, for example, Service A in Java and Service B in 
+  Go. The challenge of having polyglot services is learning how to 
+  implement these microservicilities for each language. For example, 
+  which library may be used for implementing resiliency in Java, in Go, 
+  etc....
+  In the case of Java, we may add new libraries (with all its 
+  transitive dependencies) for each of the “microservicilitities”, 
+  such as Resiliency4J for resiliency, Jaeger for tracing, or 
+  Micrometer for monitoring. While there is nothing wrong with this, we 
+  are increasing the chances of getting classpath conflicts when adding 
+  different kinds of libraries in the classpath. Moreover, the memory 
+  consumption and boot-up times are increased as well. Last, but not 
+  least, there is the problem of maintaining library versions aligned 
+  across all Java services, so all of them run the same version.
+- So arriving at this point, we may wonder why we need to implement 
+  all these microservicilities?
+  ...  A SERVICE MESH IS A DEDICATED INFRASTRUCTURE LAYER FOR 
+  HANDLING SERVICE-TO-SERVICE COMMUNICATION THAT IS SAFE, FAST AND 
+  RELIABLE.
+
+microservices architecture challenges: 
+- fault tolerance, service discovery, scaling, logging, tracing, ...
+  what we at Red Hat named "Microservicesilities."
+
+- (RESTful, ...) API: documented using tools such as Swagger.
+- DISCOVERY  : Services need to discover other services.
+- INVOCATION : 
+- ELASTICITY : Each service can be scaled up and/or down independently
+- RESILIENCY : FAILURE IN MIND
+- PIPELINE   : EACH MICRO-SERVICE SHOULD BE DEPLOYED INDEPENDENTLY.
+- AUTHENTICATION: (Web Tokens,...)
+- LOGGING    : UNIFIED LOGGING SYSTEM/DATA COLLECTOR IS REQUIRED
+- MONITORING : method/s to measure how system is performing, understand
+               overall health and/or alerting when something is wrong.
+- TRACING    : VISUALIZE A PROGRAM’S FLOW AND DATA PROGRESSION.
+└─────┬──────┘ 
+JUST THREE OF THE TEN MICROSERVICILITIES ARE COVERED BY KUBERNETES!!!
+(Discovery using Kubernetes Service, Invocation using k8s network, 
+ Elasticity through scaling mechanisms) 
+
+- What is a Service Mesh and Istio?
+- Service Mesh:
+  - dedicated infrastructure layer for handling service-to-service
+    communication that is safe, fast and reliable.
+  - typically implemented as a lightweight network proxy "sidecar"
+    intercepting all inbound/outbound network traffic from the service.
+  - Istio: OOSS implementation for Kubernetes using Envoy Proxy.
+
+- Envoy proxy sidecar container implements the following features:
+  - Intelligent routing and load-balancing across services.
+  - Fault injection.
+  - Resilience: retries and circuit breaker.
+  - Observability and Telemetry: metrics and tracing.
+  - Security: encryption and authorization.
+  - Fleet-wide policy enforcement.
+
+- KEYPOINT: Envoy may be used standalone, but when tens of services
+  are deployed, tens of Envoy proxies need to be configured.
+  Istio simplifies this process.
+
+
+Installing Istio
+
+We need a Kubernetes cluster to install Istio. For this article, we use Minikube, but any other Kubernetes cluster may be valid.
+
+Run the following command to start the cluster:
+
+minikube start -p istio --kubernetes-version='v1.19.0' --vm-driver='virtualbox' --memory=4096
+
+  [istio] minikube v1.17.1 on Darwin 11.3
+  Kubernetes 1.20.2 is now available. If you would like to upgrade, specify: --kubernetes-version=v1.20.2
+  minikube 1.19.0 is available! Download it: https://github.com/kubernetes/minikube/releases/tag/v1.19.0
+  To disable this notice, run: 'minikube config set WantUpdateNotification false'
+
+✨  Using the virtualbox driver based on existing profile
+
+❗  You cannot change the memory size for an exiting minikube cluster. Please first delete the cluster.
+
+  Starting control plane node istio in cluster istio
+  Restarting existing virtualbox VM for "istio" ...
+  Preparing Kubernetes v1.19.0 on Docker 19.03.12 ...
+  Verifying Kubernetes components...
+  Enabled addons: storage-provisioner, default-storageclass
+  Done! kubectl is now configured to use "istio" cluster and "" namespace by default
+
+With the Kubernetes cluster up and running, download the istioctl CLI tool to install Istio inside the cluster. In this case, we download the Istio 1.9.4 from the release page.
+
+With the istioctl tool installed, we may proceed to deploy Istio within the cluster. Istio ships with different profiles, but to get started with Istio, the demo profile is perfect.
+
+istioctl install --set profile=demo -y
+
+Detected that your cluster does not support third party JWT authentication. Falling back to less secure first party JWT. See https://istio.io/docs/ops/best-practices/security/#configure-third-party-service-account-tokens for details.
+
+✔ Istio core installed
+
+✔ Istiod installed
+
+✔ Egress gateways installed
+
+✔ Ingress gateways installed
+
+✔ Addons installed
+
+✔ Installation complete
+
+Wait until all Pods in the istio-system namespace are in running state.
+
+kubectl get pods -n istio-system
+
+NAME                                   READY   STATUS    RESTARTS   AGE
+grafana-b54bb57b9-fj6qk                1/1     Running   2          171d
+istio-egressgateway-68587b7b8b-m5b58   1/1     Running   2          171d
+istio-ingressgateway-55bdff67f-jrhpk   1/1     Running   2          171d
+istio-tracing-9dd6c4f7c-9gcx9          1/1     Running   3          171d
+istiod-76bf8475c-xphgd                 1/1     Running   2          171d
+kiali-d45468dc4-4nbl4                  1/1     Running   2          171d
+prometheus-74d44d84db-86hdr            2/2     Running   4          171d
+
+To take advantage of all of Istio’s capabilities, Pods in the mesh must be running an Istio sidecar proxy.
+
+There are two ways of injecting an Istio sidecar into a Pod: manually using the istioctl command or automatically when Pod is deployed to a configured namespace for that purpose.
+
+For the sake of simplicity, automatic sidecar injection is configured in the default namespace by executing the following command:
+
+kubectl label namespace default istio-injection=enabled
+
+namespace/default labeled
+
+Istio is now installed in the Kubernetes cluster, and it is ready to be used in the default namespace.
+
+In the following section, we’ll see an overview of the application to “istioize,” and we’ll deploy it.
+The Application
+
+The application is composed of two services, book service, and rating service. Book service returns the information of a book together with its ratings. Rating service returns the ratings of a given book. There are two versions in the case of rating service: v1 returns a fixed rating number for any book (1), while v2 returns a random rating number.
+
+Deployment
+
+Since automatic sidecar injection is enabled, we don’t need to change anything in the Kubernetes deployment files. Let’s deploy these three services on the “istioized” namespace.
+
+For example, the Kubernetes deployment file of the book service is:
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+ labels:
+   app.kubernetes.io/name: book-service
+   app.kubernetes.io/version: v1.0.0
+ name: book-service
+spec:
+ ports:
+ - name: http
+   port: 8080
+   targetPort: 8080
+ selector:
+   app.kubernetes.io/name: book-service
+   app.kubernetes.io/version: v1.0.0
+ type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ labels:
+   app.kubernetes.io/name: book-service
+   app.kubernetes.io/version: v1.0.0
+ name: book-service
+spec:
+ replicas: 1
+ selector:
+   matchLabels:
+     app.kubernetes.io/name: book-service
+     app.kubernetes.io/version: v1.0.0
+ template:
+   metadata:
+     labels:
+       app.kubernetes.io/name: book-service
+       app.kubernetes.io/version: v1.0.0
+   spec:
+     containers:
+     - env:
+       - name: KUBERNETES_NAMESPACE
+         valueFrom:
+           fieldRef:
+             fieldPath: metadata.namespace
+       image: quay.io/lordofthejars/book-service:v1.0.0
+       imagePullPolicy: Always
+       name: book-service
+       ports:
+       - containerPort: 8080
+         name: http
+         protocol: TCP
+
+As we can see, nothing specific to Istio nor the sidecar container is present in the file. The injection of Istio capabilities occurs automatically by default.
+
+Let’s deploy the application to the Kubernetes cluster:
+
+kubectl apply -f rating-service/src/main/kubernetes/service.yml -n default
+kubectl apply -f rating-service/src/main/kubernetes/deployment-v1.yml -n default
+kubectl apply -f rating-service/src/main/kubernetes/deployment-v2.yml -n default
+kubectl apply -f book-service/src/main/kubernetes/deployment.yml -n default
+
+After a few seconds, the application will be up and running. To validate, run the following command and keep an eye on the number of containers belonging to the Pod:
+
+kubectl get pods -n default
+
+NAME                                READY   STATUS    RESTARTS   AGE
+book-service-5cc59cdcfd-5qhb2       2/2     Running   0          79m
+rating-service-v1-64b67cd8d-5bfpf   2/2     Running   0          63m
+rating-service-v2-66b55746d-f4hpl   2/2     Running   0          63m
+
+Notice that each Pod contains two running containers, one container is the service itself, and the other is the Istio proxy.
+
+If we describe the Pod, we’ll notice that:
+
+kubectl describe pod rating-service-v2-66b55746d-f4hpl
+
+Name:         rating-service-v2-66b55746d-f4hpl
+Namespace:    default
+…
+Containers:
+  rating-service:
+    Container ID:   docker://cda8d72194ee37e146df7bf0a6b23a184b5bfdb36fed00d2cc105daf6f0d6e85
+    Image:          quay.io/lordofthejars/rating-service:v2.0.0
+…
+  istio-proxy:
+    Container ID:  docker://7f4a9c1f425ea3a06ccba58c74b2c9c3c72e58f1d805f86aace3d914781e0372
+    Image:         docker.io/istio/proxyv2:1.6.13
+
+Since we are using Minikube and the Kubernetes service is of type LoadBalancer, the Minikube IP and service port are required to access the application. To find them, execute the following command:
+
+minikube IP -p istio
+192.168.99.116
+
+kubectl get services -n default
+NAME           TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+book-service   LoadBalancer   10.106.237.42    <pending>     8080:31304/TCP   111m
+kubernetes     ClusterIP      10.96.0.1        <none>        443/TCP          132m
+rating         LoadBalancer   10.109.106.128   <pending>     8080:31216/TCP   95m
+
+And let’s execute some curl commands against the service:
+
+curl 192.168.99.116:31304/book/1
+{"bookId":1,"name":"Book 1","rating":1}
+curl 192.168.99.116:31304/book/1
+{"bookId":1,"name":"Book 1","rating":3}
+curl 192.168.99.116:31304/book/1
+{"bookId":1,"name":"Book 1","rating":1}
+curl 192.168.99.116:31304/book/1
+{"bookId":1,"name":"Book 1","rating":3}
+
+We can see from the output that the rating value changes, from 1 to 3, for the same book ID. By default, Istio balances calls using a round-robin approach across services. In this example, requests are balanced between rating:v1 (fixed rating to 1) and rating:v2 (random rating calculated at startup time; in this case, 3 for book ID 1).
+
+The application is now deployed, and “Istioized,” but no microservicilities are enabled yet. Let’s start creating some Istio resources to enable and configure microservicilities on the Istio proxy containers.
+Istio Microservicilities
+Discovery
+
+Kubernetes Service implements the concept of discovery. It provides a way to group Kubernetes Pods (acting as one) with a stable virtual IP and DNS name. Pods access other Pods using the Kubernetes Service name as a hostname. However, this only allows us to implement basic discovery strategies, but when more advanced discovery/deployment strategies are required, such as canary releases, dark launches, or shadowing traffic, Kubernetes Services isn’t enough.
+
+Istio allows you to easily control the flow of traffic among services using two concepts: DestinationRule and VirtualService.
+
+A DestinationRule defines policies to service traffic after routing has occurred. Some of the things we configure in a destination rule are:
+
+    Traffic policy.
+    Load balancing policy.
+    Connection pool settings.
+    mTLS.
+    Resiliency.
+    Specify subsets of the service using labels. These subsets are used in VirtualService.
+
+Let’s create a file named destination-rule-v1-v2.yml to register two subsets: one for rating service v1 and another one for rating service v2:
+
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+ name: rating
+spec:
+ host: rating
+ subsets:
+ - labels:
+     app.kubernetes.io/version: v1.0.0
+   name: version-v1
+ - labels:
+     app.kubernetes.io/version: v2.0.0
+   name: version-v2
+
+We set the host field to rating as this is the DNS name specified in the Kubernetes Service. Then in the subsets section, we define the subsets using the labels set as the Kubernetes resources and grouping them under a “virtual” name. For example, two groups are created in the previous case: one group for version 1 and another group for rating services of version 2.
+
+kubectl apply -f src/main/kubernetes/destination-rule-v1-v2.yml -n default
+destinationrule.networking.istio.io/rating created
+
+A VirtualService allows you to configure how requests are routed to a service within the Istio service mesh. Thanks to virtual services, it’s straightforward to implement strategies like A/B testing, Blue/Green deployments, canary releases, or dark launches.
+
+Let’s create a file named virtual-service-v1.yml to send all traffic to rating v1:
+
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+ name: rating
+spec:
+ hosts:
+ - rating
+ http:
+ - route:
+   - destination:
+       host: rating
+       subset: version-v1
+     weight: 100
+
+In the previous file, we’re configuring any request to reach the rating host which should be sent to the rating Pods belonging to the subset version-v1. Remember, the DestinationRule file created this subset.
+
+kubectl apply -f src/main/kubernetes/virtual-service-v1.yml -n default
+virtualservice.networking.istio.io/rating created
+
+Now execute some curl commands against the service again, but now the most significant difference is the output as all requests are sent to rating v1.
+
+curl 192.168.99.116:31304/book/1
+{"bookId":1,"name":"Book 1","rating":1}
+curl 192.168.99.116:31304/book/1
+{"bookId":1,"name":"Book 1","rating":1}
+curl 192.168.99.116:31304/book/1
+{"bookId":1,"name":"Book 1","rating":1}
+
+Obviously, we can create another virtual service file pointing to the rating v2 instead:
+
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+ name: rating
+spec:
+ hosts:
+ - rating
+ http:
+ - route:
+   - destination:
+       host: rating
+       subset: version-v2
+     weight: 100
+
+kubectl apply -f src/main/kubernetes/virtual-service-v2.yml -n default
+virtualservice.networking.istio.io/rating configured
+
+And traffic is sent to rating v2:
+
+curl 192.168.99.116:31304/book/1
+{"bookId":1,"name":"Book 1","rating":3}
+curl 192.168.99.116:31304/book/1
+{"bookId":1,"name":"Book 1","rating":3}
+
+The rating field is not set to 1 anymore as the request was processed by version 2.
+
+A canary release is performed by changing the weight field in the virtual service.
+
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+ name: rating
+spec:
+ hosts:
+ - rating
+ http:
+ - route:
+   - destination:
+       host: rating
+       subset: version-v1
+     weight: 75
+   - destination:
+       host: rating
+       subset: version-v2
+     weight: 25
+
+kubectl apply -f src/main/kubernetes/virtual-service-v1-v2-75-25.yml -n default
+virtualservice.networking.istio.io/rating configured
+
+Now execute some curl commands against the application:
+
+curl 192.168.99.116:31304/book/1
+{"bookId":1,"name":"Book 1","rating":1}
+curl 192.168.99.116:31304/book/1
+{"bookId":1,"name":"Book 1","rating":1}
+curl 192.168.99.116:31304/book/1
+{"bookId":1,"name":"Book 1","rating":1}
+curl 192.168.99.116:31304/book/1
+{"bookId":1,"name":"Book 1","rating":3}
+
+The rating v1 is accessed more times than rating v2 following the proportion set in the weight field.
+
+Let’s remove the virtual service resource to get back to the default behavior (the round-robin strategy):
+
+kubectl delete -f src/main/kubernetes/virtual-service-v1-v2-75-25.yml -n default
+virtualservice.networking.istio.io "rating" deleted
+
+Resilience
+
+In a microservice architecture, we should develop with failure in mind, especially when communicating with other services. In a monolith application, your application, as a whole, is up or down, but in a microservices architecture this isn’t the case as some might be up and others may be down. Resiliency (or application resiliency) is the ability of an application/service to react to problems and still provide the best possible result.
+
+Let’s see how Istio helps us in implementing resiliency strategies and how to configure them.
+Failures
+
+The rating service implements a particular endpoint that causes the service to start returning a 503 HTTP error code when it is accessed.
+
+Execute the following command (changing the Pod name with yours) to make service rating v2 start failing when it is accessed:
+
+kubectl get pods -n default
+
+NAME                                READY   STATUS    RESTARTS   AGE
+book-service-5cc59cdcfd-5qhb2       2/2     Running   4          47h
+rating-service-v1-64b67cd8d-5bfpf   2/2     Running   4          47h
+rating-service-v2-66b55746d-f4hpl   2/2     Running   4          47h
+
+kubectl exec -ti rating-service-v2-66b55746d-f4hpl -c rating-service -n default curl localhost:8080/rate/misbehave
+
+Ratings endpoint returns 503 error.
+
+Retries
+
+Currently, Istio is configured with no virtual service, meaning it balances requests between both versions.
+
+Let’s make some requests and validate rating v2 is failing:
+
+curl 192.168.99.116:31304/book/1
+{"bookId":1,"name":"Book 1","rating":1}
+
+curl 192.168.99.116:31304/book/1
+
+curl 192.168.99.116:31304/book/1
+{"bookId":1,"name":"Book 1","rating":1}
+
+One request produces no response because rating v2 returns no valid response, but an error.
+
+Retries are supported by Istio and configured in a VirtualService resource. Create a new file named virutal-service-retry.yml with the following content:
+
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+ name: rating
+spec:
+ hosts:
+ - rating
+ http:
+ - route:
+   - destination:
+       host: rating
+   retries:
+     attempts: 2
+     perTryTimeout: 5s
+     retryOn: 5xx
+
+We are configured to execute two automatic retries if the rating service (any version) returns a 5XX HTTP error code.
+
+kubectl apply -f src/main/kubernetes/virtua-service-retry.yml -n default
+virtualservice.networking.istio.io/rating created
+
+Let’s make some requests and review the output:
+
+curl 192.168.99.116:31304/book/1
+{"bookId":1,"name":"Book 1","rating":1}
+
+curl 192.168.99.116:31304/book/1
+{"bookId":1,"name":"Book 1","rating":1}
+
+curl 192.168.99.116:31304/book/1
+{"bookId":1,"name":"Book 1","rating":1}
+
+We now see all requests respond to rating v1. The reason is simple. When requests to rating service are sent to v1, a valid response is provided. But when the requests are sent to v2, an error occurs and an automatic retry is executed.
+
+Since calls are load-balanced between both services, the retry request is sent to v1, producing a valid response.
+
+For this reason, every previous request returns a response from v1.
+Circuit Breaker
+
+Automatic retries are a great way to deal with network failures or sporadic errors, but what happens when multiple concurrent users send requests to a failing system with automatic retries?
+
+Let’s simulate that scenario by using Siege, an HTTP load tester utility, but first, let’s inspect the rating v2 logs using the kubectl command:
+
+kubectl get pods -n default
+
+NAME                                READY   STATUS    RESTARTS   AGE
+book-service-5cc59cdcfd-5qhb2       2/2     Running   4          47h
+rating-service-v1-64b67cd8d-5bfpf   2/2     Running   4          47h
+rating-service-v2-66b55746d-f4hpl   2/2     Running   4          47h
+
+kubectl logs rating-service-v2-66b55746d-f4hpl -c rating-service -n default
+
+…
+Request 31
+Request 32
+Request 33
+Request 34
+
+These log lines show the number of requests processed by this service. Currently, the service processed 34 requests.
+
+To simulate four concurrent users, sending each one ten requests to the application, execute the following siege command:
+
+siege -r 10 -c 4 -v -d 1 192.168.99.116:31304/book/1
+
+HTTP/1.1 200     0.04 secs:      39 bytes ==> GET  /book/1
+HTTP/1.1 200     0.03 secs:      39 bytes ==> GET  /book/1
+
+Transactions:		          40 hits
+Availability:		      100.00 %
+Elapsed time:		        0.51 secs
+Data transferred:	        0.00 MB
+Response time:		        0.05 secs
+Transaction rate:	       78.43 trans/sec
+Throughput:		        0.00 MB/sec
+Concurrency:		        3.80
+Successful transactions:          40
+Failed transactions:	           0
+Longest transaction:	        0.13
+Shortest transaction:	        0.01
+
+Of course, no failures are sent to the caller as there are automatic retries, but let’s inspect the logs of rating v2 again:
+
+kubectl logs rating-service-v2-66b55746d-f4hpl -c rating-service -n default
+
+…
+Request 56
+Request 57
+Request 58
+Request 59
+
+Although rating v2 couldn’t generate a valid response, the service was accessed 25 times, making a considerable impact on the application because:
+
+    If the service is overloaded, sending more requests seems like a bad idea to let it recover. Probably, the best approach would be to put the service instance into quarantine.
+    If the service is just failing because of a bug, then retrying wouldn’t improve the situation.
+    For every retry, a socket is created, some file descriptors are allocated, or some packets are sent through the network to just end up with a failure. This process impacts other services running in the same node (CPU, memory, file descriptors, etc.) or using the network (increasing useless traffic, latency, etc.).
+
+To fix this problem, we need to find a way to automatically fail-fast when execution repeatedly fails. The circuit breaker design pattern and bulkhead patterns are solutions to this problem. The former provides a fail-fast strategy when concurrent errors occur, and the latter limits the number of concurrent executions.
+
+Now create a new file named destination-rule-circuit-breaker.yml with the following content:
+
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+ name: rating
+spec:
+ host: rating
+ subsets:
+ - labels:
+     version: v1
+   name: version-v1
+ - labels:
+     version: v2
+   name: version-v2
+ trafficPolicy:
+   connectionPool:
+     http:
+       http1MaxPendingRequests: 3
+       maxRequestsPerConnection: 3
+     tcp:
+       maxConnections: 3
+   outlierDetection:
+     baseEjectionTime: 3m
+     consecutive5xxErrors: 1
+     interval: 1s
+     maxEjectionPercent: 100
+
+The first thing you should notice is that DestinationRule configures the circuit breaker. Apart from configuring the circuit breaker parameters, subsets need to be specified. Limiting concurrent connections is set in the connectionPool field.
+
+To configure the circuit breaker, use the outlierDetection section. For this example, the circuit will be opened if an error occurs within a one-second window, tripping the service for three minutes. After this time, the circuit will be half-opened, meaning real logic is executed. If it fails again, the circuit remains open; if not, it’s closed.
+
+kubectl apply -f src/main/kubernetes/destination-rule-circuit-breaker.yml
+destinationrule.networking.istio.io/rating configured
+
+We’ve configured the circuit breaker pattern in Istio; let’s execute the siege command again and inspect the logs of rating v2.
+
+siege -r 10 -c 4 -v -d 1 192.168.99.116:31304/book/1
+
+HTTP/1.1 200     0.04 secs:      39 bytes ==> GET  /book/1
+HTTP/1.1 200     0.03 secs:      39 bytes ==> GET  /book/1
+
+Transactions:		          40 hits
+Availability:		      100.00 %
+
+Inspect the logs again. Remember that in the previous run, we left off at Request 59.
+
+kubectl logs rating-service-v2-66b55746d-f4hpl -c rating-service -n default
+
+kubectl logs rating-service-v2-66b55746d-f4hpl -c rating-service -n default
+
+…
+Request 56
+Request 57
+Request 58
+Request 59
+Request 60
+
+Rating v2 only receives one request because the first processed request returned an error, the circuit was opened, and no more requests were sent to rating v2.
+
+We’ve now seen resiliency in action using Istio. Instead of implementing this logic in the service together with the business logic, the sidecar container implements it.
+
+Finally, execute the following command to get back rating v2 to the previous state.
+
+kubectl exec -ti rating-service-v2-66b55746d-f4hpl -c rating-service curl localhost:8080/rate/behave
+Back to normal
+
+Authentication
+
+One of the issues we may find when implementing a microservices architecture is how to protect communications among internal services. Should we use mTLS? Should we authenticate requests? And should we authorize them? The answer to these questions is YES!. Step-by-step, we’re going to see how Istio may help us with this.
+Authentication
+
+Istio automatically upgrades all traffic among the proxies and workloads to mTLS without changing anything in the service code. Meanwhile, as developers, we implement services using the HTTP protocol. When the service is “istioized,” the communication among services occurs with HTTPS. Istio in charge of managing certificates, certificate authorities, or revoking/renewing certificates.
+
+To validate that mTLS is enabled, we may use the istioctl tool by executing the following command:
+
+istioctl experimental authz check book-service-5cc59cdcfd-5qhb2 -a
+
+LISTENER[FilterChain]     HTTP ROUTE          ALPN        mTLS (MODE)          AuthZ (RULES)
+
+...
+virtualInbound[5] inbound|8080|http|book-service.default.svc.cluster.local             istio,istio-http/1.0,istio-http/1.1,istio-h2 noneSDS: default     yes (PERMISSIVE)     no (none)
+
+…
+
+The Book-service host in port 8080 has mTLS configured with a permissive strategy.
+Authorization
+
+Let’s see how to enable authenticating end-users with Istio using the JSON Web Token (JWT) format.
+
+The first thing to do is apply a RequestAuthentication resource. This policy ensures that if the Authorization header contains a JWT token, it must be valid, not expired, issued by the correct issuer, and not manipulated.
+
+apiVersion: "security.istio.io/v1beta1"
+kind: "RequestAuthentication"
+metadata:
+ name: "bookjwt"
+ namespace: default
+spec:
+ selector:
+   matchLabels:
+     app.kubernetes.io/name: book-service
+ jwtRules:
+ - issuer: "testing@secure.istio.io"
+   jwksUri: "https://gist.githubusercontent.com/lordofthejars/7dad589384612d7a6e18398ac0f10065/raw/ea0f8e7b729fb1df25d4dc60bf17dee409aad204/jwks.json"
+
+The essential fields are:
+
+    issuer: Valid issuer of the token. If the provided token doesn’t specify this issuer in the iss JWT field, then the token is invalid.
+    jwksUri: URL of the jwks file where public keys are registered for validating the token signature.
+
+kubectl apply -f src/main/kubernetes/request-authentication-jwt.yml -n default
+requestauthentication.security.istio.io/bookjwt created
+
+Run now the curl command again with an invalid token:
+
+curl 192.168.99.116:31304/book/1 -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkRIRmJwb0lVcXJZOHQyenBBMnFYZkNtcjVWTzVaRXI0UnpIVV8tZW52dlEiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjQ2ODU5ODk3MDAsImZvbyI6ImJhciIsImlhdCI6MTUzMjM4OTcwMCwiaXNzIjoidGVzdGluZ0BzZWN1cmUuaXN0aW8uaW8iLCJzdWIiOiJ0ZXN0aW5nQHNlY3VyZS5pc3Rpby5pbyJ9.CfNnxWP2tcnR9q0vxyxweaF3ovQYHYZl82hAUsn21bwQd9zP7c-LS9qd_vpdLG4Tn1A15NxfCjp5f7QNBUo-KC9PJqYpgGbaXhaGx7bEdFWjcwv3nZzvc7M__ZpaCERdwU7igUmJqYGBYQ51vr2njU9ZimyKkfDe3axcyiBZde7G6dabliUosJvvKOPcKIWPccCgefSj_GNfwIip3-SsFdlR7BtbVUcqR-yv-XOxJ3Uc1MI0tz3uMiiZcyPV7sNCU4KRnemRIMHVOfuvHsU60_GhGbiSFzgPTAa9WTltbnarTbxudb_YEOx12JiwYToeX0DCPb43W1tzIBxgm8NxUU"
+
+Jwt verification fails
+
+Since the token is invalid, the request is rejected with an HTTP/1.1 401 Unauthorized code.
+
+Repeat the previous request with a valid token:
+
+curl 192.168.99.116:31304/book/1 -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkRIRmJwb0lVcXJZOHQyenBBMnFYZkNtcjVWTzVaRXI0UnpIVV8tZW52dlEiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjQ2ODU5ODk3MDAsImZvbyI6ImJhciIsImlhdCI6MTUzMjM4OTcwMCwiaXNzIjoidGVzdGluZ0BzZWN1cmUuaXN0aW8uaW8iLCJzdWIiOiJ0ZXN0aW5nQHNlY3VyZS5pc3Rpby5pbyJ9.CfNnxWP2tcnR9q0vxyxweaF3ovQYHYZl82hAUsn21bwQd9zP7c-LS9qd_vpdLG4Tn1A15NxfCjp5f7QNBUo-KC9PJqYpgGbaXhaGx7bEdFWjcwv3nZzvc7M__ZpaCERdwU7igUmJqYGBYQ51vr2njU9ZimyKkfDe3axcyiBZde7G6dabliUosJvvKOPcKIWPccCgefSj_GNfwIip3-SsFdlR7BtbVUcqR-yv-XOxJ3Uc1MI0tz3uMiiZcyPV7sNCU4KRnemRIMHVOfuvHsU60_GhGbiSFzgPTAa9WTltbnarTbxudb_YEOx12JiwYToeX0DCPb43W1tzIBxgm8NxUg"
+
+{"bookId":1,"name":"Book 1","rating":3}
+
+We now see a valid response as the token is correct.
+
+So far, we’re only authenticating requests (only a valid token is required), but Istio also supports authorization following a role-based access control (RBAC) model. Let’s create an AuthorizationPolicy to only allow requests with a valid JSON Web Token with the claim role set to customer. Create a file with name authorization-policy-jwt.yml:
+
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+ name: require-jwt
+ namespace: default
+spec:
+ selector:
+   matchLabels:
+     app.kubernetes.io/name: book-service
+ action: ALLOW
+ rules:
+ - from:
+   - source:
+      requestPrincipals: ["testing@secure.istio.io/testing@secure.istio.io"]
+   when:
+   - key: request.auth.claims[role]
+     values: ["customer"]
+
+kubectl apply -f src/main/kubernetes/authorization-policy-jwt.yml
+authorizationpolicy.security.istio.io/require-jwt created
+
+Then execute the exact same curl command as before:
+
+curl 192.168.99.116:31304/book/1 -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkRIRmJwb0lVcXJZOHQyenBBMnFYZkNtcjVWTzVaRXI0UnpIVV8tZW52dlEiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjQ2ODU5ODk3MDAsImZvbyI6ImJhciIsImlhdCI6MTUzMjM4OTcwMCwiaXNzIjoidGVzdGluZ0BzZWN1cmUuaXN0aW8uaW8iLCJzdWIiOiJ0ZXN0aW5nQHNlY3VyZS5pc3Rpby5pbyJ9.CfNnxWP2tcnR9q0vxyxweaF3ovQYHYZl82hAUsn21bwQd9zP7c-LS9qd_vpdLG4Tn1A15NxfCjp5f7QNBUo-KC9PJqYpgGbaXhaGx7bEdFWjcwv3nZzvc7M__ZpaCERdwU7igUmJqYGBYQ51vr2njU9ZimyKkfDe3axcyiBZde7G6dabliUosJvvKOPcKIWPccCgefSj_GNfwIip3-SsFdlR7BtbVUcqR-yv-XOxJ3Uc1MI0tz3uMiiZcyPV7sNCU4KRnemRIMHVOfuvHsU60_GhGbiSFzgPTAa9WTltbnarTbxudb_YEOx12JiwYToeX0DCPb43W1tzIBxgm8NxUg"
+
+RBAC: access denied
+
+The response is slightly different this time. Although the token is valid, access is denied  because the token doesn’t have a claimed role set to customer.
+
+Let’s use the following token:
+
+curl 192.168.99.116:31304/book/1 -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkRIRmJwb0lVcXJZOHQyenBBMnFYZkNtcjVWTzVaRXI0UnpIVV8tZW52dlEiLCJ0eXAiOiJKV1QifQ.eyJleHAiOjI1NDkwNTY4ODgsImlhdCI6MTU0OTA1Njg4OSwiaXNzIjoidGVzdGluZ0BzZWN1cmUuaXN0aW8uaW8iLCJyb2xlIjoiY3VzdG9tZXIiLCJzdWIiOiJ0ZXN0aW5nQHNlY3VyZS5pc3Rpby5pbyJ9.VM9VOHD2NwDjQ6k7tszB3helfAn5wcldxe950BveiFVg43pp7x5MWTjMtWQRmQc7iYul19PXsmGnSSOiQQobxdn2UnhHJeKeccCdX5YVgX68tR0R9xv_wxeYQWquH3roxHh2Xr2SU3gdt6s7gxKHrW7Zc4Z9bT-fnz3ijRUiyrs-HQN7DBc356eiZy2wS7O539lx3mr-pjM9PQtcDCDOGsnmwq1YdKw9o2VgbesfiHDDjJQlNv40wnsfpq2q4BgSmdsofAGwSNKWtqUE6kU7K2hvV2FvgwjzcB19bbRYMWxRG0gHyqgFy-uM5tsC6Cib-gPAIWxCdXDmLEiqIdjM3w"
+
+{"bookId":1,"name":"Book 1","rating":3}
+
+We now see a valid response as the token is correct and contains a valid role value.
+Observability
+
+Istio comes with four components installed to fit observability requirements:
+
+    Prometheus for monitoring.
+    Grafana for Visualizing.
+    Jaeger + Zipkin for tracing.
+    Kiali to have a global overview of the application.
+
+Get all Pods from the istio-system namespace:
+
+kubectl  get pods -n istio-system
+NAME                                   READY   STATUS         RESTARTS   AGE
+
+grafana-b54bb57b9-k5qbm                1/1     Running        0          178m
+istio-egressgateway-68587b7b8b-vdr67   1/1     Running        0          178m
+istio-ingressgateway-55bdff67f-hlnqw   1/1     Running        0          178m
+istio-tracing-9dd6c4f7c-44xhk          1/1     Running        0          178m
+istiod-76bf8475c-xphgd                 1/1     Running        7          177d
+kiali-d45468dc4-fl8j4                  1/1     Running        0          178m
+prometheus-74d44d84db-zmkd7            2/2     Running        0          178m
+
+Monitoring
+
+Istio integrates with Prometheus for sending all kinds of information related to network traffic and services. Moreover, it provides a Grafana instance to visualize all collected data.
+
+To access Grafana, let’s expose the Pod using the port-forward command:
+
+kubectl port-forward -n istio-system grafana-b54bb57b9-k5qbm 3000:3000
+Forwarding from 127.0.0.1:3000 -> 3000
+Forwarding from [::1]:3000 -> 3000
+
+Open a browser and access the Grafana dashboard by navigating to locahost:3000.
+
+Kiali is another tool running within Istio to manage Istio and observe the service mesh parameters, such as how services are connected, how they perform and what Istio resources are registered.
+
+To access Kiali, let’s expose the Pod using port-forward command:
+
+kubectl port-forward -n istio-system kiali-d45468dc4-fl8j4 20001:20001
+Forwarding from 127.0.0.1:20001 -> 20001
+Forwarding from [::1]:20001 -> 20001
+
+Open a browser, access the Istio dashboard, then navigate to locahost:20001.
+
+Tracing
+
+Tracing is used to visualize a program’s flow and data progression. Istio intercepts all requests/responses and sends them to Jaeger.
+
+Instead of using the port-forward command, we may use istioctl to expose the port and open the page automatically:
+
+istioctl dashboard jaeger
+
+Conclusions
+
+Developing and implementing a microservices architecture is a bit more challenging than developing a monolith application. We believe that microservicilities can drive you to create services correctly in terms of the application infrastructure.
+
+Istio implements some of these microservicilities in a sidecar container, making them reusable across all services independently of the programming language(s) used for the application.
+
+Moreover, the Istio approach lets us change the behavior of the services without having to redeploy them.
+
+If you plan to develop microservices and deploy them to Kubernetes, Istio is a viable solution as it integrates smoothly with Kubernetes.
+
+Source code demonstrated in this article may be found on this GitHub repository and source code for part one of this series may be found on this GitHub repository.
+About the Author
+
+Alex Soto is a Director of Developer Experience at Red Hat. He is passionate about the Java world, software automation, and he believes in the open-source software model. Soto is the co-author of Manning | Testing Java Microservices and O’Reilly | Quarkus Cookbook and contributor to several open-source projects. A Java Champion since 2017, he is also an international speaker and teacher at Salle URL University. You can follow him on Twitter (Alex Soto ⚛️) to stay tuned to what’s going on in Kubernetes and Java world.
+
