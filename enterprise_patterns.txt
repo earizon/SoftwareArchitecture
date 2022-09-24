@@ -38,7 +38,7 @@ s   |
     |   Message Service                    MQ Series, MSMQ, ...
 </pre>
 
-<pre zoom labels="enterprise_patterns,data.integration,architecture.event_stream,_PM.low_code,ui,architecture.decoupled,kafka," bgorange>
+<pre zoom labels="enterprise_patterns,data.integration,architecture.event_stream,01_PM.low_code,ui,architecture.decoupled,kafka," bgorange>
 <span xsmall>Apache NiFi: Data Routing</span>
 @[https://nifi.apache.org]
 - no-code, .drag-and-drop Web-GUI to build pipelines for
@@ -84,7 +84,7 @@ REFS:
 @[https://stackoverflow.com/questions/65625166/apache-camel-vs-apache-nifi]
 </pre>
 
-<pre zoom labels="data.analytics,_PM.low_code,_PM.TODO">
+<pre zoom labels="data.analytics,01_PM.low_code,_PM.TODO">
 <span title>GraphQL Engine</span>
 • Blazing fast, instant realtime GraphQL APIs for DB with fine 
   grained access control, also trigger webhooks on database events.
@@ -104,7 +104,7 @@ REFS:
 
 </pre>
 
-<pre zoom labels="data.analytics,_PM.low_code,_PM.TODO">
+<pre zoom labels="data.analytics,01_PM.low_code,_PM.TODO">
 <span title>NoCoDB: DDBB to spreedsheet</span>
 @[https://www.nocodb.com/]
 • Second position in GitHub for Top 32 Automatic Api Open Source Projects on Github (
@@ -114,7 +114,7 @@ https://awesomeopensource.com/projects/automatic-api
 • Turns any database into a smart spreadsheet.
 </pre>
 
-<pre zoom labels="db_engine,data.analytics,_PM.low_code,_PM.TODO">
+<pre zoom labels="db_engine,data.analytics,01_PM.low_code,_PM.TODO">
 <span title>Metabase</span>
 https://github.com/metabase/metabase
 • simplest way to get business intelligence and analytics from a DDBB to everyone.
@@ -123,7 +123,7 @@ https://github.com/metabase/metabase
 
 
 
-<pre zoom labels="db_engine,data.analytics,_PM.low_code,_PM.TODO">
+<pre zoom labels="db_engine,data.analytics,01_PM.low_code,_PM.TODO">
 <span title>Datasette.io</span>
 • Spin up a JSON API for any data in minutes. 
 • Prototype and prove your ideas without building a custom backend.
@@ -131,7 +131,7 @@ https://github.com/metabase/metabase
 
 
 
-<pre zoom labels="db_engine,data.analytics,_PM.low_code,_PM.TODO">
+<pre zoom labels="db_engine,data.analytics,01_PM.low_code,_PM.TODO">
 <span title>Redash:</span>
 - "Make your company Data Driven"
 - Redash is designed to enable anyone, regardless of the level of 
@@ -210,7 +210,7 @@ DataDog.
   transformations, native trace support, ... 
 https://grafana.com/blog/2020/05/18/grafana-v7.0-released-new-plugin-architecture-visualizations-transformations-native-trace-support-and-more/ 
 </pre>
-<pre zoom labels="enterprise_patterns,_PM.TODO">
+<pre zoom labels="enterprise_patterns,01_PM.TODO">
 <span xsmall>TOGAF</span>
 @[https://en.wikipedia.org/wiki/The_Open_Group_Architecture_Framework]
 The Open Group Architecture Framework (TOGAF) is a framework for enterprise
@@ -259,7 +259,7 @@ Summary from @[https://www.redhat.com/architect/TOGAF-importance]
     solution blueprints."
 </pre>
 
-<pre zoom label="enterprise_patterns,optimization,_PM.TODO" bgorange>
+<pre zoom label="enterprise_patterns,optimization,01_PM.TODO" bgorange>
 <span xsmall>Kogito</span>
 @[http://kie.org/]
 - Kogito == Drools + jBPM + OptaPlanner

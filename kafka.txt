@@ -43,7 +43,7 @@ design patterns.
 
 [[{]]
     <span title>Summary</span><br/>
-<pre zoom labels="kafka,_PM.ext_resource">
+<pre zoom labels="kafka,01_PM.ext_resource">
 <span xsmall>External Links</span>
 - Documentation:
 @[http://kafka.apache.org/documentation/]
@@ -71,7 +71,7 @@ design patterns.
 </pre>
 
 
-<pre zoom labels="kafka,101,_doc_has.diagram">
+<pre zoom labels="kafka,101,02_DOC_HAS.diagram">
 <span xsmall>Global Diagram</span>
 (one+ server in 1+ datacenters)
 
@@ -160,7 +160,7 @@ can wait for ACK.         ↓                          CONSUMER   |    CONSUMER 
 </pre>
 
 <span title>data-schema Support</span>
-<pre zoom labels="kafka.101,enterprise_patterns,_PM.TODO">
+<pre zoom labels="kafka.101,enterprise_patterns,01_PM.TODO">
 <span title>Apache AVRO format</span>
 • Efficient compac way to store data in disk.
 • "Imported" from Hadoop's World. 
@@ -591,7 +591,7 @@ https://docs.confluent.io/current/schema-registry/schema_registry_tutorial.html
 [[{]]
 <span title>APIs</span><br/>
 [[{]]
-<pre zoom labels="kafka,_PM.ext_resource,_doc_has.comparative">
+<pre zoom labels="kafka,01_PM.ext_resource,02_DOC_HAS.comparative">
 <span xsmall>API Summary</span>
 @[https://medium.com/@stephane.maarek/the-kafka-api-battle-producer-vs-consumer-vs-kafka-connect-vs-kafka-streams-vs-ksql-ef584274c1e]
 ┌──────────────────────────────────────────────────────────────────┐
@@ -683,12 +683,12 @@ KSQL :
    (as of 2019-11, gaps can be filled)
 
 <hr/>
-<pre zoom labels="kafka,_PM.TODO" bgorange>
+<pre zoom labels="kafka,01_PM.TODO" bgorange>
 <span xsmall>Message Delivery Semantics</span>
 @[http://kafka.apache.org/documentation.html#semantics]
 </pre>
 
-<pre zoom labels="kafka,_doc_has.code_snippet">
+<pre zoom labels="kafka,02_DOC_HAS.code_snippet">
 <span xsmall>producer</span>
 @[http://kafka.apache.org/11/javadoc/index.html?org/apache/kafka/clients/producer/kafkaproducer.html]
 - send streams of data to topics in the cluster.
@@ -843,7 +843,7 @@ Basics:
 </pre>
 [[}]]
 [[{]]
-<pre zoom labels="kafka,_PM.TODO">
+<pre zoom labels="kafka,01_PM.TODO">
 <span xsmall>Connect</span>
 @[http://kafka.apache.org/11/javadoc/index.html?overview-summary.html]
 (<a TODO href="http://kafka.apache.org/documentation.html#connect">more info</a>)
@@ -870,7 +870,7 @@ Basics:
 @[http://kafka.apache.org/documentation/#connectconfigs]
 </pre>
 
-<pre zoom labels="kafka,_PM.TODO">
+<pre zoom labels="kafka,01_PM.TODO">
 <span xsmall>AdminClient</span>
 @[http://kafka.apache.org/11/javadoc/index.html?org/apache/kafka/clients/admin/AdminClient.html]
 
@@ -881,7 +881,7 @@ Basics:
 @[http://kafka.apache.org/documentation/#adminclientconfigs]
 </pre>
 
-<pre zoom labels="kafka,architecture.event_stream,_PM.TODO">
+<pre zoom labels="kafka,architecture.event_stream,01_PM.TODO">
 <span xsmall>Streams</span>
 @[http://kafka.apache.org/25/documentation/streams/]
 See also:
@@ -1182,7 +1182,7 @@ See details: @[http://kafka.apache.org/documentation/#streamsconfigs]
   - Examples: Event Streaming Platform
 </pre>
 
-<pre zoom labels="kafka,_PM.TODO">
+<pre zoom labels="kafka,01_PM.TODO">
 <span bgorange xsmall>KSQL(ksqlDB)</span>
 @[https://www.confluent.io/]
 @[https://www.confluent.io/blog/ksql-open-source-streaming-sql-for-apache-kafka/]
@@ -1229,7 +1229,7 @@ meet these scalability requirements.
 
 
 <span title>Developer Tools</span>
-<pre zoom labels="kafka,_PM.low_code,protocol.client_server,_PM.TODO">
+<pre zoom labels="kafka,01_PM.low_code,protocol.client_server,_PM.TODO">
 <span title>Pixy</span>
 @[https://github.com/mailgun/kafka-pixy]
   Kafka-Pixy is a dual API (gRPC and REST) proxy for Kafka with 
@@ -1237,7 +1237,7 @@ meet these scalability requirements.
   complexity of the Kafka client protocol and provide a stupid simple 
   API that is trivial to implement in any language.
 </pre>
-<pre zoom labels="kafka,_PM.low_code,computing.containerization,">
+<pre zoom labels="kafka,01_PM.low_code,computing.containerization,">
 <span XSMALl>Docker Img For Developers</span>
 @[https://github.com/lensesio/fast-data-dev]
 - Apache Kafka docker image for developers; with Lenses (lensesio/box) 
@@ -1271,7 +1271,7 @@ meet these scalability requirements.
 </pre>
 
 <span title>DevOps</span>
-<pre zoom labels="kafka.devops,_PM.TODO">
+<pre zoom labels="kafka.devops,01_PM.TODO">
 <span xsmall>Quick start</span>
 @[http://kafka.apache.org/documentation.html#quickstart]
 BºPRE-SETUPº
@@ -1393,7 +1393,7 @@ BºPRE-SETUPº
 • Compaction: kafka.devops, kakfa.performance
 http://kafka.apache.org/documentation.html#compaction
 </pre>
-<pre zoom labels="kafka.devops.k8s,_PM.low_code,kafka.security,_PM.TODO">
+<pre zoom labels="kafka.devops.k8s,01_PM.low_code,kafka.security,_PM.TODO">
 <span title>Strimzi k8s Operator</span>
   "Kafka on K8s in a few minutes"
 • Strimzi: RedHat OOSS project that provides container images and 
@@ -1410,7 +1410,7 @@ http://kafka.apache.org/documentation.html#compaction
  
 </pre>
 <span title>Kafka vs ...</span>
-<pre zoom labels="architecture.event_stream.pulsar,kafka,_doc_has.comparative,_PM.TODO">
+<pre zoom labels="architecture.event_stream.pulsar,kafka,02_DOC_HAS.comparative,01_PM.TODO">
 <span title>Pulsar vs Kafka</span>
 - Pulsar is a younger project Bºinspired and informed by Kafkaº. 
   Kafka on the other side has a bigger community. 
@@ -1525,7 +1525,7 @@ Bº========================º
 @[https://streamnative.io/blog/tech/pulsar-vs-kafka-part-1]
 </pre>
 
-<pre zoom labels="kafka.devops,_doc_has.comparative,_PM.TODO">
+<pre zoom labels="kafka.devops,02_DOC_HAS.comparative,01_PM.TODO">
 <span title>KubeMQ: Kafka alternative</span>
 @[https://dzone.com/articles/seamless-migration-from-kafka-to-kubemq?edition=699391]
 • Non free product.
@@ -1559,7 +1559,7 @@ Bº========================º
 
 
 
-<pre zoom labels="kafka.akka,_PM.TODO">
+<pre zoom labels="kafka.akka,01_PM.TODO">
 <span xsmall>Akka+Kotlin:Data Pipes</span>
 @[https://www.kotlindevelopment.com/data-pipelines-kotlin-akka-kafka/]
 - Objective: 
@@ -1715,7 +1715,7 @@ You can find the complete source code on GitHub.
 
 [[{]]
 <span title>Unordered</span><br/>
-<pre zoom labels="kafka.security,qa,distributed.ha,kafka.troubleshooting,security.backups,_PM.TODO">
+<pre zoom labels="kafka.security,qa,distributed.ha,kafka.troubleshooting,security.backups,01_PM.TODO">
 <span xsmall>Unordered</span>
 • Security:
   https://kafka.apache.org/documentation/#security

@@ -4,7 +4,7 @@
 
 [[{]]
 <span title>Messaging Architecture</span>
-<pre zoom label="architecture.messaging,enterprise_patterns.101,data.integration,architecture.event_stream,architecture.decoupled,cache.redis,_doc_has.comparative" bgorange id="messaging_summary">
+<pre zoom label="architecture.messaging,enterprise_patterns.101,data.integration,architecture.event_stream,architecture.decoupled,cache.redis,02_DOC_HAS.comparative" bgorange id="messaging_summary">
 <span xsmall>Summary</span>
 • Messaging represents a layer down ESB in some cases.
   Messaging architectures focus on reliable delivery of messages of different nature/timelife.
@@ -266,7 +266,7 @@ Bº####################
 See @[#activemq_summary]
 </pre>
 
-<pre zoom labels="architecture.event_stream,scalability,_PM.TODO">
+<pre zoom labels="architecture.event_stream,scalability,01_PM.TODO">
 <span xsmall>OpenHFT: microSec Messaging storing to disk</span>
 @[https://github.com/OpenHFT/]
    - Chronicle-Queue: Micro second messaging that stores everything to disk

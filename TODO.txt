@@ -145,7 +145,7 @@ https://dzone.com/articles/using-apache-spark-and-spring-batch-for-processing?ed
 ● Authentication Service Auth0:
   https://www.youtube.com/channel/UCUlQ5VoIzE_kFbYjzUwHTKA
 
-● REST-driven data mng.: [[{data.management,_PM.low_code,radarradar,,_PM.TODO]]
+● REST-driven data mng.: [[{data.management,01_PM.low_code,radarradar,,_PM.TODO]]
 @[https://slime.aitnologies.es]
 • Manage your data following the REST principles. Data first
 • Let data describe the exposed backend, just push new data to view 
@@ -224,7 +224,7 @@ https://dzone.com/articles/using-apache-spark-and-spring-batch-for-processing?ed
 ● File format comparative: Avro, JSON, ORC , Parquet 
   https://www.slideshare.net/HadoopSummit/file-format-benchmark-avro-json-orc-parquet
 
-● TypeDB:  [[{graph_networks,_PM.low_code,data.analytics.sql,_doc_has.comparative,qa,_PM.TODO]]
+● TypeDB:  [[{graph_networks,01_PM.low_code,data.analytics.sql,02_DOC_HAS.comparative,qa,_PM.TODO]]
 @[https://github.com/graknlabs/grakn]
 · previously known as Grakn?
 · Growing interest in Google Trends [2021]
@@ -453,6 +453,9 @@ https://hackernoon.com/graphql-vs-rest-how-to-choose-one-over-the-other
 ● Version Vector:
   https://martinfowler.com/articles/patterns-of-distributed-systems/version-vector.html 
 
+● Request Batch 
+  https://martinfowler.com/articles/patterns-of-distributed-systems/request-batch.html
+
 ● What's New in Grafana v7.4 
   https://grafana.com/docs/grafana/latest/whatsnew/whats-new-in-v7-4/ 
 
@@ -549,7 +552,7 @@ https://hackernoon.com/graphql-vs-rest-how-to-choose-one-over-the-other
   valuable feedback on the ideas in this paper. We also thank the
   CIDR reviewers for their feedback
 
-● Idempotency HTTP Header:[[{standards,payments,api_management,qa,protocol,_PM.TODO]]
+● Idempotency HTTP Header:[[{standards,payments,api_management,qa,protocol,01_PM.TODO]]
 @[https://tools.ietf.org/id/draft-idempotency-header-01.html]
 By J. Jena ( PayPal, Inc.), S. Dalal
 
@@ -571,7 +574,7 @@ By J. Jena ( PayPal, Inc.), S. Dalal
   transfer MUST NOT be allowed.
 [[}]]
 
-● hasura/graphql-engine:  [[{_PM.low_code]]
+● hasura/graphql-engine:  [[{01_PM.low_code]]
 https://github.com/hasura/graphql-engine
 
 - accelerates API development 10x 
@@ -599,7 +602,7 @@ https://github.com/hasura/graphql-engine
 [[}]]
 
 
-● Dapr  [[{_PM.low_code,sidecar}]]
+● Dapr  [[{01_PM.low_code,sidecar}]]
 
 
 ● Time-Sensitive Networking:
@@ -759,7 +762,7 @@ https://github.com/hasura/graphql-engine
     Use Case: Blob         -> Blob             S3            Blob Storage Cloud Storage    HDFS, MinIO,
 
 
-● InfluxDB (Elas.Search Alt for TimeSeries):[[{elk,db_engine.timeseries.influxdb,_PM.ext_resource]]
+● InfluxDB (Elas.Search Alt for TimeSeries):[[{elk,db_engine.timeseries.influxdb,01_PM.ext_resource]]
 @[https://logz.io/blog/influxdb-vs-elasticsearch/]
 
 • awesome influxdb:
@@ -816,7 +819,7 @@ https://opensource.com/article/20/3/open-source-multi-factor-authentication 
 Open source alternative for multi-factor authentication: privacyIDEA 
 [[}]]
 
-● Chrony (NTP replacement): [[{distributed.101,protocol.ntp,computing.infraestructure,_doc_has.comparative,]]
+● Chrony (NTP replacement): [[{distributed.101,protocol.ntp,computing.infraestructure,02_DOC_HAS.comparative,]]
 @[https://www.infoq.com/news/2020/03/ntp-chrony-facebook/]
 Facebook’s Switch from ntpd to chrony for a More Accurate, Scalable NTP Service
 [[}]]
@@ -991,7 +994,7 @@ The fallacies are[1]
   - Augmenting or Replacing Legacy Messaging Systems
   [[}]]
 
-● Serverless Architecture:[[{architecture.serverless,_PM.low_code,computing.kubernetes]]
+● Serverless Architecture:[[{architecture.serverless,01_PM.low_code,computing.kubernetes]]
 · Also known as (AWS non official name) "Lambda" architecture.
 · LinkedIn drops Lambda Arch to remove complexity                         [[comparative]]
 @[https://www.infoq.com/news/2020/12/linkedin-lambda-architecture/]
@@ -1002,7 +1005,7 @@ The fallacies are[1]
   OpenFaaS makes it simple to deploy both functions and existing code to Kubernetes.
 [[}]]
 
-● CliG Dev: [[{_PM.low_code,qa.ui,qa.usability]]
+● CliG Dev: [[{01_PM.low_code,qa.ui,qa.usability]]
 @[https://clig.dev/]
 Command Line Interface Guidelines
 [[}]]
@@ -1020,7 +1023,7 @@ Command Line Interface Guidelines
 [[}]]
 
 
-● Apache AirFlow: [[{_PM.low_code,integration,ui,cloud,cloud,monitoring]]
+● Apache AirFlow: [[{01_PM.low_code,integration,ui,cloud,cloud,monitoring]]
    https://dzone.com/articles/apache-airflow-20-a-practical-jump-start?edition=676391
 - community driven platfom to programmatically author, schedule and monitor workflows. 
 
@@ -1055,7 +1058,7 @@ Command Line Interface Guidelines
   · https://github.com/BasPH/data-pipelines-with-apache-airflow
 [[}]]
 
-● Jailer SQL "Explorer":[[{SQL,_PM.low_code,data_architecture.management]]
+● Jailer SQL "Explorer":[[{SQL,01_PM.low_code,data_architecture.management]]
 @[https://github.com/Wisser/Jailer]
 • Jailer Database:  tool for database subsetting and relational data browsing.
 • The Subsetter exports consistent, referentially intact row-sets 
@@ -1093,7 +1096,7 @@ stage, provided by Huff0 and FSE library.
 https://www.enterprisestorageforum.com/cloud-storage/object-storage-protocol-could-mean-the-end-for-posix.html
 [[}]]
 
-● Kafka: Removing Zookeeper Dependency: kafka.zookeeper,_PM.TODO
+● Kafka: Removing Zookeeper Dependency: kafka.zookeeper,01_PM.TODO
 https://www.infoq.com/podcasts/kafka-zookeeper-removing-dependency/
 
 ● Noclassified Identity Technologies [[{architecture.identity]]
@@ -1172,7 +1175,7 @@ make effective use of the level of parallelism in this environment.
 
 
 
-● Search UI: React+ElasticSearch "site search" accelerator: [[{db_engine.search,_PM.low_code]]
+● Search UI: React+ElasticSearch "site search" accelerator: [[{db_engine.search,01_PM.low_code]]
   https://github.com/ProjectOpenSea/search-ui
   https://www.elastic.co/enterprise-search/search-ui?size=n_6_n
 • React Library for the fast development of modern, engaging search experiences
@@ -1408,7 +1411,7 @@ Bº(Bulk) Log Managementº
   <a href="https://dzone.com/articles/when-disruptor-not-good-fit">When Disruptor is not good fit</a>
 
 
-● Solr (ElasticSearch Alternative)</span>[[{db_engine.search.solr,_doc_has.comparative,_PM.TODO]]
+● Solr (ElasticSearch Alternative)</span>[[{db_engine.search.solr,02_DOC_HAS.comparative,01_PM.TODO]]
 @[http://lucene.apache.org/solr/]
 - blazing-fast, search platform built on Apache Lucene
 - Doesn't include analytics engine like ElasticSearch
@@ -1478,4 +1481,32 @@ Local               Consistent prefix   Consistent prefix
    can choose to do fast Apache TinkerPop Gremlin traversals for
    property graph or tuned SPARQL queries over RDF graphs..."
 
+● Genesis Distributed Testing  [[{testing,distributed.qa,01_PM.TODO]]
+@[https://docs.whiteblock.io/introduction_to_testing.html]
+The following are types of tests one can perform on a distributed system:
+- Functional Testing is conducted to test whether a system performs as it was 
+  specified or in accordance with formal requirements
+- Performance Testing tests the reliability and responsiveness of a system 
+  under different types of conditions and scenarios
+- Penetration Testing tests the system for security vulnerabilities
+- End-to-End Testing is used to determine whether a system’s process flow 
+  functions as expected
+- Fuzzing is used to test how a system responds to unexpected, random, or 
+  invalid data or inputs
 
+Genesis is a versatile testing platform designed to automate the tests listed 
+above, making it faster and simpler to conduct them on distributed systems 
+where it was traditionally difficult to do so. Where Performance, End-to-End, 
+and Functional testing comprise the meat of Genesis’ services, other types of 
+testing are enabled through the deployment of services and sidecars on the 
+platform.
+
+End-to-End tests can be designed by applying exit code checks for process 
+completion, success, or failure in tasks and phases, while Performance tests 
+can be conducted by analyzing data from tests on Genesis that apply a variety 
+of network conditions and combinations thereof. Functional tests can use a 
+combination of tasks, phases, supplemental services and sidecars, and network 
+conditions, among other tools.
+
+These processes and tools are further described in this documentation.
+[[}]]

@@ -1,7 +1,5 @@
-[[{]]
-<span title>AAA</span>
-<pre zoom labels="aaa.oauth,qa.standards">
-<span xsmall>keycloak</span>
+● AAA Architecture [[{aaa]]
+• keycloak: [[{aaa.oauth,qa.standards]]
 @[https://www.keycloak.org/]
 @[https://medium.com/keycloak/keycloak-essentials-86254b2f1872]                   [TODO]
 @[https://medium.com/keycloak/keycloak-realm-client-configuration-dfd7c8583489]
@@ -29,7 +27,6 @@
    Password Policies
    Customize password policies
 
-
 - AA using the Keycloak REST API
 @[https://developers.redhat.com/blog/2020/11/24/authentication-and-authorization-using-the-keycloak-rest-api/]
 @[https://github.com/edwin/java-keycloak-integration]
@@ -41,7 +38,7 @@ Ex Use Case:
   - Teachers (IDs)
  - each user have different access and privileges at each school.
 
-BºSETUP:º {
+ *SETUP:* {
   → Creating Keycloak realm:
     → Add 'education' realm for ministry.
       (click enable and create)
@@ -57,11 +54,11 @@ BºSETUP:º {
                   Client ID: jakarta-school
                   Enabled: ON
                   Consent Required: OFF
-                BºClient Protocol: openid-connectº
+                 *Client Protocol: openid-connect*
                   Access Type: confidential
-                BºStandard Flow Enabled: ONº
+                 *Standard Flow Enabled: ON*
                   Impact Flow Enabled: OFF
-                BºDirect Access Grants Enabled: ONº
+                 *Direct Access Grants Enabled: ON*
                   Browser Flow: browser            (← Scroll to bottom)
                   Direct Grant Flow: direct grant
                 → Go to tab "Roles" tab → Add next Roles:
@@ -86,11 +83,11 @@ BºSETUP:º {
                       → go to "Users page" → "Add user".
                         - create the new users and Save. Ex:
                           Username      : edwin
-                        BºEmail         : edwin@redhat.comº
+                         *Email         : edwin@redhat.com*
                           First Name    : Edwin
                           Last Name     : M
                           User Enabled  : ON
-                        BºEmail Verified: OFFº
+                         *Email Verified: OFF*
                         → Go to tab "Role Mappings" → Client Roles 
                           (for each user in jakarta-school)
                           Check that roles perm. are enabled:
@@ -99,7 +96,7 @@ BºSETUP:º {
                           "view-student-profile".
 }
 
-BºSpring Boot Java App using Keycloak for AAº
+ *Spring Boot Java App using Keycloak for AA*
   - pom.xml:
     ˂?xml version="1.0" encoding="UTF-8"?˃
     ...  
@@ -151,7 +148,7 @@ BºSpring Boot Java App using Keycloak for AAº
         MultiValueMap˂String, String˃ map = new LinkedMultiValueMap˂˃();
         map.add("client_id",clientId);
         map.add("client_secret",clientSecret);
-        map.add("refresh_token",refreshToken); // ← RºWARNº: Use refresh 
+        map.add("refresh_token",refreshToken); // ← R*WARN*: Use refresh 
                                                //   (vs access) token
 
         HttpEntity˂MultiValueMap˂String, String˃˃ request = new HttpEntity˂˃(map, null);
@@ -172,11 +169,11 @@ BºSpring Boot Java App using Keycloak for AAº
     - Authorization (== "role valid for a given API"?) alternatives:
       - Alt 1. determine what role a bearer token brings by verifying it 
                against Keycloak’s userinfo API
-             RºDrawback:º multiple roundtrip request needed
+             R*Drawback:* multiple roundtrip request needed
         following response from Keycloak is expected:
         {
             "sub": "ef2cbe43-9748-40e5-aed9-fe981e3082d5",
-          Oº"roles": [ "teacher" ],º
+          O*"roles": [ "teacher" ],*
             "name": "Edwin M",
             "preferred_username": "edwin",
             "given_name": "Edwin",
@@ -194,8 +191,8 @@ BºSpring Boot Java App using Keycloak for AAº
                   "kty": "RSA",
                   "alg": "RS256",
                   "use": "sig",
-                  "n": "4OPCc_LDhU6ADQj7cEgRei4....",← Oºpublic key usedº
-                  "e": "AQAB"                          Oºfor decodingº
+                  "n": "4OPCc_LDhU6ADQj7cEgRei4....",← O*public key used*
+                  "e": "AQAB"                          O*for decoding*
                 }
               ] }
         - A sample decoded JWT token will look like:
@@ -234,14 +231,14 @@ BºSpring Boot Java App using Keycloak for AAº
               Jwk jwk = jwtService.getJwk();
               Algorithm algorithm = Algorithm.RSA256(
                         (RSAPublicKey) jwk.getPublicKey(), null);
-              algorithm.verify(jwt);                // ← Bºcheck signatureº
+              algorithm.verify(jwt);                // ←  *check signature*
 
               List˂String˃ roles = ((List)jwt.getClaim("realm_access").
                                     asMap().get("roles"));
-              if(!roles.contains("teacher"))        //  ← Bºcheck rolesº
+              if(!roles.contains("teacher"))        //  ←  *check roles*
                   throw new Exception("not a teacher role");
 
-              Date expiryDate = jwt.getExpiresAt(); // ← Bºcheck expirationº
+              Date expiryDate = jwt.getExpiresAt(); // ←  *check expiration*
               if(expiryDate.before(new Date()))
                   throw new Exception("token is expired");
 
@@ -250,13 +247,11 @@ BºSpring Boot Java App using Keycloak for AAº
               throw new RuntimeException(e);
                   }
           }
-
-
-</pre>
-<pre zoom labels="aaa,_PM.TODO,">
-<span xsmall>FreeIPA</span>
-@[https://www.reddit.com/r/linuxadmin/comments/apbjtc/freeipa_groups_and_linux_usernames/]
-</pre>
 [[}]]
 
+• FreeIPA:
+@[https://www.reddit.com/r/linuxadmin/comments/apbjtc/freeipa_groups_and_linux_usernames/]
 
+• (Community-driven) User Controlled Authorization Network (UCAN) STANDARD.
+  E.g use in nft.storage: https://github.com/nftstorage/nft.storage/issues/851
+[[aaa}]]

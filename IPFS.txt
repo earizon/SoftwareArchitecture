@@ -105,15 +105,33 @@ REF: https://blog.infura.io/post/an-introduction-to-ipfs
     files         Interact UNIX-like with objects
     dag           Interact with IPLD documents 
                   (experimental)
+    e.g:
+    $ ipfs dag export $CID > FILENAME.car 
   
   ● (P2P) NETWORK COMMANDS                               ● TOOL COMMANDS
-    id            Show IPFS peers info                     config        Manage configuration
+                                                           config        Manage configuration
     bootstrap     Add|remove bootstrap peers               version       Show IPFS version information
     swarm         Manage connections to p2p network        update        Download+apply go-ipfs updates
     dht           Query the DHT for values or peers        commands      List all available commands
     ping          Measure latency-of-connection
     diag          Print diagnostics
- 
+    e.g.:
+    $ ipfs swarm peers
+    /ip4/192.1.2.1/tcp/4001/ipfs/QmSo...
+    /ip4/192.1.2.2/tcp/4001/ipfs/QmSo...
+    ...
+
+    $ ipfs id  # Dump IPFS peer info
+    {
+      "ID": "12D3KooWRPYAg5JuAnJ6wQjdkvBoPGmUB9xWDKvdgkWWCcgtcmRp",
+      "PublicKey": "CAESIOdexrl1Uw0B8QyMQBOp/zrLvJThl1NBy84JBQiq/EIX",
+      "Addresses": null,
+      "AgentVersion": "kubo/0.15.0/3ae52a4",
+      "ProtocolVersion": "ipfs/0.1.0",
+      "Protocols": null
+    }
+
+
 [[}]] 
 
 ● IPFS: "file Pinning" HOW-TO: [[{]]
@@ -128,7 +146,7 @@ REF: https://blog.infura.io/post/an-introduction-to-ipfs
   Objects added through ipfs add are PINNED RECURSIVELY BY DEFAULT. 
 
   $ echo "ipfs rocks" > foo    
-  $ ipfs add foo               
+  $ ipfs add ./foo               
   > added QmRTV3h1jLcA... foo
 
   $ ipfs pin ls --type=all       <- list all pinned objects in local storage.
@@ -187,7 +205,7 @@ NEXT) install the Swarm key generation utility:
      github.com/Kubuxu/go-ipfs-swarm-key-gen/ipfs-swarm-key-gen
    $ ipfs-swarm-key-gen & > ~/swarm.key             <- Generate key 
    $ scp ~/swarm.key "userXX"@node{0,1,2}:~/.ipfs   <- Copy to all nodes
-   $ ipfs bootstrap rm -all                         <- REMOVE default bootstrap entries
+   $ ipfs bootstrap rm --all                        <- REMOVE default bootstrap entries
                                                        (in all nodes)
 
    $ BOOTSTRAP_HASH="/ip4/${BOOTSTRAP_NODE_IP}/tcp/4001"    
@@ -220,7 +238,7 @@ NEXT) install the Swarm key generation utility:
    NODE 0:
    $ echo "hello IPFS" > test.txt                                
    QmZU...                                 Check at node 1/2/... like:
-   $ ipfs add file.txt                     $ ipfs cat QmZU...    
+   $ ipfs add ./file.txt                   $ ipfs cat QmZU...    
                                            WARN: at this point content is just in NODE 0, 
                                                  NOT YET REPLICATED, but accesible to node1/2/...
 
@@ -252,29 +270,9 @@ NEXT) Systemd integration:
   NOTE: There are two ways how to organize IPFS cluster:
   1st) set a fixed peerset  : It will not be possible to "grow" the cluster.
   2nd) set 1+bootstrap nodes: 
-
-    $ git clone \                                 <- Install from source  
-      https://github.com/ipfs/ipfs-cluster.git \     (alternatively dockerize, ...)
-      $GOPATH/src/github.com/ipfs/ipfs-cluster       Repeat in all nodes.
-    $ cd $GOPATH/src/github.com/ipfs/ipfs-cluster
-    $ make install
-    $ ipfs-cluster-service --version              <- Check installation is "OK"
-    $ ipfs-cluster-ctl --version
-
-    $ export CLUSTER_SECRET=$(                    <- Generate and set up 'CLUSTER_SECRET' ENV.VAR
-       od -vN 32 -An -tx1 /dev/urandom | \           Output will be similar to:
-       tr -d ' \n'                                   > 98eb46e1c56fdba420ec947512b8836d↲
-      )                                                1e6b46b38346ab8a78015b98244038f7
-                                                     copy it to all nodes (in ~/.bashrc, ...)
-                                                     ┌ KEY-POINT: Sharing the CLUSTER_SECRET ──┐
-                                                     │ allow peers to understand that they are │
-                                                     │ part of one IPFS-Cluster.               │
-                                                     └─────────────────────────────────────────┘
-
-    $ cluster-service init                        <- Init the cluster  (@node1/2/...
-    $ cluster-service daemon                      <- Start the cluster (@node1/2/...)
-    > ...IPFS Cluster is ready cluster.go:461        WARN: ipfs daemon must be running properly
-    > ipfs-cluster-service daemon 
+    $ OCI_IMG="ipfs/ipfs-cluster:v1.0.1"
+    $ docker run --rm                               ${OCI_IMG} --version
+    $ docker run --rm --entrypoint ipfs-cluster-ctl ${OCI_IMG} --version
 
     $ ipfs-cluster-service init                   <- Bootstrap Node0
     $ ipfs-cluster-service daemon --bootstrap     <- Bootstrap Node0
@@ -283,6 +281,20 @@ NEXT) Systemd integration:
                                                                  (vs IPFS peer ID)
                                                      Fetch current value like:
                                                      $ ipfs-cluster-service id 
+
+    $ docker ... ipfs-cluster-service ... init    <- Init the cluster  (@node1/2/...
+      ...
+      Initializing default configuration...
+      configuration written to /data/ipfs-cluster/service.json.
+      ...
+      new empty peerstore written to /data/ipfs-cluster/peerstore.
+      ...
+      configuration written to /data/ipfs-cluster/service.json.
+
+
+    $ docker ... ipfs-cluster-service ... daemon  <- Start the cluster (@node1/2/...)
+    > ...IPFS Cluster is ready cluster.go:461        WARN: ipfs daemon must be running properly
+    > ipfs-cluster-service daemon 
 
     $ ipfs-cluster-ctl peers ls                   <- check that we have two peers in the cluster.
     > node1 & > ipfs-cluster-ctl peers ls
@@ -325,22 +337,64 @@ NEXT) TESTING DATA-REPLICATION:
     ( You should see that this file has been PINNED among all cluster nodes)
 [[}]]
 
-● Infura IPFS IaaS: [[{0_PM.low_code,storage.scalability,]]
-  - 74 million unique objects
-  - 4.5+TB of data transfer per day (as of 2020-09)
 
-  $ ipfs object get QmarHSr9aSNaPSR6G9KFPbuLV9aEqJfTk1y9B8pdwqK4Rq
-  {"Data": "Hello World!",
-   "Links": [
-    { "Name": "AnotherName",
-      "Hash": "QmVtYjNij3KeyGmcgg7yVXWskLaBtov3UYL9pgcGK3MCWu",
-      "Size": 18},
-    {"Name": "SomeName",
-     "Hash": "QmbUSy8HCn8J4TMDRRdxCbK2uCCtkQyZtY6XYv3y7kLgDC",
-     "Size": 58}],
-  }
+● IPFS IaaS Comparative: [[{01_PM.low_code,storage.scalability,02_doc_has.comparative]]
+  └ INFURA:
+  · - 74 million unique objects
+  · - 4.5+TB of data transfer per day (as of 2020-09)
+  ·
+  · $ ipfs object get QmarHSr9aSNaPSR6G9KFPbuLV9aEqJfTk1y9B8pdwqK4Rq
+  ·   {"Data": "Hello World!",
+  ·    "Links": [
+  ·     { "Name": "AnotherName",
+  ·       "Hash": "QmVtYjNij3KeyGmcgg7yVXWskLaBtov3UYL9pgcGK3MCWu",
+  ·       "Size": 18},
+  ·     {"Name": "SomeName",
+  ·      "Hash": "QmbUSy8HCn8J4TMDRRdxCbK2uCCtkQyZtY6XYv3y7kLgDC",
+  ·      "Size": 58}],
+  ·   }
+  ·
+  └ https://nft.storage 
+  · - Based on filecoin network. 
+  ·   STEP 1) Create (free) nft.storage account.
+  ·   STEP 2) use IPFS links are URI when minting NFTs and metadata.
+  ·
+  ·   Manage content through:
+  ·   - web interface.
+  ·   - desktop NFTUp.
+  ·   - NFTP cli (https://github.com/factoria-org/nftp)
+  ·
+  └ pinata.cloud (non-free service)
+
 [[}]]
 
+● car archives: [[{security.backup]]
+  More info at:
+  https://github.com/ipld/specs/blob/master/block-layer/content-addressable-archives.md
+
+- A subset of (Directed Acyclic Graph) DAGs in IPFS can be downloaded as:
+  $ ipfs dag export $CID > FILENAME.car 
+- car files are sort of UNIX tar (type archive) for IPFS Content Addresable subDAGs
+  storing any IPLD DAG (graph) as a serialized representation sequence of bytes;
+  as a concatenation of its blocks, plus a header describing the graphs in the file 
+  (via root CIDs).
+
+- Packing files into car:
+  $ ipfs-car --pack path/to/file/or/dir    # write content addressed archive to current working dir
+                                           # Use --output path_file.car to specify output
+                                           # --wrapWithDirectory false: No not wrap top-level directory
+                                           # --verbose: # display files being packed
+- Unpacking .car:
+  $ ipfs-car --unpack path/to/my.car       # unpack
+                                           # --output "unpack_destination_path"
+                                           # --root $cid1 --root $cid2 : unpack specific roots         
+                                           # STDIN can be isued as input cat my.car | ipfs-car --unpack
+- Listing contents of .car:
+    $ ipfs-car --list-cids path/to/my.car  # list cids for all blocks.
+    $ ipfs-car --list-roots path/to/my.car # list cid roots.
+    $ ipfs-car --list path/to/my.car       # list files
+    $ ipfs-car --list-full path/to/my.car  # list both files-path and their CIDs.
+[[security.backup}]]
 
 ● TODO: 
   https://docs.ipfs.tech/concepts/file-systems/#mutable-file-system-mfs

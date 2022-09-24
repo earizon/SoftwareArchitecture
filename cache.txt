@@ -1,7 +1,7 @@
 [[{]]
 <span title>Distributed cache</span><br/>
 [[{]]
-<pre zoom labels="cache,_doc_has.comparative">
+<pre zoom labels="cache,02_DOC_HAS.comparative">
 (Extracted from whitepaper by Christoph Engelbert, Soft.Arch.at Hazelcast)
 cache hit: data is already available in the cache when requested
            (otherwise it's said cache miss)
@@ -97,7 +97,7 @@ Other evict strategies can be found at
 @[https://en.wikipedia.org/wiki/Cache_replacement_policies]
 
 </pre>
-<pre zoom labels="cache.memcached,_PM.TODO">
+<pre zoom labels="cache.memcached,01_PM.TODO">
 <span xsmall>Memcached</span>
 @[https://www.memcached.org/
 - distributed memory object caching system
@@ -114,7 +114,7 @@ Other evict strategies can be found at
 - Failover is supported via migration of sessions
 @[https://www.infoworld.com/article/3063161/why-redis-beats-memcached-for-caching.html]
 </pre>
-<pre zoom labels=",cache.redis,architecture.messaging,enterprise_patterns,db_engine.key_value,architecture.event_stream,architecture.decoupled,_PM.TODO," id="redis_summary">
+<pre zoom labels=",cache.redis,architecture.messaging,enterprise_patterns,db_engine.key_value,architecture.event_stream,architecture.decoupled,01_PM.TODO," id="redis_summary">
 <span title>Redis</span>
 @[https://redis.io/]
 • in-memory data structure store, used as a key-value database, cache.

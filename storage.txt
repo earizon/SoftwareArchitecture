@@ -1,20 +1,14 @@
-[[{]]
-    <span title>Distributed Storage</span></br>
-[[{]]
-
-<pre zoom labels="101,storage.hardware,_PM.TODO">
-<span xsmall>SAN vs ...</span>
+STORAGE ARCHITECTURE [[{storage]]
+● SAN vs ...  [[{101,storage.hardware,01_PM.TODO]]
 @[https://serversuit.com/community/technical-tips/view/storage-area-network,-and-other-storage-methods.html]
 Storage Area Network, and Other Storage Methods
-</pre>
+[[}]]
 
-<pre bgorange zoom labels="101,storage,_PM.TODO">
-<span xsmall>Data Lake</span>
+● Data Lake:[[{101,storage,01_PM.TODO]]
 @[https://en.wikipedia.org/wiki/Data_lake]
-</pre>
+[[}]]
 
-<pre bgorange zoom labels="storage.distributed,_PM.TODO">
-<span xsmall bgorange>UStore!!!</span>
+● UStore!!! [[{storage.distributed,01_PM.TODO]]
 @[https://arxiv.org/pdf/1702.02799.pdf]
 Distributed Storage with rich semantics!!!
 
@@ -48,18 +42,18 @@ scienceapplication, a transaction management application, anda
 blockchain application. We demonstrate that UStore enables faster 
 development and the UStore-backed applications can have better 
 performance than the existing implementations. """
-</pre>
+[[}]]
 
-<pre bgorange zoom labels="storage.distributed,_PM.TODO">
-<span xsmall>NFS considered harmful</span>
+● NFS considered harmful  [[{storage.distributed,01_PM.TODO]]
 @[http://www.time-travellers.org/shane/papers/NFS_considered_harmful.html]
-</pre>
-<pre bgorange zoom labels="storage.distributed,_PM.TODO">
-<span xsmall>cluster-FS comparative</span>
+[[}]]
+
+● cluster-FS comparative  [[{storage.distributed,02_doc_has.comparative,01_PM.TODO]]
 @[http://zgp.org/linux-tists/20040101205016.E5998@shaitan.lightconsulting.com.html]
-</pre>
-<pre bgorange zoom labels="storage.ceph,distributed,_PM.TODO">
-<span xsmall>Ceph (exabyte Soft.Defined Storage)</span>
+[[}]]
+
+
+● Ceph (exabyte Soft.Defined Storage): [[{storage.ceph,distributed,01_PM.TODO]]
 @[http://ceph.com/ceph-storage/]
 Ceph’s RADOS provides you with extraordinary data storage  scalability—
 thousands of client hosts or KVMs accessing petabytes to
@@ -82,7 +76,8 @@ infinite scalability.
 
 See more at: http://ceph.com/ceph-storage/#sthash.KNp2tGf5.dpuf
 
-<span xsmall>When Ceph is Not Enough</span>
+
+● When Ceph is Not Enough [[{01_PM.risk]]
 Josh Goldenhar, VP Product Marketing, Lightbits Labs
 ...  In this 30-minute webinar, we'll discuss the origins of Ceph and why 
   it's a great solution for highly scalable, capacity optimized storage 
@@ -94,39 +89,42 @@ Josh Goldenhar, VP Product Marketing, Lightbits Labs
   • The evolution of Ceph
   • Ceph applicability to infrastructures such as OpenStack, 
     OpenShift and other Kubernetes orchestration environments
-Rº• Why Ceph can't meet the block storage challenges of modern, º
-Rº  scale-out, distributed databases, analytics and AI/ML workloadsº
-Rº• Where Cephs falls short on consistent latency responseº
+  • Why Ceph can't meet the block storage challenges of modern,       
+    scale-out, distributed databases, analytics and AI/ML workloads
+  • Where Cephs falls short on consistent latency response 
   • Overcoming Ceph’s performance issues during rebuilds
-Bº• How you can deploy high performance, low latency block storage inº
-Bº  the same environments Ceph integrates with, alongside your Ceph º
-Bº  deployment.º
-</pre>
-
-<pre bgorange zoom labels="storage.distributed,_PM.TODO">
-<span TODO xsmall>GlusterFS</span>
-- Software defined distributed storage,
-</pre>
+  • How you can deploy high performance, low latency block storage in 
+    the same environments Ceph integrates with, alongside your Ceph  
+    deployment.  [[}]]
 [[}]]
-[[{]]
-<pre bgorange zoom labels="storage.distributed,_PM.TODO">
-<span xsmall>Tachyon memory-centric distributed FS</span>
+
+● GlusterFS [[{storage.distributed,01_PM.TODO]]
+- Software defined distributed storage,
+[[}]]
+
+
+● Tachyon memory-centric distributed FS [[{storage.distributed,scalability,01_PM.TODO]]
 @[http://tachyon-project.org/index.html]
-- memory-centric distributed file system enabling reliable file sharing at memory-speed
-across cluster frameworks, such as Spark and MapReduce. It achieves high performance by leveraging
-lineage information and using memory aggressively. Tachyon caches working set files in memory,
-thereby avoiding going to disk to load datasets that are frequently read. This enables different
-jobs/queries and frameworks to access cached files at memory speed.
+- memory-centric distributed file system enabling reliable file 
+sharing at memory-speed across cluster frameworks, such as Spark and 
+MapReduce. It achieves high performance by leveraging lineage 
+information and using memory aggressively. Tachyon caches working set 
+files in memory, thereby avoiding going to disk to load datasets that 
+are frequently read. This enables different jobs/queries and 
+frameworks to access cached files at memory speed.
 
-Tachyon is Hadoop compatible. Existing Spark and MapReduce programs can run on top of it without
-any code change. The project is open source (Apache License 2.0) and is deployed at multiple companies.
-It has more than 40 contributors from over 15 institutions, including Yahoo, Intel, and Redhat.
+Tachyon is Hadoop compatible. Existing Spark and MapReduce programs 
+can run on top of it without any code change. The project is open 
+source (Apache License 2.0) and is deployed at multiple companies.
+It has more than 40 contributors from over 15 institutions, including 
+Yahoo, Intel, and Redhat.
 
-The project is the storage layer of the Berkeley Data Analytics Stack (BDAS) and also part of the
-Fedora distribution.
-</pre>
-<pre bgorange zoom labels="storage.cloud,_PM.TODO">
-<span xsmall>S3QL FUSE FS (Amazon S2, GCS, OpenStack,...)</span>
+The project is the storage layer of the Berkeley Data Analytics Stack 
+(BDAS) and also part of the Fedora distribution.
+[[}]]
+
+
+● S3QL FUSE FS (Amazon S2, GCS, OpenStack,...)[[{storage.cloud,01_PM.TODO]]
 - FUSE-based file system
 - backed by several cloud storages:
   - such as Amazon S2, Google Cloud Storage, Rackspace CloudFiles, or OpenStack
@@ -147,25 +145,22 @@ Fedora distribution.
 - When you attempt to read contents stored in an S3QL file system, the
   corresponding objects are downloaded from cloud (if not in the local
   cache), and decrypted/uncompressed on the fly.
-</pre>
+[[}]]
 
-<pre zoom labels="storage,_PM.TODO">
-<span xsmall>Nexenta</span>
+● Nexenta [[{storage,01_PM.TODO]]
 @[https://nexenta.com/]
 - Software-Defined Storage Product Family.
-</pre>
+[[}]]
 
-<pre zoom labels="storage.distributed,storage.cloud,_PM.TODO">
-<span xsmall>Minio.io</span>
+● Minio.io [[{storage.distributed,storage.cloud,01_PM.TODO]]
 @[https://minio.io]
 - Private Cloud Storage
 - high performance distributed object storage server, designed for
   large-scale private cloud infrastructure. Minio is widely deployed across the
   world with over 146.6M+ docker pulls.
-</pre>
+[[}]]
 
-<pre zoom labels="storage,_PM.TODO">
-<span xsmall>Why Object storage?</span>
+● Why Object storage?  [[{storage,01_PM.TODO]]
 @[https://www.ibm.com/developerworks/library/l-nilfs-exofs/index.html]
 
 Object storage is an interesting idea and makes for a much more scalable
@@ -185,9 +180,6 @@ Object storage has made a comeback recently in the area of cloud storage. Cloud
 storage providers (which sell storage as a service) represent their storage as
 objects instead of the traditional block API. These providers implement APIs
 for object transfer, management, and metadata management.
-</pre>
-
 [[}]]
-[[}]] <!-- Distributed Storage -->
 
-
+[[storage}]]
