@@ -1,4 +1,54 @@
-- Spark: http://spark.apache.org/
+[[{spark]]
+
+● Spark GENERAL CLUSTER COMPUTING FRAMEWORK [[{architecture.event_stream,big_data.spark,01_PM.WiP]]
+@[http://spark.apache.org/]
 - Zeppelin "Spark Notebook"(video): [[{01_PM.TODO}]]
  @[https://www.youtube.com/watch?v=CfhYFqNyjGc]
 
+- initially designed around the concept of RESILIENT DISTRIBUTED DATASETS (RDDs).
+  RDDs enable data reuse by persisting intermediate results in memory.
+  - Use case 1: fast computations for iterative algorithms.
+    """ same operation may be applied over and over again """
+    (e.g.: optimization, machine learning)
+  - Use case 2: clean and/or transform data.
+- Run workloads 100x faster (compared to Hadoop?).
+  by batching and streaming data, and with an state-of-the-art DAG scheduler,
+  a query optimizer, and a physical execution engine.
+
+- Ease of Use 80+ high-level operators that make it easy to
+  build parallel apps. (interfaces in Java, Scala, Python, R, SQL).
+  e.g: PythonB DataFrame API .
+     df = spark.read.json ("logs.json") <- automatic schema inference
+     df .where("age > 21")
+       .select("name.first").show()
+
+- Combine SQL, streaming, and complex analytics.
+- Included libraries for SQL and DataFrames, machine learning, GraphX,
+  and Spark Streaming.
+
+- Run on Hadoop YARN, Apache Mesos, Kubernetes, standalone, or EC2,
+- INPUT/OUPUT data from/to FS, HDFS, Alluxio, Apache Cassandra,
+  Apache HBase, Apache Hive, and hundreds of others .
+[[}]]
+
+● Apache Druid:   [[{architecture.real_time.OLAP]]
+- Complementary to Spark, Druid can be used to accelerate OLAP queries in Spark.
+  - Spark: indicated for   NON-interactive  latencies.
+  - Druid: indicated for       interactive  (sub-milisec) scenarios.
+    - Use-case:
+      - powering applications used by thousands of users where each query
+        must return fast enough such that users can interactively explore
+        through data.
+  - Druid fully indexes all data, and   can act as a middle layer between
+    Spark and final app .
+  Typical production setup :
+
+  data → Spark processing → Druid → Serve fast queries to clients
+
+  More info at:
+  https://www.linkedin.com/pulse/combining-druid-spark-interactive-flexible-analytics-scale-butani
+[[}]]
+
+[[}]]
+
+[[spark}]]

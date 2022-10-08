@@ -1,54 +1,53 @@
-[[{]]
-<span title>Distributed cache</span><br/>
-[[{]]
-<pre zoom labels="cache,02_DOC_HAS.comparative">
-(Extracted from whitepaper by Christoph Engelbert, Soft.Arch.at Hazelcast)
-cache hit: data is already available in the cache when requested
-           (otherwise it's said cache miss)
+[[{cache]]
+
+● Distributed cache: [[{02_DOC_HAS.comparative]]
+ (Extracted from whitepaper by Christoph Engelbert, Soft.Arch.at Hazelcast)
+ cache hit: data is already available in the cache when requested
+            (otherwise it's said cache miss)
 
 - Caches are implemented as simple key-value stores for performance.
 - Caching-First: term to describe the situation where you start thinking
-       about Caching itself as one of the main domains of your application.
+         about Caching itself as one of the main domains of your application.
 
-ºUssageº
--ºReference Dataº
+ Ussage
+- Reference Data
   - normally small and used to speed up the dereferencing
     of previously known, fixed number of elements (e.g.
     states of the USA, abbreviations of elements,...).
--ºActive DataSetº
+- Active DataSet
 - Grow to their maximum size and evict the oldest or not
   frequently used entries to keep in memory bounds.
 
-<span xsmall>Caching Strategies</span>
-ºCooperative (Distributed) cachingº
+● Caching Strategies:
+• Cooperative (Distributed) caching:
   different  cluster-nodes work together to build a huge, shared cache
   Ussually an "intelligent" partitioning algorithm is used to balance
   load about cluster nodes.
-  - common approach when system requires large amounts of data to be cached
+  Common approach when system requires large amounts of data to be cached
 
-ºPartial Cachingº
-- not all data is stored in the cache.
+• Partial Caching
+  not all data is stored in the cache.
 
-ºGeographical Cachingº
-- located in chosen locations to optimize latency
-- CDN (Content Delivery Network) is the best known example of this type of cache
-- Works well when  content changes less often.
+• Geographical Caching:
+  - located in chosen locations to optimize latency
+  - CDN (Content Delivery Network) is the best known example of this type of cache
+  - Works well when  content changes less often.
 
-ºPreemptive Cachingº
-- mostly used in conjunction with a Geographical Cache
-- Using a warm-up engine a Preemptive Cache is populated on startup
-  and tries to update itself based on rules or events.
-- The idea behind this cache addition is to reload data from any
-  backend service or central cluster even before a requestor wants
-  to retrieve the element. This keeps access time to the cached
-  elements constant and prevents accesses to single elements from
-  becoming unexpectedly long.
-- Can be difficult to implement properly and requires a lot of
-  knowledge of the cached domain and the update workflows
+• Preemptive Caching:
+  - mostly used in conjunction with a Geographical Cache
+  - Using a warm-up engine a Preemptive Cache is populated on startup
+    and tries to update itself based on rules or events.
+  - The idea behind this cache addition is to reload data from any
+    backend service or central cluster even before a requestor wants
+    to retrieve the element. This keeps access time to the cached
+    elements constant and prevents accesses to single elements from
+    becoming unexpectedly long.
+  - Can be difficult to implement properly and requires a lot of
+    knowledge of the cached domain and the update workflows
 
-ºLatency SLA Cachingº
-- It's able to maintain latency SLAs even if the cache is slow
-  or overloaded. This type of cache can be build in two different ways.
+• Latency SLA Caching:
+  - It's able to maintain latency SLAs even if the cache is slow
+    or overloaded. This type of cache can be build in two different ways.
   - Having a timeout to exceed before the system either requests
     the potentially cached element from the original source
     (in parallel to the already running cache request) or simple
@@ -57,83 +56,66 @@ cache hit: data is already available in the cache when requested
     (discouraged since it mostly dimiss the value of caching). Can make
     sense if multiple caching layers are available.
 
-<span xsmall>Caching Topologies</span>
--ºIn-process:º
+● Caching Topologies:
+- In-process:
  - cache share application's memory space.
  - most oftenly used in non-distributed systems.
  - fastest possible access speed.
  - Easy to build, but complex to grow.
 
--ºEmbedded Node Cachesº
-- the application itself will be part of the cluster.
-- kind of combination between an In-Process Cache and the
-  Cooperative Caching
-- it can either use partitioning or full dataset replication.
+- Embedded Node Caches
+  - the application itself will be part of the cluster.
+  - kind of combination between an In-Process Cache and the
+    Cooperative Caching
+  - it can either use partitioning or full dataset replication.
+  - CONST: Application and cache cannot be scaled independently
 
-- CONST: Application and cache cannot be scaled independently
+- Client-Server Caches
+  - these systems tend to be Cooperative Caches by having a
+    multi-server architecture to scale out and have the
+    same feature set as the Embedded Node Caches
+    but with the client layer on top.
+  - This architecture keeps separate clusters of the applications
+    using the cached data and the data itself, offering
+    the possibility to scale the application cluster and the
+    caching cluster independently.
 
--ºClient-Server Cachesº
-- these systems tend to be Cooperative Caches by having a
-  multi-server architecture to scale out and have the
-  same feature set as the Embedded Node Caches
-  but with the client layer on top.
-- This architecture keeps separate clusters of the applications
-  using the cached data and the data itself, offering
-  the possibility to scale the application cluster and the
-  caching cluster independently.
-
-<span xsmall>Evict Strategies</span>
--ºLeast Frequently usedº
+● Evict Strategies:
+└ Least Frequently used
  - values that are accessed the least amount of times are
    remove on memory preasure.
  - each cache record must keep track of its accesses using
    a counter which is increment only.
 
--ºLeast Recently Usedº
+└ Least Recently Used
  - values that were last used most far back in terms of time
    are removed on memory preasure.
  - each record keeps must track of its last access timestamp
 Other evict strategies can be found at
 @[https://en.wikipedia.org/wiki/Cache_replacement_policies]
+[[}]]
 
-</pre>
-<pre zoom labels="cache.memcached,01_PM.TODO">
-<span xsmall>Memcached</span>
-@[https://www.memcached.org/
-- distributed memory object caching system
-- Memcached servers are unaware of each other. There is no crosstalk, no
-  syncronization, no broadcasting, no replication. Adding servers increases
-  the available memory. Cache invalidation is simplified, as clients delete
-  or overwrite data on the server which owns it directly
-- initially intended to speed up dynamic web applications alleviating database load
-
-ºMemcached-session-managerº
-@[https://github.com/magro/memcached-session-manager]
-  tomcat HA/scalable/fault-tolerant session manager
-- supports sticky and non-sticky configurations
-- Failover is supported via migration of sessions
-@[https://www.infoworld.com/article/3063161/why-redis-beats-memcached-for-caching.html]
-</pre>
-<pre zoom labels=",cache.redis,architecture.messaging,enterprise_patterns,db_engine.key_value,architecture.event_stream,architecture.decoupled,01_PM.TODO," id="redis_summary">
-<span title>Redis</span>
+● Redis:  [[{cache.distributed.redis,architecture.messaging,enterprise_patterns]]     #[redis_summary]
+          [[db_engine.key_value,architecture.event_stream,architecture.decoupled]]
+          [[01_PM.TODO]]
 @[https://redis.io/]
 • in-memory data structure store, used as a key-value database, cache.
   Commonly used as shared-session in balanced REST APIs (e.g, Spring has
   zero-code/low-config options to "move" sessions to redis in spring-cloud
   module).
-• Since it can also notify listener of changes in its state it can
-  also be used as message broker (this is the case for example
-  in Kubernetes, where etcd implement an asynchronous message system
-  amongst its componentes).
+
 • supports data structures such as strings, hashes, lists, sets, sorted sets
   with range queries, bitmaps, hyperloglogs and geospatial indexes with
   radius queries
 • Redis has built-in replication, Lua scripting, LRU eviction, transactions
   and different levels of on-disk persistence, and provides high availability
   via Redis Sentinel and automatic partitioning with Redis Cluster
-• Redis Bºis also considered as a lightweight alternative to "heavy" messagingº
-Bºsystems (AMPQ, ...)º.
-@[https://www.infoworld.com/article/3063161/why-redis-beats-memcached-for-caching.html]
+• Since it can also notify listener/s of changes in its state it can
+  also be used as message broker (this is the case for example in
+  Kubernetes, where etcd implement an asynchronous message system              [[{02_doc_has.comparative]]
+  amongst its components).
+• Redis is also considered as a lightweight alternative to "heavy" messaging
+  systems (AMPQ, ...) .                                                        [[}]]
 @[https://www.infoq.com/news/2018/10/Redis-5-Released]
 
 • redis supports a variety of data types all oriented around binary safe strings.
@@ -144,13 +126,13 @@ Bºsystems (AMPQ, ...)º.
   - sorted sets of strings
   - maps of strings
 - redis works best with smaller values (100k or less):
-Bºconsider chopping up bigger data into multiple keysº
+  consider chopping up bigger data into multiple keys
 
-•ºeach data value is associated to a keyºwhich can be used
+• each data value is associated to a key which can be used
   to lookup the value from the cache.
 • up to 500 mb values are possible, but increases
-  network latency and Rºcan cause caching and out-of-memory issuesº
-Rºif cache isn't configured to expire old valuesº
+  network latency and   can cause caching and out-of-memory issues
+  if cache isn't configured to expire old values
 
 • redis keys: binary safe strings.
   - guidelines for choosing keys:
@@ -162,13 +144,13 @@ Rºif cache isn't configured to expire old valuesº
       "fb:8-2-2". extra size and performance difference is
       negligible.
 
-• data in redisºis stored in nodes and clustersº
-•ºclusters are sets of three or more nodesºyour dataset is split
+• data in redis is stored in nodes and clusters
+• clusters are sets of three or more nodes your dataset is split
   across.
 
-Bº#########################º
-Bº# common redis commands #º
-Bº#########################º
+  #########################
+  # common redis commands #
+  #########################
   ┌───────────────────────────────────────────────────────────────────────┐
   │command          │ description                                         │
   │─────────────────┼─────────────────────────────────────────────────────│
@@ -192,89 +174,99 @@ Bº#########################º
   │─────────────────┼─────────────────────────────────────────────────────│
   │flushdb          │ delete all keys and values in the database.         │
   └───────────────────────────────────────────────────────────────────────┘
-   + create batch , create transaction related ones                       [TODO]
+   + create batch , create transaction related ones                       [[01_PM.TODO]]
 
--ºredis has a command-line tool (redis-cli)º: ex:
-  STRING VALUE                      INTEGER VALUE 
+- redis has a command-line tool (redis-cli) : ex:
+  STRING VALUE                      INTEGER VALUE
   ============                    | =============
-  ˃ set key01 value01 ←ok         | ˃ set key02 100   ←ok
-  ˃ get key01         ←"value01"  | ˃ get  key02      ←(integer) 100
-                                  | ˃ incr key02      ←(integer) 101
-                                  | ˃ incrby key02 50 ←(integer) 151
-  ˃ type key01        ←(string)   | ˃ type key02      ←(integer)
-  ˃ exists key01      ←(string) 1 | 
-  ˃ del key01         ←(string) 1 | 
-  ˃ exists key01      ←(string) 0 | 
+  > set key01 value01 ←ok         | > set key02 100   ←ok
+  > get key01         ←"value01"  | > get  key02      ←(integer) 100
+                                  | > incr key02      ←(integer) 101
+                                  | > incrby key02 50 ←(integer) 151
+  > type key01        ←(string)   | > type key02      ←(integer)
+  > exists key01      ←(string) 1 |
+  > del key01         ←(string) 1 |
+  > exists key01      ←(string) 0 |
 
--ºadding an expiration timeº  (key time-to-live (ttl))
+- adding an expiration time   (key time-to-live (ttl))
   after which key is automatically deleted from cache.
   - expirations can be set using seconds or milliseconds precision
     but expire-time resolution is always 1 millisecond.
-  - expire information is replicated to disk, so if server remains 
+  - expire information is replicated to disk, so if server remains
     stopped, at restart stop-time is counted as consumed time.
-  - expiration example:    
+  - expiration example:
                           returns
-    ˃ set counter 100   ← OK
-    ˃ºexpire counter 5º ← (integer) 1
-    ˃ get counter         100
+    > set counter 100   ← OK
+      expire counter    ← (integer) 1
+    > get counter         100
     ... wait ...
-    ˃ get counter        º(nil)º
+    > get counter         (nil)
 
 
 • redis deployments can consists of:
-   ºsingle node  º, ºmultiple nodeº, ºclusteredº
-• Eval: Lua Scripts                                                       [TODO]
-@[https://redis.io/commands/eval] 
-</pre>
-<pre zoom>
-<span xsmall>Hazelcast</span>
-<span xsmall>in-memory</span>
-<span xsmall>data grid</span>
-@[https://en.wikipedia.org/wiki/Hazelcast]
--  based on Java
-</pre>
-<pre zoom>
-<span xsmall>Ehcache</span>
-<span xsmall>(terabyte)</span>
-<span xsmall>cache</span>
+    single node   ,  multiple node ,  clustered
+• Eval: Lua Scripts [[01_PM.TODO]]]
+@[https://redis.io/commands/eval]
+[[}]]
+
+● Memcached: [[{cache.distributed.memcached,01_PM.TODO]]
+@[https://www.memcached.org/
+@[https://www.infoworld.com/article/3063161/why-redis-beats-memcached-for-caching.html]  [[{02_doc_has.comparative}]]
+- distributed memory object caching system
+- Memcached servers are unaware of each other. There is no crosstalk, no
+  syncronization, no broadcasting, no replication. Adding servers increases
+  the available memory. Cache invalidation is simplified, as clients delete
+  or overwrite data on the server which owns it directly
+- initially intended to speed up dynamic web applications alleviating database load
+
+ Memcached-session-manager
+@[https://github.com/magro/memcached-session-manager]
+  tomcat HA/scalable/fault-tolerant session manager
+- supports sticky and non-sticky configurations
+- Failover is supported via migration of sessions
+@[https://www.infoworld.com/article/3063161/why-redis-beats-memcached-for-caching.html]
+[[}]]
+
+● Ehcache (TERABYTE!!!) cache [[{cache.distributed.ehcache,01_PM.TODO]]
 @[http://www.ehcache.org/]
 - Can be used as tcp service (distributed cache) or process-embedded
   TODO:  Same API for local and distributed objects?
-- open source, standards-based cache that boosts performance, offloads I/O
-- Integrates with other popular libraries and frameworks
+- open source, standards-based cache that boosts performance, offloads I/O.
+- Integrates with other popular libraries and frameworks.
 - It scales from in-process caching, all the way to mixed
-  in-process/out-of-process deployments withºterabyte-sized cachesº
+  in-process/out-of-process deployments with terabyte-sized caches
 
-ºExample Ehcache 3 APIº:
-CacheManager cacheManager =
-  CacheManagerBuilder.newCacheManagerBuilder()
-  .withCache("preConfigured",
-    CacheConfigurationBuilder.newCacheConfigurationBuilder(Long.class, String.class,
-      ResourcePoolsBuilder.heap(100))
-  .build())
-  .build(true);
+- eg Ehcache 3 API :
+   CacheManager cacheManager =
+     CacheManagerBuilder.newCacheManagerBuilder()
+     .withCache("preConfigured",
+       CacheConfigurationBuilder.newCacheConfigurationBuilder(Long.class, String.class,
+         ResourcePoolsBuilder.heap(100))
+     .build())
+     .build(true);
 
-Cache˂Long, String˃ preConfigured =
-    = cacheManager.getCache("preConfigured", Long.class, String.class);
+  Cache<Long, String> preConfigured =
+      = cacheManager.getCache("preConfigured", Long.class, String.class);
 
-Cache˂Long, String˃ myCache = cacheManager.createCache("myCache",
-    CacheConfigurationBuilder.newCacheConfigurationBuilder(Long.class, String.class,
-                                  ResourcePoolsBuilder.heap(100)).build());
+  Cache<Long, String> myCache = cacheManager.createCache("myCache",
+      CacheConfigurationBuilder.newCacheConfigurationBuilder(Long.class, String.class,
+                                    ResourcePoolsBuilder.heap(100)).build());
 
-myCache.put(1L, "da one!");
-String value = myCache.get(1L);
+  myCache.put(1L, "da one!");
+  String value = myCache.get(1L);
 
-cacheManager.close();
+  cacheManager.close();
 
-(simpler/lighter solution but not so escalable could be to use Google Guava Cache)
-</pre>
+  (simpler/lighter solution but not so escalable could be to use GOOGLE GUAVA CACHE)
 [[}]]
 
-[[{]]
-<pre zoom>
-<span TODO xsmall>JBoss Cache</span>
+● Hazelcast in-memory (JAVA) data grid: [[{cache.distributed.hazelcast,01_PM.TODO]]
+@[https://en.wikipedia.org/wiki/Hazelcast]
+[[}]]
+• JBoss Cache: [[{cache.distributed.hazelcast,01_PM.TODO]]
 @[http://jbosscache.jboss.org/]
-</pre>
-
 [[}]]
-[[}]] <!-- Distributed Cache -->
+
+[[01_PM.TODO}]]
+
+[[cache}]] <!-- Distributed Cache -->

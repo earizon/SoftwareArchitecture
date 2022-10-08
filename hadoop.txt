@@ -1,75 +1,10 @@
-Big Data:
 <pre zoom labels="big_data.hadoop,storage.distributed,devops,01_PM.low_code,">
 <span xsmall>Ambari: Hadoop Cluster Provision</span>
 @[https://projects.apache.org/project.html?ambari]
 Apache Ambari makes Hadoop cluster provisioning, managing, and monitoring dead simple.
 </pre>
 
-<pre zoom labels="architecture.event_stream,big_data.spark,architecture.olap,01_PM.TODO">
-<span xsmall>Spark</span>
-@[http://spark.apache.org/]
-- General cluster computing framework 
-- initially designed around the concept of Resilient Distributed Datasets (RDDs).
-  - RDDs enable data reuse by persisting intermediate results in memory 
-    - Use case 1: fast computations for iterative algorithms.
-      - especially beneficial for work flows like machine learning 
-        (Bºsame operation may be applied over and over againº)
-    - Use case 2: clean and/or transform data.
-- Speed
-  - Run workloads 100x faster (compared to Hadoop?).
-  - Apache Spark achieves high performance for both batch
-    and streaming data, using a state-of-the-art DAG scheduler,
-    a query optimizer, and a physical execution engine.
-
-- Ease of Use
-  - Write applications quickly in Java, Scala, Python, R, and SQL.
-  - Spark offers over 80 high-level operators that make it easy to
-    build parallel apps. And you can use it interactively from the
-    Scala, Python, R, and SQL shells.
-    - Example PythonBºDataFrame APIº.
-      |Bºdfº=ºspark.read.jsonº("logs.json") ← automatic schema inference
-      |Bºdfº.where("age ˃ 21")
-      |    .select("name.first").show()
-
-
-- Generality
-  - Combine SQL, streaming, and complex analytics.
-  - Spark powers a stack of libraries including SQL and DataFrames,
-    MLlib for machine learning, GraphX, and Spark Streaming.
-    You can combine these libraries seamlessly in the same application.
-
-- Runs Everywhere
-  - Spark runs on Hadoop, Apache Mesos, Kubernetes, standalone,
-    or in the cloud. It can access diverse data sources.
-
-- You can run Spark using its standalone cluster mode, on EC2, on Hadoop YARN,
-  on Mesos, or on Kubernetes. Access data in HDFS, Alluxio, Apache Cassandra,
-  Apache HBase, Apache Hive, and hundreds of other data sources.
-
-- Common applications for Spark include real-time marketing campaigns, online
-  product recommendations, cybersecurity analytics and machine log monitoring.
-
-<hr/>
-<span xsmall>Apache Druid</span>
-- Complementary to Spark, Druid can be used to accelerate OLAP queries in Spark.
-  - Spark: indicated for BºNON-interactiveº latencies.
-  - Druid: indicated for Bº    interactiveº (sub-milisec) scenarios.
-    - Use-case:
-      - powering applications used by thousands of users where each query
-        must return fast enough such that users can interactively explore 
-        through data.
-  - Druid fully indexes all data, and Bºcan act as a middle layer between º
-  BºSpark and final appº.
-BºTypical production setupº:
-  
-  data → Spark processing → Druid → Serve fast queries to clients
-
-  More info at:
-  https://www.linkedin.com/pulse/combining-druid-spark-interactive-flexible-analytics-scale-butani
-</pre>
-
-<pre zoom>
-<span xsmall>Hadoop "vs" Spark</span>
+● Hadoop "vs" Spark: [[{]]
 @[https://www.infoworld.com/article/3014440/big-data/five-things-you-need-to-know-about-hadoop-v-apache-spark.html]
 Hadoop is essentially a distributed data infrastructure:
  -It distributes massive data collections across multiple nodes
@@ -116,10 +51,9 @@ resiliency by virtue of the fact that its data objects are stored in something
 called resilient distributed datasets distributed across the data cluster.
 "These data objects can be stored in memory or on disks, and RDD provides full
 recovery from faults or failures," Borne pointed out.
-</pre>
-<pre zoom labels="">
-<span xsmall>Hive</span>
-Data W.H. on top of Hadoop
+[[}]]
+
+● Hive: Data WareHouse on top of Hadoop
 @[https://projects.apache.org/project.html?hive]
 - querying and managing utilities for large datasets
   residing in distributed storage built on top of Hadoop
@@ -128,27 +62,5 @@ Data W.H. on top of Hadoop
 - access to files stored in Apache HDFS and other data storage
   systems such as Apache HBase (TM)
 
-<span xsmall>HiveMQ Broker: MQTT+Kafka for IoT</span>
+- HiveMQ Broker: MQTT+Kafka for IoT:
 @[https://www.infoq.com/news/2019/04/hivemq-extension-kafka-mqtt/]
-
-</pre>
-
-
-
-<span title>Data Science</span>
-
-<pre zoom labels="data.analytics,01_PM.low_code,_PM.TODO" bgorange>
-<span xsmall bgorange>Orange</span>
-@[https://orange.biolab.si/screenshots/]
-Features:
-- Interactive Data Visualization
-- Visual Programming
-- Student's friendly.
-- Add-ons
-- Python Anaconda Friendly
-  $ conda config --add channels conda-forge
-  $ conda install orange3
-  $ conda install -c defaults pyqt=5 qt
-- Python pip  Friendly
-  $ pip install orange3
-</pre>

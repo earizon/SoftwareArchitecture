@@ -1,23 +1,22 @@
+[[{architecture.messaging]]
 ● Domain Driven Design, CQRS and Event Sourcing:
 @[https://www.kenneth-truyers.net/2013/12/05/introduction-to-domain-driven-design-cqrs-and-event-sourcing/]
 
-
-[[{]]
-<span title>Messaging Architecture</span>
-<pre zoom label="architecture.messaging,enterprise_patterns.101,data.integration,architecture.event_stream,architecture.decoupled,cache.redis,02_DOC_HAS.comparative" bgorange id="messaging_summary">
-<span xsmall>Summary</span>
+ #[messaging_summary]
+●  Messaging Architecture Summary  [[{enterprise_patterns.messaging.101,data.integration,architecture.event_stream]]
+                            [[architecture.decoupled,cache.redis,02_DOC_HAS.comparative]]
 • Messaging represents a layer down ESB in some cases.
   Messaging architectures focus on reliable delivery of messages of different nature/timelife.
   On top of them, ESB add data management/processing/transformation.
 • In general a message in message driven architectures represents some information that
- *MUST* be processed, while an event in event stream architecture ("Kafka", "Pulse", fast 
+ *MUST* be processed, while an event in event stream architecture ("Kafka", "Pulse", fast
   distributed queues) represent a more generic information that MUST or MUST not be processed.
     Event streams can most of the time be used to build a message stream architecture on top
   and ussually the have better real-time performance and/or scalability (big data) performance.
     On the other side conventional messaging architectures focus on warranting the proper
   delivery and consumption of messages.
-    For example, messages triggering transactions representing "money" that do not require 
-  big-data scalation are better deal with message archictectures than general event stream 
+    For example, messages triggering transactions representing "money" that do not require
+  big-data scalation are better deal with message archictectures than general event stream
   architectures.
 
 - Message classification by consumption model:
@@ -38,12 +37,11 @@
  │           │ subscribers are decoupled in time and in logic.                              │
  └──────────────────────────────────────────────────────────────────────────────────────────┘
 
-
 - Messages classification by message expiration-time validity:
  ┌────────────────────────────────────────────────────────────────────┐
  │MESSAGE VALID           │ MESSAGIN SYSTEM NEEDS │ Consumption model │
  │────────────────────────│───────────────────────│───────────────────│
- │for a short time        │ fast delivery         │ publish/subscribe │ 
+ │for a short time        │ fast delivery         │ publish/subscribe │
  │────────────────────────│───────────────────────│───────────────────│
  │until consumed          │ persistence           │ publish/subscribe │
  │────────────────────────│───────────────────────│───────────────────│
@@ -103,15 +101,19 @@ Bº##################º
   - Routing: point-to-point / publish-and-subscribe
   - No processing/transformation of message/data
 
+● TODO: @ma [[{01_PM.TODO.NOW]]
+  https://medium.com/@philipfeng/modern-open-source-messaging-apache-kafka-rabbitmq-nats-pulsar-and-nsq-ca3bf7422db5
+[[}]]
+
 Bº########º
 Bº# AMQP #º (RabbitMQ, APache ActiveMQ, Qpid, Solace, ...)
 Bº########º
   @[https://en.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol]
     - Open standard network protocol
-  • binary wire protocol designed as open replacement for existing 
-    proprietary messaging middleware. 
-  • strong enterprise adoption. (JP Morgan claims to process 
-    1+ billion messages a day. Also used by NASA, Google,...) 
+  • binary wire protocol designed as open replacement for existing
+    proprietary messaging middleware.
+  • strong enterprise adoption. (JP Morgan claims to process
+    1+ billion messages a day. Also used by NASA, Google,...)
 
 
     - Often compared to JMS:
@@ -124,7 +126,7 @@ Bº########º
         the specs while also automating construction of algorithms to
         marshal and demarshal messages.
     - brokers implementations supporting it:
-      
+
       @[https://www.amqp.org/about/examples]
       - Apache Qpid (TODO)
       @[http://qpid.apache.org/]
@@ -139,10 +141,10 @@ Bº########º
    @[https://news.ycombinator.com/item?id=1657574]
     """ ... My answer, as someone who recentlyºswitched an AMQP backend º
      ºto using redisºfor queues and pub/sub broadcast: AMQP is wrong the   [comparative]
-      same way RDBMSes or Java are "wrong." It's too heavy, too slow, or 
+      same way RDBMSes or Java are "wrong." It's too heavy, too slow, or
       too complex for a great-many use cases...
     Bº  The truth is that something with a radically reduced feature set, º
-    Bºthat's simpler to use and understand, is really all that's needed toº 
+    Bºthat's simpler to use and understand, is really all that's needed toº
     Bºmeet a whole lot of "real world" use cases.                         º
 
   - @[http://www.windowsazure.com/en-us/develop/net/how-to-guides/service-bus-amqp-overview/]
@@ -160,13 +162,12 @@ Bº########º
   - Java JMS
 
 • See also:
-  ·@[../WebTechnologies/map.html#asyncapi_summary] standard to model   [standard] 
+  ·@[../WebTechnologies/map.html#asyncapi_summary] standard to model   [standard]
     event-driven async APIs.
   · "The many meanings of event-driven architecture,"
     @[https://www.youtube.com/watch?v=STKCRSUsyP0] (By Martin Fowler)
 
-<hr/>
-<span xsmall>Message Brokers</span>
+● Message Brokers:
 - Routing
 - (De-)Multiplexing of messages from/into multiple messages to different recipients
 - Durability
@@ -176,15 +177,15 @@ Bº########º
   Gearman, IronMQ, JMS, SQS or MSMQ."
   Message broker examples are, Qpid, Open AMQ or ActiveMQ.
 - Kafka can also be used as message broker but is not its main intention
-</pre>
 
-<pre zoom labels="architecture.messaging,enterprise_patterns,distributed.ha," id="activemq_summary">
-<span title>ActiveMQ</span>
+
+● ActiveMQ: [[{architecture.messaging,enterprise_patterns,distributed.ha]]
+#[activemq_summary]
 • Based on JAVA
 Bº######################
 Bº# ActiveMQ "Classic" #
 Bº######################
-  endlessly pluggable architecture serving many generations of 
+  endlessly pluggable architecture serving many generations of
   applications.
   · Web interface.
   · JMS 1.1 with full client implementation including JNDI
@@ -195,19 +196,19 @@ Bº######################
   · KahaDB+JDBC options for persistence
   ·BºQUICK DEVELOPMENT SETUP:º
      → Setup Java/$JAVA_HOME
-       → Download ActiveMQ Classic 
+       → Download ActiveMQ Classic
          → Execute (apache-activemq-5.16.2/bin/)wrapper
            → Open http://localhost:8161/admin/index.jsp
              → "Queues" tab → "Create" button
                DONE!!!
-  
+
 Bº####################
 Bº# ActiveMQ Artemis #
 Bº####################
 • Multiprotocol("polyglot") broker (AMQP, OpenWire, MQTT, STOMP, HTTP, ...)
 • Single / multi-cluster.
 • Java based
-• next generation High-performance, non-blocking architecture  
+• next generation High-performance, non-blocking architecture
   · Web interface.
   · JMS 1.1, 2.0 with full client implementation including JNDI
   ·ºHigh availabilityºusing shared storage or network replication
@@ -219,9 +220,8 @@ Bº####################
   · Very good and free documentation:
   @[https://activemq.apache.org/components/artemis/documentation/latest/book.pdf]
 
-<hr/>
-<span xsmall>RabbitMQ </span>
-• Erlang Alternative. Quite popular since it was used as AMQP 
+● RabbitMQ:
+• Erlang Alternative. Quite popular since it was used as AMQP
   ref.implementation.
 @-[https://www.rabbitmq.com/getstarted.html]
 • Based on Erlang (Rºvery reduce developer communityº)
@@ -243,15 +243,15 @@ Bº####################
             ┌→ (error) │││queue1 │││ ──→ C
   P →  │X│ ─┤                                                 Routing
         ^   │       info                                      -------
-        |   └───────error──→ │││queue2 │││ ──→ C              
-                    warning 
+        |   └───────error──→ │││queue2 │││ ──→ C
+                    warning
      type=direct
 
 
             ┌→ *.orange.* → │││queue1 │││ ──→ C
   P →  │X│ ─┤                                                 Topics
         ^   │                                                 ------
-        |   └─ *.*.rabbit → │││queue2 │││ ──→ C 
+        |   └─ *.*.rabbit → │││queue2 │││ ──→ C
                lazy.*
      type=topic
 
@@ -260,14 +260,13 @@ Bº####################
   ^    reply_to=amqp.gen...                           │       ---------
   │    correlation_id=abc                             │
   │                                                   │
-  └─── Reply               ─── │││ response │││ ──────┘ 
+  └─── Reply               ─── │││ response │││ ──────┘
          correlation_id=abc
 
 See @[#activemq_summary]
-</pre>
+[[}]]
 
-<pre zoom labels="architecture.event_stream,scalability,01_PM.TODO">
-<span xsmall>OpenHFT: microSec Messaging storing to disk</span>
+● OpenHFT: microSec Messaging storing to disk [[{architecture.event_stream,architecture.real_time.hard,scalability,01_PM.TODO]]
 @[https://github.com/OpenHFT/]
    - Chronicle-Queue: Micro second messaging that stores everything to disk
    - Chronicle-Accelerate: HFT meets Blockchain in Java platform
@@ -295,31 +294,30 @@ See @[#activemq_summary]
    - Chronicle-Logger: A sub microsecond java logger, supporting standard logging
                       APIs such as Slf &amp; Log4J
 
-</pre>
+[[}]]
 
-<pre zoom labels="architecture.event_stream,architecture.CQRS" id="CQRS_summary,">
-<span title>CQRS</span>
+● CQRS [[{architecture.event_stream,architecture.CQRS]] #[CQRS_summary]
 REF: @[https://www.redhat.com/architect/pros-and-cons-cqrs]
-• CQRS stands for Command Query Responsibility Segregation 
+• CQRS stands for Command Query Responsibility Segregation
 • The data-processing architecture pattern separates a service's write
   tasks from its read tasks:
-• Separating write activity from ready activities allows you to use the 
+• Separating write activity from ready activities allows you to use the
   best database technology for the task at hand, for example, a stream-event
   engine (Kafka/Pulse/...) for writing and a non-SQL database for reading.
-• While reading and writing to the same database is acceptable for 
-  small applications, distributed applications operating at web-scale 
+• While reading and writing to the same database is acceptable for
+  small applications, distributed applications operating at web-scale
   require a segmented approach.
 • Typically there's more read activity than write activity. Also,
   read activity is immutable. Thus, replicas dedicated to reading data
    can be spread out over a variety of geolocations.
-• This approach allows users to get the data that closest to them 
+• This approach allows users to get the data that closest to them
   resulting in a more efficient and scalable solution.
-</pre>
-
 [[}]]
 
+[[enterprise_patterns.messaging.101}]]
 
-● CloudEvents:[[{architecture.event_stream.standards]] @ma
+
+● CloudEvents:[[{architecture.event_stream,01_PM.standards]] @ma
 • CloudEvents(CNCF) specification describes event data in common formats to
   provide interoperability across services, platforms and systems.
 
@@ -329,9 +327,9 @@ REF: @[https://www.redhat.com/architect/pros-and-cons-cqrs]
   to aide the delivery of event data across environments, like SDKs,
   event routers or tracing systems.
 
-• Core Specification:         
+• Core Specification:
   CloudEvents                 v1.0.1 WIP
-• Optional Specifications:            
+• Optional Specifications:
   AMQP Protocol Binding       v1.0.1  WIP
   AVRO Event Format           v1.0.1  WIP
   HTTP Protocol Binding       v1.0.1  WIP
@@ -342,28 +340,26 @@ REF: @[https://www.redhat.com/architect/pros-and-cons-cqrs]
   WebSockets Protocol Binding      -  WIP
   Protobuf Event Format       v1.0-rc1
   Web hook                    v1.0.1  WIP
-        
-• Additional Documentation:       
+
+• Additional Documentation:
   CloudEvents Adapters              - WIP
   CloudEvents SDK Requirements      - WIP
   Documented Extensions             - WIP
   Primer                       v1.0.1 WIP
   Proprietary Specifications        - WIP
-  
+
 [[}]]
 
-● NSQ Distributed Real Time Msg.: [[messaging.nsq,qa,distributed]] @ma
+● NSQ Distributed Real Time Msg.: [[{architecture.messaging.nsq,qa,distributed,architecture.real_time,]] @ma
   https://nsq.io/
-  • NSQ promotes distributed+decentralized topologies WITHOUT SINGLE 
-    POINTS OF FAILURE plus reliable message delivery guarantee. 
-  • Used amongst others, by Stripe.
+  • NSQ promotes distributed+decentralized topologies WITHOUT SINGLE
+    POINTS OF FAILURE plus reliable message delivery guarantee.
+  • Used amongst others, by Stripe.  [[use_case.finances]]
   • easy to configure and deploy, with pre-bundled admin UI.
   • Official Go and Python libraries available plus many community
     supported libraries for most major languages.
-  • Compares to redis / RabitMQ / kafka / pulsar / ...
-
-
-
+  • Compares to redis / RabitMQ / kafka / pulsar / ...  [[02_doc_has.comparative]]
+[[}]]
 
 
 ● Event Stream Architectures: [[{architecture.event_stream,01_PM.TODO]]
@@ -372,11 +368,11 @@ REF: @[https://www.redhat.com/architect/pros-and-cons-cqrs]
   REF:
 - https://en.wikipedia.org/wiki/Stream_processing
 - https://iwringer.wordpress.com/2015/08/03/patterns-for-streaming-realtime-analytics
-- Streaming Reactive Systems & Data Pites w. Squbs 
+- Streaming Reactive Systems & Data Pites w. Squbs
   https://www.infoq.com/presentations/squbs
 - Streaming SQL Foundations: Why I Love Streams+Tables
   https://www.infoq.com/presentations/sql-streaming
-- Next Steps in Stateful Streaming with Apache Flink 
+- Next Steps in Stateful Streaming with Apache Flink
   https://www.infoq.com/presentations/flink-stateful-streaming
 - Kafka Streams - from the Ground Up to the Cloud
 - https://www.infoq.com/presentations/kafka-streams-spring-cloud
@@ -392,6 +388,7 @@ REF: @[https://www.redhat.com/architect/pros-and-cons-cqrs]
   https://www.infoq.com/presentations/hbc-digital-streaming
 - Streaming for Personalization Datasets at Netflix
   https://www.infoq.com/presentations/netflix-personalization-datasets-streaming
+[[}]]
 
 ● Kafka @[./kafka.txt]
  - scalable,persistent and fault-tolerant real-time log/event processing cluster.
@@ -404,7 +401,7 @@ REF: @[https://www.redhat.com/architect/pros-and-cons-cqrs]
      published to central topics with one topic per activity type.
    - METRICS: operational monitoring data.
    - LOG AGGREGATION REPLACEMENT.
-   - STREAM PROCESSING 
+   - STREAM PROCESSING
    - Event Sourcing architecture: state changes are logged as a time-ordered
      sequence of records.
    - external commit log for distributed systems.
@@ -431,4 +428,4 @@ REF: @[https://www.redhat.com/architect/pros-and-cons-cqrs]
   - Underlying storage based on RocksDB, a key value store
     also open sourced by Facebook
 
-
+[[architecture.messaging}]]

@@ -1,25 +1,37 @@
+●  Apropos:
+- Visit next Web site for a great experience:
+  https://earizon.github.io/txt_world_domination/viewer.html?payload=../SoftwareArchitecture/IPFS.txt
+
+- If you want to contribute to great gistory of this
+  document you can take the next flight to:
+@[https://www.github.com/earizon/SoftwareArchitecture]
+  Your commits and pull-request will be immortalized
+  in the Pantheon of the Unicode Gods.
+────────────────────────────────────────────────────────────────────────────────
+
+
 INTERPLANETARY FILE SYSTEM (IPFS) [[{ipfs]]
 
 REF: https://blog.infura.io/post/an-introduction-to-ipfs
 
 - IPFS started in 2015 by Protocol Labs.
-- IPFS is the sum of: 
+- IPFS is the sum of:
   └ P2P-swarm protocol
   · - transport layer agnostic: TCP, uTP, UDT, QUIC, TOR, even Bluetooth!!!.
-  · - IPFS rules determine how data move around on the network, in a similar 
-  ·   way to Kademlia (the  p2p distributed hash-table of BitTorrent protocol). 
+  · - IPFS rules determine how data move around on the network, in a similar
+  ·   way to Kademlia (the  p2p distributed hash-table of BitTorrent protocol).
   · - to access a given object, IPFS will ask the entire network,
   ·   "does anyone have the data that corresponds to this hash?"
   ·   Then a node containing the corresponding hash will return the data.
   ·
   └  Global Merkle-DAG (Directed Acyclic Graph) of Objects
-        Merkle => hashes are cryptographically secure to collision 
+        Merkle => hashes are cryptographically secure to collision
                   The probability for 2 objects with different Data
-                  to generate the same hash is 1 in trillions. 
-   
-     IPFS OBJECT:     
-     ──────────────── 
-     [ Data, Link[] ]    
+                  to generate the same hash is 1 in trillions.
+
+     IPFS OBJECT:
+     ────────────────
+     [ Data, Link[] ]
        └─┬─┘ └─┬┘
          │     └···· [ Name, Hash-pointer, cumulative-size of linked IPFS object ]
          │
@@ -29,9 +41,9 @@ REF: https://blog.infura.io/post/an-introduction-to-ipfs
    Content-ID == cryptrographically-secure-hash-of(Data)
    e.g Hash: "QmVtYjNij3KeyGmcgg7yVXWskLaBtov3UYL9pgcGK3MCWu",
               ├┘
-              └ all hashes begin with "Qm" prefix that when 
+              └ all hashes begin with "Qm" prefix that when
                 base58-decoded to bytes translates to:
-                byte0: 0x12 => SHA256-hash-function  
+                byte0: 0x12 => SHA256-hash-function
                 byte1: 0x20 => 32 bytes hash-length
                 (In a future different hash-functions/lengths could be added)
 
@@ -40,26 +52,26 @@ REF: https://blog.infura.io/post/an-introduction-to-ipfs
   ========================================
   - file name is NOT part of the IPFS object.
     Path names will be the result of concatenating link.name + link.name + ...
-  - Two files with different names and the same content will map 
+  - Two files with different names and the same content will map
     to a single IPFS object with ID == hash-of(content)
 
   - SMALL FILES(< 256 kB) are directly mapped to a single IPFS object
-    whose data is file content (plus a small header and footer) and 
+    whose data is file content (plus a small header and footer) and
     an empty array o links.
 
     $ ipfs object get ${HASH_OF_SMALL_FILE}                    # Dump full object as JSON
     { "Data": "\u0008\u0002\u0012\rHello World!\n\u0018\r",
                └··IPFS header ····┘              └─IPFS─┘
-      "Links": []                                  footer 
+      "Links": []                                  footer
     }
 
-  - LARGE FILES(< 256 kB) are mapped to "a list_of_links" "pointing" to file-chunks(< 256kB), 
+  - LARGE FILES(< 256 kB) are mapped to "a list_of_links" "pointing" to file-chunks(< 256kB),
     with each link having an empty-string name and with a minimal data specifying that
     this object represents a large file.
 
     $ ipfs object get ${HASH_OF_LARGE_FILE}                    # Dump full object as JSON
-    { 
-      "Data": "\u0008\u0002\u0018* \u0010 \u0010 \n",  <- IPFS metadata marking object as Large file 
+    {
+      "Data": "\u0008\u0002\u0018* \u0010 \u0010 \n",  <- IPFS metadata marking object as Large file
       "Links": [
         {"Name": "", "Hash": "QmYS...", "Size": 262158}, <- link to chunk0
         {"Name": "", "Hash": "QmQe...", "Size": 262158}, <- link to chunk1
@@ -74,7 +86,7 @@ REF: https://blog.infura.io/post/an-introduction-to-ipfs
     NOTE: more elaborated versioned file systems can be implemented easely by
           following the Git approach for commits, where acommit object has 1+
           links to parent commits and on extra link to a "tree" object pointing
-          to the file-system "root" of the current commit. 
+          to the file-system "root" of the current commit.
           Blockchains can naturally fit as IPFS implementations.
 
 
@@ -90,7 +102,7 @@ REF: https://blog.infura.io/post/an-introduction-to-ipfs
     --help   (ipfs $subcmd --help for  subcmd info)
     --local  bool (true: run locally, vs using daemon)
     --api    $API (def.: /ip4/127.0.0.1/tcp/5001)
-  
+
   ● BASIC COMMANDS                                       ● ADVANCED COMMANDS
     init          Initialize ipfs local configuration      daemon        Start daemon
     add path_to_file (Add file to IPFS)                    mount         Mount read-only mountpoint
@@ -103,11 +115,11 @@ REF: https://blog.infura.io/post/an-introduction-to-ipfs
     block         Interact with raw blocks in datastore    stats         Various operational stats
     object        Interact with raw dag nodes              filestore     Manage the filestore (experimental)
     files         Interact UNIX-like with objects
-    dag           Interact with IPLD documents 
+    dag           Interact with IPLD documents
                   (experimental)
     e.g:
-    $ ipfs dag export $CID > FILENAME.car 
-  
+    $ ipfs dag export $CID > FILENAME.car
+
   ● (P2P) NETWORK COMMANDS                               ● TOOL COMMANDS
                                                            config        Manage configuration
     bootstrap     Add|remove bootstrap peers               version       Show IPFS version information
@@ -132,7 +144,7 @@ REF: https://blog.infura.io/post/an-introduction-to-ipfs
     }
 
 
-[[}]] 
+[[}]]
 
 ● IPFS: "file Pinning" HOW-TO: [[{]]
   https://docs.ipfs.tech/how-to/pin-files/
@@ -141,12 +153,12 @@ REF: https://blog.infura.io/post/an-introduction-to-ipfs
   with no need for intermediate step "retrieve this file from remote server".
 
   Pinning tell IPFS to always keep a given object in well-defined node (localhost,...).
-  (vs just caching files locally for a time that will be garbage-collected at random). 
+  (vs just caching files locally for a time that will be garbage-collected at random).
 
-  Objects added through ipfs add are PINNED RECURSIVELY BY DEFAULT. 
+  Objects added through ipfs add are PINNED RECURSIVELY BY DEFAULT.
 
-  $ echo "ipfs rocks" > foo    
-  $ ipfs add ./foo               
+  $ echo "ipfs rocks" > foo
+  $ ipfs add ./foo
   > added QmRTV3h1jLcA... foo
 
   $ ipfs pin ls --type=all       <- list all pinned objects in local storage.
@@ -175,13 +187,13 @@ REF: https://labs.eleks.com/2019/03/ipfs-network-data-replication.html
 - Cluster: Provides data replication. (the other alternative for Data Replication is Filecoin).
   In practice an IPFS-Cluster is the sum of:
   - IPFS daemons.
-  - ipfs-cluster-ctl (CLI): manage nodes and data among the cluster, 
+  - ipfs-cluster-ctl (CLI): manage nodes and data among the cluster,
     allocating, replicating and tracks pins across the cluster of IPFS daemons
     using a LEADER-BASED CONSENSUS ALGORITHM RAFT TO COORDINATE STORAGE OF A PINSET,
-    distributing the set of data 
-  - ipfs-cluster-service application (different to the IPFS daemon) 
+    distributing the set of data
+  - ipfs-cluster-service application (different to the IPFS daemon)
     mostly used to initialise cluster peer and run its daemon.
-    across the participating nodes. 
+    across the participating nodes.
     WARN: The IPFS-Cluster daemon depends on IPFS daemon and should be started afterwards.
 
     IPFS daemon                    IPFS-CLUSTER daemon
@@ -193,27 +205,27 @@ REF: https://labs.eleks.com/2019/03/ipfs-network-data-replication.html
 
 
    192.168.10.1 <- VM/Node0: Bootstrap Node
-   192.168.10.2 <- VM/Node1: 
-   192.168.10.3 <- VM/Node2: 
+   192.168.10.2 <- VM/Node1:
+   192.168.10.3 <- VM/Node2:
 
-PRESETUP) 
+PRESETUP)
 - Go installed. (GOROOT, GOPATH, PATH)
 - latest version of go-ipfs installed (or compiled with Go)
 
 NEXT) install the Swarm key generation utility:
    $ go get -u \                                    <- install package
      github.com/Kubuxu/go-ipfs-swarm-key-gen/ipfs-swarm-key-gen
-   $ ipfs-swarm-key-gen & > ~/swarm.key             <- Generate key 
+   $ ipfs-swarm-key-gen & > ~/swarm.key             <- Generate key
    $ scp ~/swarm.key "userXX"@node{0,1,2}:~/.ipfs   <- Copy to all nodes
    $ ipfs bootstrap rm --all                        <- REMOVE default bootstrap entries
                                                        (in all nodes)
 
-   $ BOOTSTRAP_HASH="/ip4/${BOOTSTRAP_NODE_IP}/tcp/4001"    
+   $ BOOTSTRAP_HASH="/ip4/${BOOTSTRAP_NODE_IP}/tcp/4001"
    $ BOOTSTRAP_HASH="${BOOTSTRAP_HASH}/ipfs"
-   $ BOOTSTRAP_HASH="${BOOTSTRAP_HASH}/${BOOSTRAP_PEER_ID}   generated through '$ ipfs init'  
-                                       └·················┴─ ('$ ipfs id' @ boostrap node) 
+   $ BOOTSTRAP_HASH="${BOOTSTRAP_HASH}/${BOOSTRAP_PEER_ID}   generated through '$ ipfs init'
+                                       └·················┴─ ('$ ipfs id' @ boostrap node)
 
-   $ ipfs bootstrap add ${BOOTSTRAP_HASH}           <- Add to each node (including bootstrap 
+   $ ipfs bootstrap add ${BOOTSTRAP_HASH}           <- Add to each node (including bootstrap
                                                        node itself)
 
    $ export LIBP2P_FORCE_PNET=1                     <- FORCE PRIVATE MODE
@@ -232,14 +244,14 @@ NEXT) install the Swarm key generation utility:
     },
 
    $ ipfs daemon                                   <- Finally, on each node, start the ipfs daemon
-   $ ipfs swarm peers  
+   $ ipfs swarm peers
 
    TEST SETUP:
    NODE 0:
-   $ echo "hello IPFS" > test.txt                                
+   $ echo "hello IPFS" > test.txt
    QmZU...                                 Check at node 1/2/... like:
-   $ ipfs add ./file.txt                   $ ipfs cat QmZU...    
-                                           WARN: at this point content is just in NODE 0, 
+   $ ipfs add ./file.txt                   $ ipfs cat QmZU...
+                                           WARN: at this point content is just in NODE 0,
                                                  NOT YET REPLICATED, but accesible to node1/2/...
 
    WARN: CHECK THAT FILE IS NOT ACCESIBLE IN A PUBLIC GATEWAY
@@ -266,10 +278,10 @@ NEXT) Systemd integration:
 ───────────────────────────────────────────────
 ── SETUP IPFS-CLUSTER FOR DATA REPLICATION ────
 ───────────────────────────────────────────────
-   
+
   NOTE: There are two ways how to organize IPFS cluster:
   1st) set a fixed peerset  : It will not be possible to "grow" the cluster.
-  2nd) set 1+bootstrap nodes: 
+  2nd) set 1+bootstrap nodes:
     $ OCI_IMG="ipfs/ipfs-cluster:v1.0.1"
     $ docker run --rm                               ${OCI_IMG} --version
     $ docker run --rm --entrypoint ipfs-cluster-ctl ${OCI_IMG} --version
@@ -280,7 +292,7 @@ NEXT) Systemd integration:
       ipfs/QmZjSoXU...                            <- QmZ.. is the IPFS-Cluster peer ID
                                                                  (vs IPFS peer ID)
                                                      Fetch current value like:
-                                                     $ ipfs-cluster-service id 
+                                                     $ ipfs-cluster-service id
 
     $ docker ... ipfs-cluster-service ... init    <- Init the cluster  (@node1/2/...
       ...
@@ -294,7 +306,7 @@ NEXT) Systemd integration:
 
     $ docker ... ipfs-cluster-service ... daemon  <- Start the cluster (@node1/2/...)
     > ...IPFS Cluster is ready cluster.go:461        WARN: ipfs daemon must be running properly
-    > ipfs-cluster-service daemon 
+    > ipfs-cluster-service daemon
 
     $ ipfs-cluster-ctl peers ls                   <- check that we have two peers in the cluster.
     > node1 & > ipfs-cluster-ctl peers ls
@@ -326,13 +338,13 @@ NEXT) Systemd integration:
     │ [Install]
     │ WantedBy=multi-user.target
     └─────────────────────────────────────────────
-    $ sudo systemctl daemon-reload 
-    $ sudo systemctl enable ipfs-cluster 
-    $ sudo systemctl start ipfs-cluster 
-    $ sudo systemctl status ipfs-cluster 
+    $ sudo systemctl daemon-reload
+    $ sudo systemctl enable ipfs-cluster
+    $ sudo systemctl start ipfs-cluster
+    $ sudo systemctl status ipfs-cluster
 
-NEXT) TESTING DATA-REPLICATION: 
-    $ ipfs-cluster-ctl add myfile.txt 
+NEXT) TESTING DATA-REPLICATION:
+    $ ipfs-cluster-ctl add myfile.txt
     $ ipfs-cluster-ctl status CID
     ( You should see that this file has been PINNED among all cluster nodes)
 [[}]]
@@ -354,8 +366,8 @@ NEXT) TESTING DATA-REPLICATION:
   ·      "Size": 58}],
   ·   }
   ·
-  └ https://nft.storage 
-  · - Based on filecoin network. 
+  └ https://nft.storage
+  · - Based on filecoin network.
   ·   STEP 1) Create (free) nft.storage account.
   ·   STEP 2) use IPFS links are URI when minting NFTs and metadata.
   ·
@@ -373,10 +385,10 @@ NEXT) TESTING DATA-REPLICATION:
   https://github.com/ipld/specs/blob/master/block-layer/content-addressable-archives.md
 
 - A subset of (Directed Acyclic Graph) DAGs in IPFS can be downloaded as:
-  $ ipfs dag export $CID > FILENAME.car 
+  $ ipfs dag export $CID > FILENAME.car
 - car files are sort of UNIX tar (type archive) for IPFS Content Addresable subDAGs
   storing any IPLD DAG (graph) as a serialized representation sequence of bytes;
-  as a concatenation of its blocks, plus a header describing the graphs in the file 
+  as a concatenation of its blocks, plus a header describing the graphs in the file
   (via root CIDs).
 
 - Packing files into car:
@@ -387,7 +399,7 @@ NEXT) TESTING DATA-REPLICATION:
 - Unpacking .car:
   $ ipfs-car --unpack path/to/my.car       # unpack
                                            # --output "unpack_destination_path"
-                                           # --root $cid1 --root $cid2 : unpack specific roots         
+                                           # --root $cid1 --root $cid2 : unpack specific roots
                                            # STDIN can be isued as input cat my.car | ipfs-car --unpack
 - Listing contents of .car:
     $ ipfs-car --list-cids path/to/my.car  # list cids for all blocks.
@@ -396,7 +408,7 @@ NEXT) TESTING DATA-REPLICATION:
     $ ipfs-car --list-full path/to/my.car  # list both files-path and their CIDs.
 [[security.backup}]]
 
-● TODO: 
+● TODO:
   https://docs.ipfs.tech/concepts/file-systems/#mutable-file-system-mfs
   https://docs.ipfs.tech/concepts/file-systems/#unix-file-system-unixfs
   https://nft.storage/

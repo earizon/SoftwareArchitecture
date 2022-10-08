@@ -1,35 +1,46 @@
+●  Apropos:
+- Visit next Web site for a great experience:
+  https://earizon.github.io/txt_world_domination/viewer.html?payload=../SoftwareArchitecture/istio_microservicilites.txt
+
+- If you want to contribute to great gistory of this
+  document you can take the next flight to:
+@[https://www.github.com/earizon/SoftwareArchitecture]
+  Your commits and pull-request will be immortalized
+  in the Pantheon of the Unicode Gods.
+────────────────────────────────────────────────────────────────────────────────
+
 ● Summary from:
   https://www.infoq.com/articles/microservicilities-istio/
   by Alex Soto, Director of Developer Experience at Red Hat
   reviewed by Michael Redlich, Java Queue Lead Editor
-- Services in a microservices architecture may be developed in 
-  different languages, for example, Service A in Java and Service B in 
-  Go. The challenge of having polyglot services is learning how to 
-  implement these microservicilities for each language. For example, 
-  which library may be used for implementing resiliency in Java, in Go, 
+- Services in a microservices architecture may be developed in
+  different languages, for example, Service A in Java and Service B in
+  Go. The challenge of having polyglot services is learning how to
+  implement these microservicilities for each language. For example,
+  which library may be used for implementing resiliency in Java, in Go,
   etc....
-  In the case of Java, we may add new libraries (with all its 
-  transitive dependencies) for each of the “microservicilitities”, 
-  such as Resiliency4J for resiliency, Jaeger for tracing, or 
-  Micrometer for monitoring. While there is nothing wrong with this, we 
-  are increasing the chances of getting classpath conflicts when adding 
-  different kinds of libraries in the classpath. Moreover, the memory 
-  consumption and boot-up times are increased as well. Last, but not 
-  least, there is the problem of maintaining library versions aligned 
+  In the case of Java, we may add new libraries (with all its
+  transitive dependencies) for each of the “microservicilitities”,
+  such as Resiliency4J for resiliency, Jaeger for tracing, or
+  Micrometer for monitoring. While there is nothing wrong with this, we
+  are increasing the chances of getting classpath conflicts when adding
+  different kinds of libraries in the classpath. Moreover, the memory
+  consumption and boot-up times are increased as well. Last, but not
+  least, there is the problem of maintaining library versions aligned
   across all Java services, so all of them run the same version.
-- So arriving at this point, we may wonder why we need to implement 
+- So arriving at this point, we may wonder why we need to implement
   all these microservicilities?
-  ...  A SERVICE MESH IS A DEDICATED INFRASTRUCTURE LAYER FOR 
-  HANDLING SERVICE-TO-SERVICE COMMUNICATION THAT IS SAFE, FAST AND 
+  ...  A SERVICE MESH IS A DEDICATED INFRASTRUCTURE LAYER FOR
+  HANDLING SERVICE-TO-SERVICE COMMUNICATION THAT IS SAFE, FAST AND
   RELIABLE.
 
-microservices architecture challenges: 
+microservices architecture challenges:
 - fault tolerance, service discovery, scaling, logging, tracing, ...
   what we at Red Hat named "Microservicesilities."
 
 - (RESTful, ...) API: documented using tools such as Swagger.
 - DISCOVERY  : Services need to discover other services.
-- INVOCATION : 
+- INVOCATION :
 - ELASTICITY : Each service can be scaled up and/or down independently
 - RESILIENCY : FAILURE IN MIND
 - PIPELINE   : EACH MICRO-SERVICE SHOULD BE DEPLOYED INDEPENDENTLY.
@@ -38,10 +49,10 @@ microservices architecture challenges:
 - MONITORING : method/s to measure how system is performing, understand
                overall health and/or alerting when something is wrong.
 - TRACING    : VISUALIZE A PROGRAM’S FLOW AND DATA PROGRESSION.
-└─────┬──────┘ 
+└─────┬──────┘
 JUST THREE OF THE TEN MICROSERVICILITIES ARE COVERED BY KUBERNETES!!!
-(Discovery using Kubernetes Service, Invocation using k8s network, 
- Elasticity through scaling mechanisms) 
+(Discovery using Kubernetes Service, Invocation using k8s network,
+ Elasticity through scaling mechanisms)
 
 - What is a Service Mesh and Istio?
 - Service Mesh:

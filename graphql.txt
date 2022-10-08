@@ -1,7 +1,7 @@
 ● GraphQL: [[{data.graphql,qa.standards,api,protocol.client_server,data.integration,01_PM.low_code,_PM.TODO]]
 • GraphQL: Facebook-developed language that provides a powerful API to get only
   the dataset you need in a single request, seamlessly combining data sources.
-• Replacement for REST and non-standandard ORM mapping tools that offers 
+• Replacement for REST and non-standandard ORM mapping tools that offers
   (10x) speed improvements and removes the need for custom (vs DDBB) caches.
 
 • REF: https://www.redhat.com/en/topics/api/what-is-graphql
@@ -12,7 +12,7 @@
       a monaco mode (in the works)
       an example of how to use this ecosystem with GraphiQL.
       examples of how to implement or extend GraphiQL.
-  
+
 <span xsmall>Apollo GraphQL Middelware</span>
 @[https://www.apollographql.com/]
 · Simplify app development by combining APIs, databases, and microservices into a
@@ -20,3 +20,24 @@
 · @[https://www.infoq.com/news/2020/06/apollo-platform-graphql/]
   Apollo Data Graph Platform: A GraphQL Middleware Layer for the Enterprise
 [[}]]
+
+● GraphQL Engine: [[{data.analytics,01_PM.low_code,_PM.TODO]]
+• Blazing fast, instant realtime GraphQL APIs for DB with fine
+  grained access control, also trigger webhooks on database events.
+• POLE POSITION in GitHub for Top 32 Automatic Api Open Source Projects on Github (
+  https://awesomeopensource.com/projects/automatic-api
+
+• Ex:
+  PostgreSQL data                   GraphQL subscription                      UI (Web, Mobile, ...)
+
+  ORDERS TABLE                       subscription fetchOrder {    ·········─→ event pushed to update UI
+  ==============================       orders ( where:
+  order_id  payment   dispatched                 {id: {_eq: 'XX_11'}}) {
+  ---------+--------+-----------         id
+  XX-11     true      true               payment
+  ---------+--------+-----------         dispatched
+  ...                                  }
+                                     }
+[[}]]
+
+

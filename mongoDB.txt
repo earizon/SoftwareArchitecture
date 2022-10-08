@@ -1,7 +1,269 @@
+●  Apropos:
+- Visit next Web site for a great experience:
+  https://earizon.github.io/txt_world_domination/viewer.html?payload=../SoftwareArchitecture/mongoDB.txt
+
+- If you want to contribute to great gistory of this
+  document you can take the next flight to:
+@[https://www.github.com/earizon/XXXXXX]
+  Your commits and pull-request will be immortalized
+  in the Pantheon of the Unicode Gods.
+────────────────────────────────────────────────────────────────────────────────
+
 ● MongoDB Summary   [[{db_engine.document_store.mongo]] #[mongo_summary]
-• 14 Things I Wish I’d Known When Starting with MongoDB [[{01_PM.TODO}]]
+
+• 14 Things I Wish I’d Known When Starting with MongoDB [[{01_PM.TODO]]
   https://www.infoq.com/articles/Starting-With-MongoDB
 
+14 Things I Wish I’d Known When Starting with MongoDB
+Sep 13, 2018 9 min read
+by Phil Factor
+reviewed by
+  Jonathan Allen
+  Software Architect
+
+Write for InfoQ, Join a community of experts.
+Increase your visibility.
+
+    Even though MongoDB doesn’t enforce it, it is vital to design a
+schema.
+    Likewise, indexes have to be designed in conjunction with your
+schema and access patterns.
+    Avoid large objects, and especially large arrays.
+    Be careful with MongoDB’s settings, especially when it concerns
+security and durability.
+    MongoDB doesn’t have a query optimizer, so you have to be very
+careful how you order the query operations.
+
+I’ve been a database person for an embarrassing length of time, but
+I only started working with MongoDB recently. When I was starting out
+with MongoDB, there are a few things that I wish I’d known about.
+With general experience, there will always be preconceptions of what
+databases are and what they do. In hopes of making it easier for
+other people, here is a list of common mistakes.
+Creating a MongoDB server without authentication
+
+Unfortunately, MongoDB installs without authentication by default.
+This is fine on a workstation, accessed only locally. But because
+MongoDB is a multiuser system that likes to use as much memory as it
+can, it is much better installed on a server, loaded up to the hilt
+with RAM, even for development work. To install it on a server on the
+default port without authentication is asking for trouble, especially
+when one can execute arbitrary JavaScript within a query (e.g. $where
+as a vector for injection attacks).
+
+There are several authentication methods, but user ID/password
+credentials are easy to install and manage. Do that method while you
+think about your fancy LDAP-based authentication. While we’re
+talking about security, MongoDB must be kept up-to-date, and it is
+always worth checking logs for signs of unauthorized access. I like
+to use a different port to the default.
+Forgetting to tie down MongoDB’s attack surface
+
+    Related Sponsored Content
+    7 Essentials When Selecting a NoSQL Database-as-a-Service (DBaaS)
+    Get started with Java on Azure
+    The Definitive Guide to Overcoming Challenges in AWS Backup
+    [eBook] From Minecraft to LinkedIn - How Microsoft Uses Java
+Internally
+    The 2022 Cloud Report
+
+Related Sponsor
+
+Meet CockroachDB Serverless - The most highly evolved SQL database on
+the planet. Start free and scale as you grow. Start Instantly.
+
+MongoDB’s security checklist gives good advice on reducing the risk
+of penetration of the network and of a data breach. It is easy to
+shrug and assume that a development server doesn’t need a high
+level of security. Not so: It is relevant to all MongoDB servers. In
+particular, unless there is a very good reason to use  mapReduce,
+group, or $where, you should disable the use of arbitrary JavaScript
+by setting javascriptEnabled:false in the config file. Because the
+data files of standard MongoDB is not encrypted, It is also wise to
+Run MongoDB with a Dedicated User with full access to the data files
+restricted to that user so as to use the operating systems own
+file-access controls.
+Failing to design a schema
+
+MongoDB doesn’t enforce a schema. This is not the same thing as
+saying that it doesn’t need one. If you really want to save
+documents with no consistent schema, you can store them very quickly
+and easily but retrieval can be the very devil.
+
+The classic article ‘6 Rules of Thumb for MongoDB Schema Design’
+is well worth reading, and features like Schema Explorer from
+third-party tools such as Studio 3T is well worth having for regular
+schema check-ups.
+Forgetting about collations (sort order)
+
+This can result in more frustration and wasted time than any other
+misconfiguration. MongoDB defaults to using binary collation. This is
+helpful to no cultures anywhere. Case-sensitive, accent-sensitive,
+binary collations were considered curious anachronisms in the
+eighties along with beads, kaftans and curly moustaches. Now, they
+are inexcusable. In real life a motorbike is the same as a Motorbike.
+Britain is the same place as britain. Lower-case (minuscule) is
+merely a cursive equivalent of an upper-case (majuscule) letter.
+Don’t get me started about the collation of accented characters
+(diacritics).  When you create a MongoDB database, use an
+accent-insensitive, case-insensitive collation appropriate to the
+languages and culture of the users of the system. This makes searches
+through string data so much easier.
+Creating collections with large documents
+
+MongoDB is happy to accommodate large documents of up to 16 MB in
+collections, and GridFS is designed for large documents over 16MB.
+Because large documents can be accommodated doesn’t mean that it is
+a good idea. MongoDB works best if you keep individual documents to a
+few kilobytes in size, treating them more like rows in a wide SQL
+table. Large documents will cause several performance problems.
+Creating documents with large arrays
+
+Documents can contain arrays. It is best to keep the number of array
+elements well below four figures. If the array is added to
+frequently, it will outgrow the containing document so that its
+location on disk has to be moved, which in turn means every index
+must be updated. A lot of index rewriting is going to take place when
+a document with a large array is re-indexed, because there is a
+separate index entry for every array element. This re-indexing also
+happens when such a document is inserted or deleted.
+
+MongoDB has a ‘padding factor’ to provide space for documents to
+grow, in order to minimize this problem.
+
+You might think that you could get around this by not indexing
+arrays. Unfortunately, without the indexes, you can run into other
+problems. Because documents are scanned from start to end, it takes
+longer to find elements towards the end of an array, and most
+operations dealing with such a document would be slow.
+Forgetting that the order of stages in an aggregation matters
+
+In a database system with a query optimizer, the queries that you
+write are explanations of what you want rather than how to get it. It
+is like ordering in a restaurant; you usually just order the dish,
+rather than give detailed instructions to the cook.
+
+In MongoDB, you are instructing the cook. For example, you need to
+make sure that the data is reduced as early as possible in the
+pipeline via $match and $project, sorts happen only once the data is
+reduced, and that lookups happen in the order you intend. Having a
+query optimizer that removes unnecessary work, orders the stages
+optimally, and chooses the type of join can spoil you. MongoDB gives
+you more control, but at a cost in convenience.
+
+Tools like Studio 3T make it simpler to build accurate MongoDB
+aggregation queries. Its Aggregation Editor feature lets you apply
+pipeline operators one stage at a time, and you can validate inputs
+and outputs at each stage for easier debugging.
+Using fast writes
+
+Never set MongoDB for high-speed writes with low durability. This
+‘file-and-forget’ mode makes writes appear to be fast because
+your command returns before actually writing anything. If the system
+crashes before the data is written to disk, it is lost and risks
+being in an inconsistent state. Fortunately, 64-bit MongoDB has
+journaling enabled.
+
+The MMAPv1 and WiredTiger storage engine both use journaling to
+prevent this, though WiredTiger can be restored to the last
+consistent checkpoint during recovery if journaling is switched off.
+
+Journaling will ensure that the database is in a consistent state
+when it recovers and will save all the data up to the point that the
+journal is written. The duration between journal writes is
+configurable using the commitIntervalMs run-time option.
+
+To be confident of your writes, make sure that journaling is enabled
+(storage.journal.enabled) in the configuration file and the commit
+interval corresponds with what you can afford to lose.
+Sorting without an index
+
+In searches and aggregations, you will often want to sort your data.
+Hopefully, it is done in one of the final stages, after filtering the
+result, to reduce the amount of data being sorted. Even then, you
+will need an index that can cover the sort. Either a single or
+compound index will do this.
+When no suitable index is available, MongoDB is forced to do without.
+There is a 32MB memory limit on the combined size of all documents in
+the sort operation and if MongoDB hits the limit, it  will either
+produce an error or occasionally just return an empty set of records.
+Lookups without supporting indexes
+
+Lookups perform a similar function to a SQL join. To perform well,
+they require an index on the key value used as the foreign key. This
+isn’t obvious because the use isn’t reported in explain(). These
+indexes are in addition to the index recorded by explain() that is
+used by the $match and $sort pipeline operators when they occur at
+the beginning of the pipeline. Indexes can now cover any stage an
+aggregation pipeline.
+Not using multi-updates
+
+The db.collection.update() method is used to modify part or all of an
+existing document or replace an existing document entirely, depending
+on the update parameter you provide. It is less obvious that it
+doesn’t do all the documents in a collection unless you set the
+multi parameter to update all documents that match the query criteria.
+Forgetting the significance of the order of keys in a hash object
+
+In JSON, an object consists of an unordered collection of zero or
+more name/value pairs, where a name is a string and a value is a
+string, number, boolean, null, object, or array.
+
+Unfortunately, BSON attaches significance to order when doing
+searches. The order of keys within embedded objects matters in
+MongoDB, i.e. { firstname: "Phil", surname: "factor" } does not match
+{ { surname: "factor", firstname: "Phil" }. This means that you have
+to preserve the order of name/value pairs in your documents if you
+want to be sure to find them.
+Confusing ‘null’ and ‘undefined’
+
+The ‘undefined’ value has never been valid in JSON, according to
+the official JSON standard (ECMA-404, Section 5), despite the fact
+that it is used in JavaScript. Furthermore, it is ‘deprecated’ in
+BSON and converted to $null which isn’t always a happy solution.
+Avoid using ‘undefined’ in MongoDB.
+Using $limit() without $sort()
+
+Often, when you are developing in MongoDB, it useful to just see a
+sample of the results that are returned from a query or aggregation.
+$limit() serves this purpose, but it should never be in the final
+version of the code, unless you first use $sort. This is because you
+can’t otherwise guarantee the order of the result and you won’t
+be able to reliably ‘page’ through data. You get different
+records in the top of the result depending on the way you’ve sorted
+it. To work reliably, queries or aggregations must be
+‘deterministic’, meaning that they give the same results every
+time they are executed. Code that has $limit without $sort isn’t
+deterministic, and can cause bugs later on that are difficult to
+track down.
+Conclusions
+
+The only way that you could end up feeling disappointed in MongoDB is
+if you compare it directly with another type of database such as an
+RDBMS, or come to it with particular expectations. It is like
+comparing an orange with a fork. Database systems have their
+purposes. It is best to just understand and appreciate these
+differences. It would be a shame to pressure the developers of
+MongoDB down a route that forced them towards an RDBMS way of doing
+things, and I’d like to continue to see new and interesting ways of
+solving old problems such as ensuring the integrity of data and
+making data systems resilient to failure and malice.
+
+MongoDB’s introduction of ACID transactionality in version 4.0 is a
+good example of introducing important improvements in an innovative
+way. Multi-document, multi-statement transactions are now atomic, and
+it is possible to adjust the time allowed to acquire locks, and to
+expire hung transactions, as well as to change the isolation level.
+About the Author
+
+Phil Factor (real name withheld to protect the guilty), aka Database
+Mole, has nearly forty years of experience with database-intensive
+applications. Despite having once been shouted at by a furious Bill
+Gates at an exhibition in the early 1980s, he has remained resolutely
+anonymous throughout his career.
+
+
+[[}]]
 $ mongo                                  ← Launch mongo shell
 # show dbs                               ← list all databases
 # use db_name                            ← create/ login to a database
@@ -19,13 +281,13 @@ $ mongo                                  ← Launch mongo shell
 
 # db.collection01.update(                ← updateOne()|updateMany()
      { key1: val11 },                    ← query to match
-     { $set: { key2 : val2} },           ← update with 
+     { $set: { key2 : val2} },           ← update with
      { multi: true}                      ← options
   );
 
 # db.collection01                        ← Update single document.
   .findOneAndUpdate(
-    filter, 
+    filter,
     update,
     options)                             ← Options:
                                            upsert=true|false
@@ -35,8 +297,8 @@ $ mongo                                  ← Launch mongo shell
                                            → return null.
 
 # db.collecti01.findOne( { _id  : 123 });← Find by ID
-# db.collecti01.findOne( { key1 : val1});       by query 
-# db.collecti01.findOne(                 ← Find with projection 
+# db.collecti01.findOne( { key1 : val1});       by query
+# db.collecti01.findOne(                 ← Find with projection
      { key1 : val1},                       (limiting the fields to return)
      { key2: 1}      );                    ←  returns id , key2 fields only
 
@@ -47,20 +309,20 @@ $ mongo                                  ← Launch mongo shell
 
 
 • MONGODB READ-CONCERN LEVELS:  [[{db_engine.101]]
-- Control consistency and isolation properties of data reads 
+- Control consistency and isolation properties of data reads
   ( from replica sets & replica set shards ).
   LOCAL       : returns data from instace without guaranteing that
                 its been written to majority of replica members
                 (Default for reads against primary)
   AVAILABLE   : similar to local, gives lowest latancy for sharded collections.
                 (Default for reads against secondaries)
-  MAJORITY    : returns only if the data acknowledged by a majority of 
+  MAJORITY    : returns only if the data acknowledged by a majority of
                 the replica set members.
-  LINEARIZABLE: return data after all successful majority-acknowledged 
+  LINEARIZABLE: return data after all successful majority-acknowledged
                 writes
   SNAPSHOT    : Only available for transactions on multi documents.
 
-• MONGODB WRITE CONCERN LEVELS:  
+• MONGODB WRITE CONCERN LEVELS:
   - Control level of acknowledgment for a given write operation
     sent to mongod and mongos (for sharded collections)
 
@@ -69,7 +331,7 @@ $ mongo                                  ← Launch mongo shell
       0 : No ACK requested
       1 : (default) wait ACK from standalone mongod|primary(replica set)
       2+:           wait ACK from primary + given N-1 secondaries
-    - j : (bool)    
+    - j : (bool)
       true => return ACK only after real writte onto on-disk journal
     - wtimeout: millisecs before returning error.
 [[}]]
@@ -86,3 +348,6 @@ $ mongo                                  ← Launch mongo shell
   2. Map-Reduce
   3. Single Purpose
 [[}]]
+
+
+
