@@ -34,13 +34,13 @@ blockchain application.   We demonstrate that UStoreenables  faster
 development  and  the  UStore-backed  ap-plications can have better performance
 than the existingimplementations
 
-""" Our current implementation of UStore hasbetter performance than 
-general in-memory key-valuestorage systems, especially for version 
-scan operations.We port and evaluate four applications on top of 
-US-tore: a Git-like application, a collaborative data 
-scienceapplication, a transaction management application, anda 
-blockchain application. We demonstrate that UStore enables faster 
-development and the UStore-backed applications can have better 
+""" Our current implementation of UStore hasbetter performance than
+general in-memory key-valuestorage systems, especially for version
+scan operations.We port and evaluate four applications on top of
+US-tore: a Git-like application, a collaborative data
+scienceapplication, a transaction management application, anda
+blockchain application. We demonstrate that UStore enables faster
+development and the UStore-backed applications can have better
 performance than the existing implementations. """
 [[}]]
 
@@ -77,24 +77,24 @@ infinite scalability.
 See more at: http://ceph.com/ceph-storage/#sthash.KNp2tGf5.dpuf
 
 
-● When Ceph is Not Enough [[{01_PM.risk]]
+● When Ceph is Not Enough [[{01_PM.risks]]
 Josh Goldenhar, VP Product Marketing, Lightbits Labs
-...  In this 30-minute webinar, we'll discuss the origins of Ceph and why 
-  it's a great solution for highly scalable, capacity optimized storage 
-  pools. You’ll learn how and where Ceph shines but also where its 
-  architectural shortcomings make Ceph a sub-optimal choice for today's 
-  high performance, scale-out databases and other key web-scale 
+...  In this 30-minute webinar, we'll discuss the origins of Ceph and why
+  it's a great solution for highly scalable, capacity optimized storage
+  pools. You’ll learn how and where Ceph shines but also where its
+  architectural shortcomings make Ceph a sub-optimal choice for today's
+  high performance, scale-out databases and other key web-scale
   software infrastructure solutions.
   Participants will learn:
   • The evolution of Ceph
-  • Ceph applicability to infrastructures such as OpenStack, 
+  • Ceph applicability to infrastructures such as OpenStack,
     OpenShift and other Kubernetes orchestration environments
-  • Why Ceph can't meet the block storage challenges of modern,       
+  • Why Ceph can't meet the block storage challenges of modern,
     scale-out, distributed databases, analytics and AI/ML workloads
-  • Where Cephs falls short on consistent latency response 
+  • Where Cephs falls short on consistent latency response
   • Overcoming Ceph’s performance issues during rebuilds
-  • How you can deploy high performance, low latency block storage in 
-    the same environments Ceph integrates with, alongside your Ceph  
+  • How you can deploy high performance, low latency block storage in
+    the same environments Ceph integrates with, alongside your Ceph
     deployment.  [[}]]
 [[}]]
 
@@ -105,21 +105,21 @@ Josh Goldenhar, VP Product Marketing, Lightbits Labs
 
 ● Tachyon memory-centric distributed FS [[{storage.distributed,scalability,01_PM.TODO]]
 @[http://tachyon-project.org/index.html]
-- memory-centric distributed file system enabling reliable file 
-sharing at memory-speed across cluster frameworks, such as Spark and 
-MapReduce. It achieves high performance by leveraging lineage 
-information and using memory aggressively. Tachyon caches working set 
-files in memory, thereby avoiding going to disk to load datasets that 
-are frequently read. This enables different jobs/queries and 
+- memory-centric distributed file system enabling reliable file
+sharing at memory-speed across cluster frameworks, such as Spark and
+MapReduce. It achieves high performance by leveraging lineage
+information and using memory aggressively. Tachyon caches working set
+files in memory, thereby avoiding going to disk to load datasets that
+are frequently read. This enables different jobs/queries and
 frameworks to access cached files at memory speed.
 
-Tachyon is Hadoop compatible. Existing Spark and MapReduce programs 
-can run on top of it without any code change. The project is open 
+Tachyon is Hadoop compatible. Existing Spark and MapReduce programs
+can run on top of it without any code change. The project is open
 source (Apache License 2.0) and is deployed at multiple companies.
-It has more than 40 contributors from over 15 institutions, including 
+It has more than 40 contributors from over 15 institutions, including
 Yahoo, Intel, and Redhat.
 
-The project is the storage layer of the Berkeley Data Analytics Stack 
+The project is the storage layer of the Berkeley Data Analytics Stack
 (BDAS) and also part of the Fedora distribution.
 [[}]]
 

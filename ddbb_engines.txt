@@ -489,6 +489,10 @@ CONTEXT:
   - Apache Lucene: Powerful search java Library used as the base for
                    powerful solutions.
 
+  - Zinc: Light-weight Golang alternative to ElasticSearch
+    using "bluge" (vs Lucens) as core underlying indexing library.
+    See notes @[./ZincSearch.txt]
+
   - Elasticsearch: Both are built on top of Lucene.       [[{02_doc_has.comparative]]
     Solr           adding server, cluster and escalability features.
                    - When compared, Elasticsearch is simpler to use
@@ -812,7 +816,7 @@ CONTEXT:
 [[}]]
 
 ● Logreduce IA filter: [[{db_engine.search,db_engine.timeseries,db_engine.log_collect]]
-                       [[qa,security.monitoring,aaa,security.ia,01_PM.TODO.0]]
+                       [[qa,security.monitoring,aaa,security.ia,01_PM.TODO.NOW]]
   https://opensource.com/article/18/9/quiet-log-noise-python-and-machine-learning
   https://pypi.org/project/logreduce/
   - Quiet log noise with Python and machine learning
@@ -820,7 +824,7 @@ CONTEXT:
 
 [[db_engine.101}]]
 
-● tbls https://github.com/k1LoW/tbls  [[{01_PM.TODO.0]]
+● tbls https://github.com/k1LoW/tbls  [[{01_PM.TODO.NOW]]
   - CI-Friendly (golang == docker-friendly) tool for documenting DDBBs.
   FEATURES:
   - Diff database.

@@ -95,27 +95,33 @@ Other evict strategies can be found at
 @[https://en.wikipedia.org/wiki/Cache_replacement_policies]
 [[}]]
 
-● Redis:  [[{cache.distributed.redis,architecture.messaging,enterprise_patterns]]     #[redis_summary]
-          [[db_engine.key_value,architecture.event_stream,architecture.decoupled]]
-          [[01_PM.TODO]]
+● Redis (RE)mote (DI)ctionary (S)ervice [[{cache.distributed.redis,architecture.messaging,]]
+          [[enterprise_patterns,db_engine.key_value,architecture.event_stream,]]
+          [[architecture.decoupled,01_PM.TODO]]
+#[redis_summary]
+
+
+Redis  is an open-source key-value database server.
 @[https://redis.io/]
 • in-memory data structure store, used as a key-value database, cache.
   Commonly used as shared-session in balanced REST APIs (e.g, Spring has
   zero-code/low-config options to "move" sessions to redis in spring-cloud
   module).
-
 • supports data structures such as strings, hashes, lists, sets, sorted sets
   with range queries, bitmaps, hyperloglogs and geospatial indexes with
   radius queries
 • Redis has built-in replication, Lua scripting, LRU eviction, transactions
   and different levels of on-disk persistence, and provides high availability
   via Redis Sentinel and automatic partitioning with Redis Cluster
-• Since it can also notify listener/s of changes in its state it can
-  also be used as message broker (this is the case for example in
-  Kubernetes, where etcd implement an asynchronous message system              [[{02_doc_has.comparative]]
-  amongst its components).
 • Redis is also considered as a lightweight alternative to "heavy" messaging
-  systems (AMPQ, ...) .                                                        [[}]]
+  systems (AMPQ, ...) .
+
+Summary from https://architecturenotes.co/redis/
+by Mahdi Yusuf
+
+
+
+[[}]]
 @[https://www.infoq.com/news/2018/10/Redis-5-Released]
 
 • redis supports a variety of data types all oriented around binary safe strings.
@@ -213,6 +219,9 @@ Other evict strategies can be found at
 @[https://www.memcached.org/
 @[https://www.infoworld.com/article/3063161/why-redis-beats-memcached-for-caching.html]  [[{02_doc_has.comparative}]]
 - distributed memory object caching system
+- Created by Brad Fitzpatrick in 2003, it started as a Perl project
+  and was later rewritten in C being the facto caching tool of its day, bu
+  Redis is a better alternative a few years later.
 - Memcached servers are unaware of each other. There is no crosstalk, no
   syncronization, no broadcasting, no replication. Adding servers increases
   the available memory. Cache invalidation is simplified, as clients delete
