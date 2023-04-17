@@ -1,4 +1,4 @@
-●  Apropos:
+#  Apropos:
 - Visit next Web site for a great experience:
   https://earizon.github.io/txt_world_domination/viewer.html?payload=../SoftwareArchitecture/kafka.txt
 
@@ -10,7 +10,7 @@
 ────────────────────────────────────────────────────────────────────────────────
 [[{kafka]]
 
-● Event Based Architecture: [[{]]
+# Event Based Architecture: [[{]]
 @[https://www.infoq.com/news/2017/11/jonas-reactive-summit-keynote]
 Jonas Boner ... talked about event driven services (EDA) and
 event stream processing (ESP)... on distributed systems.
@@ -53,7 +53,7 @@ Kafka Streams, Apache Gearpump and Apache Beam can be used to implement these
 design patterns.
 [[}]]
 
-● Kafka Summary [[{]]
+# Kafka Summary [[{]]
 • External Links:
   - @[http://kafka.apache.org/documentation/]
   - Clients: (Java,C/C--,Python,Go,...)
@@ -73,7 +73,7 @@ design patterns.
   @[https://github.com/Landoop/kafka-cheat-sheet]
 
 
-● Global Diagram [[{kafka,101,02_DOC_HAS.diagram]]
+# Global Diagram [[{kafka,101,02_DOC_HAS.diagram]]
 (one+ server in 1+ datacenters)
 
 ☞  best practice : publishers must be unaware of underlying
@@ -160,8 +160,8 @@ can wait for ACK.         ↓                          CONSUMER   |    CONSUMER 
      multiple consumer groups
 [[}]]
 
-● data-schema Support [[{kafka.101,enterprise_patterns,01_PM.TODO]]
-● Apache AVRO format
+# data-schema Support [[{kafka.101,enterprise_patterns,01_PM.TODO]]
+# Apache AVRO format
 • Efficient compac way to store data in disk.
 • "Imported" from Hadoop's World.
 • Efficient: Binary format, containing only data (vs JSON/JSON-schema field name+data)
@@ -207,7 +207,7 @@ can wait for ACK.         ↓                          CONSUMER   |    CONSUMER 
 
 @[https://shravan-kuchkula.github.io/kafka-schemas/#understand-why-data-schemas-are-a-critical-part-of-a-real-world-stream-processing-application]
 
-● Kafka Schema Registry
+# Kafka Schema Registry
   DZone Intro Summary
 @[https://dzone.com/articles/kafka-avro-serialization-and-the-schema-registry]
 by Jean-Paul Azar
@@ -242,7 +242,7 @@ Confluent Schema Registry:
     schemas and AUTOMATICALLY "TRANSFORM" BETWEEN COMPATIBLE SCHEMAS,
     TRANSFORMING PAYLOAD VIA AVRO SCHEMA EVOLUTION.
 
-● SCHEMA EVOLUTION:
+# SCHEMA EVOLUTION:
   Scenario:
   - Avro schema modified after data has already been written to store
     with old schema version.
@@ -587,7 +587,7 @@ https://docs.confluent.io/current/schema-registry/index.html
 https://docs.confluent.io/current/schema-registry/schema_registry_tutorial.html
 [[}]]
 
-● API Summary [[{]]
+# API Summary [[{]]
 [[{kafka,01_PM.ext_resource,02_DOC_HAS.comparative]]
 @[https://medium.com/@stephane.maarek/the-kafka-api-battle-producer-vs-consumer-vs-kafka-connect-vs-kafka-streams-vs-ksql-ef584274c1e]
 ┌──────────────────────────────────────────────────────────────────┐
@@ -679,11 +679,11 @@ KSQL :
    (as of 2019-11, gaps can be filled)
 [[}]]
 
-● Message Delivery Semantics  [[{kafka,01_PM.TODO]]
+# Message Delivery Semantics  [[{kafka,01_PM.TODO]]
 @[http://kafka.apache.org/documentation.html#semantics]
 [[}]]
 
-● producer [[{kafka,02_DOC_HAS.code_snippet]]
+# producer [[{kafka,02_DOC_HAS.code_snippet]]
 @[http://kafka.apache.org/11/javadoc/index.html?org/apache/kafka/clients/producer/kafkaproducer.html]
 - send streams of data to topics in the cluster.
 - thread safe → sharing a singleton across threads will generally be faster.
@@ -736,7 +736,7 @@ KSQL :
     partitions and topics! atomically (producer.beginTransaction, producer.send,
     producer.commit, producer.abortTransaction ).
 
-● config
+# config
 see full list @ @[http://kafka.apache.org/documentation/#producerconfigs]
 - cleanup.policy       : "delete"* or "compact" retention policy for old log segments.
 - compression.type     : 'gzip', 'snappy', lz4, 'uncompressed'
@@ -756,7 +756,7 @@ see full list @ @[http://kafka.apache.org/documentation/#producerconfigs]
                          sla on how soon consumers must read their data .
 [[}]]
 
-● Consumer [[{api,code_snippet]]
+# Consumer [[{api,code_snippet]]
 @[http://kafka.apache.org/26/javadoc/index.html?org/apache/kafka/clients/consumer/KafkaConsumer.html]
 @[http://kafka.apache.org/11/javadoc/index.html?org/apache/kafka/streams/KafkaStreams.html]
 
@@ -829,7 +829,7 @@ Basics:
     See original doc for how to read Transactional Messages.
     See original doc for Multi-threaded Processing.
 
-● Config:
+# Config:
 @[http://kafka.apache.org/documentation/#consumerconfigs]
 @[http://kafka.apache.org/documentation/#newconsumerconfigs]
 @[http://kafka.apache.org/documentation/#oldconsumerconfigs]
@@ -837,7 +837,7 @@ Basics:
 
 [[}]]
 
-● Connect [[{kafka.101,01_PM.TODO]]
+# Connect [[{kafka.101,01_PM.TODO]]
 @[http://kafka.apache.org/11/javadoc/index.html?overview-summary.html]
 (<a TODO href="http://kafka.apache.org/documentation.html#connect">more info</a>)
 - allows reusable producers or consumers that connect Kafka
@@ -863,7 +863,7 @@ Basics:
 @[http://kafka.apache.org/documentation/#connectconfigs]
 [[}]]
 
-● AdminClient [[{kafka,01_PM.TODO]]
+# AdminClient [[{kafka,01_PM.TODO]]
 @[http://kafka.apache.org/11/javadoc/index.html?org/apache/kafka/clients/admin/AdminClient.html]
 
 - administrative client for Kafka, which supports managing and inspecting
@@ -873,7 +873,7 @@ Basics:
 @[http://kafka.apache.org/documentation/#adminclientconfigs]
 [[}]]
 
-● Streams [[{kafka,architecture.event_stream,01_PM.TODO]]
+# Streams [[{kafka,architecture.event_stream,01_PM.TODO]]
 @[http://kafka.apache.org/25/documentation/streams/]
 See also:
 @[http://kafka.apache.org/11/javadoc/index.html?org/apache/kafka/streams/KafkaStreams.html]
@@ -1173,7 +1173,7 @@ See details: @[http://kafka.apache.org/documentation/#streamsconfigs]
   - Examples: Event Streaming Platform
 [[}]]
 
-● KSQL(ksqlDB) [[{kafka,01_PM.TODO]]
+# KSQL(ksqlDB) [[{kafka,01_PM.TODO]]
 @[https://www.confluent.io/]
 @[https://www.confluent.io/blog/ksql-open-source-streaming-sql-for-apache-kafka/]
 
@@ -1206,7 +1206,7 @@ See also:
     failover across instances for high availability.
 [[}]]
 
-● Zeebe Streams  [[{enterprise_patterns,kafka,TODO]]
+# Zeebe Streams  [[{enterprise_patterns,kafka,TODO]]
 @[https://www.infoq.com/news/2019/05/kafka-zeebe-streams-workflows]
 • Kafka events are sometimes part of a business process with tasks
   spread over several microservices. To handle complex business
@@ -1216,7 +1216,7 @@ See also:
   meet these scalability requirements.
 [[}]]
 
-● Developer Tools  [[{kafka,01_PM.low_code,protocol.client_server,_PM.TODO]]
+# Developer Tools  [[{kafka,01_PM.low_code,protocol.client_server,_PM.TODO]]
 • Pixy
 @[https://github.com/mailgun/kafka-pixy]
   Kafka-Pixy is a dual API (gRPC and REST) proxy for Kafka with
@@ -1225,7 +1225,7 @@ See also:
   API that is trivial to implement in any language.
 [[}]]
 
-● Docker Img For Developers [[{kafka,01_PM.low_code,computing.containerization,]]
+# Docker Img For Developers [[{kafka,01_PM.low_code,computing.containerization,]]
 @[https://github.com/lensesio/fast-data-dev]
 - Apache Kafka docker image for developers; with Lenses (lensesio/box)
   or Lenses.io's open source UI tools (lensesio/fast-data-dev). Have a
@@ -1257,7 +1257,7 @@ See also:
   | WantedBy=multi-user.target
 [[}]]
 
-● DevOps [[{kafka.devops,01_PM.TODO]]
+# DevOps [[{kafka.devops,01_PM.TODO]]
 • Quick start
 @[http://kafka.apache.org/documentation.html#quickstart]
   PRE-SETUP
@@ -1366,7 +1366,7 @@ See also:
   - Configuration options for:
      plaintext, SSL, SASL_SSL, and Kerberos.
 
-● Configuration
+# Configuration
 • Broker Config:
 @[http://kafka.apache.org/documentation/#configuration]
   Main params:
@@ -1380,7 +1380,7 @@ See also:
 http://kafka.apache.org/documentation.html#compaction
 [[}]]
 
-● Strimzi k8s Operator [[{kafka.devops.k8s,01_PM.low_code,kafka.security,_PM.TODO]]
+# Strimzi k8s Operator [[{kafka.devops.k8s,01_PM.low_code,kafka.security,_PM.TODO]]
   "Kafka on K8s in a few minutes"
 • Strimzi: RedHat OOSS project that provides container images and
   operators for running production-ready Kafka on k8s and OpenShift.
@@ -1395,7 +1395,7 @@ http://kafka.apache.org/documentation.html#compaction
 
 [[}]]
 
-● Pulsar vs Kafka [[{architecture.event_stream.pulsar,kafka,02_DOC_HAS.comparative,01_PM.TODO]]
+# Pulsar vs Kafka [[{architecture.event_stream.pulsar,kafka,02_DOC_HAS.comparative,01_PM.TODO]]
 - Pulsar is a younger project   inspired and informed by Kafka .
   Kafka on the other side has a bigger community.
 
@@ -1508,7 +1508,7 @@ http://kafka.apache.org/documentation.html#compaction
 @[https://streamnative.io/blog/tech/pulsar-vs-kafka-part-1]
 [[}]]
 
-● KubeMQ: Kafka alternative [[{kafka.devops,02_DOC_HAS.comparative,01_PM.TODO]]
+# KubeMQ: Kafka alternative [[{kafka.devops,02_DOC_HAS.comparative,01_PM.TODO]]
 @[https://dzone.com/articles/seamless-migration-from-kafka-to-kubemq?edition=699391]
 • Non free product.
   · Free for stand alone single pod.
@@ -1538,7 +1538,7 @@ http://kafka.apache.org/documentation.html#compaction
   migration from Kafka.
 [[}]]
 
-● Akka+Kotlin:Data Pipes [[{kafka.akka,01_PM.TODO]]
+# Akka+Kotlin:Data Pipes [[{kafka.akka,01_PM.TODO]]
 @[https://www.kotlindevelopment.com/data-pipelines-kotlin-akka-kafka/]
 - Objective:
   Create a "GitHub monitor" that build an analytics component that
@@ -1687,7 +1687,7 @@ You can find the complete source code on GitHub.
 [[}]]
 
 
-● Unordered [[{01_PM.TODO]]
+# Unordered [[{01_PM.TODO]]
 • Security     : https://kafka.apache.org/documentation/#security
 • Burrow Monit : @[https://dzone.com/articles/kafka-monitoring-with-burrow]
 • Best Pracites: @[https://www.infoq.com/articles/apache-kafka-best-practices-to-optimize-your-deployment]
