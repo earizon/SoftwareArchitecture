@@ -1,4 +1,4 @@
-● AsyncAPI.org:[[{async/reactive.101,qa.standards.openapi,qa,01_PM.TODO]]  @ma
+# AsyncAPI.org:[[{async/reactive.101,qa.standards.openapi,qa,01_PM.TODO]]  @ma
 @[https://www.asyncapi.org/]
 - Building the future of event-driven architectures.
 - Open source tools to easily build and maintain your event-driven architecture.

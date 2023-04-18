@@ -1,6 +1,6 @@
 [[{cache]]
 
-● Distributed cache: [[{02_DOC_HAS.comparative]]
+# Distributed cache: [[{02_DOC_HAS.comparative]]
  (Extracted from whitepaper by Christoph Engelbert, Soft.Arch.at Hazelcast)
  cache hit: data is already available in the cache when requested
             (otherwise it's said cache miss)
@@ -18,7 +18,7 @@
 - Grow to their maximum size and evict the oldest or not
   frequently used entries to keep in memory bounds.
 
-● Caching Strategies:
+# Caching Strategies:
 • Cooperative (Distributed) caching:
   different  cluster-nodes work together to build a huge, shared cache
   Ussually an "intelligent" partitioning algorithm is used to balance
@@ -56,7 +56,7 @@
     (discouraged since it mostly dimiss the value of caching). Can make
     sense if multiple caching layers are available.
 
-● Caching Topologies:
+# Caching Topologies:
 - In-process:
  - cache share application's memory space.
  - most oftenly used in non-distributed systems.
@@ -80,7 +80,7 @@
     the possibility to scale the application cluster and the
     caching cluster independently.
 
-● Evict Strategies:
+# Evict Strategies:
 └ Least Frequently used
  - values that are accessed the least amount of times are
    remove on memory preasure.
@@ -95,7 +95,7 @@ Other evict strategies can be found at
 @[https://en.wikipedia.org/wiki/Cache_replacement_policies]
 [[}]]
 
-● Redis (RE)mote (DI)ctionary (S)ervice [[{cache.distributed.redis,architecture.messaging,]]
+# Redis (RE)mote (DI)ctionary (S)ervice [[{cache.distributed.redis,architecture.messaging,]]
           [[enterprise_patterns,db_engine.key_value,architecture.event_stream,]]
           [[architecture.decoupled,01_PM.TODO]]
 #[redis_summary]
@@ -215,7 +215,7 @@ by Mahdi Yusuf
 @[https://redis.io/commands/eval]
 [[}]]
 
-● Memcached: [[{cache.distributed.memcached,01_PM.TODO]]
+# Memcached: [[{cache.distributed.memcached,01_PM.TODO]]
 @[https://www.memcached.org/
 @[https://www.infoworld.com/article/3063161/why-redis-beats-memcached-for-caching.html]  [[{02_doc_has.comparative}]]
 - distributed memory object caching system
@@ -236,7 +236,7 @@ by Mahdi Yusuf
 @[https://www.infoworld.com/article/3063161/why-redis-beats-memcached-for-caching.html]
 [[}]]
 
-● Ehcache (TERABYTE!!!) cache [[{cache.distributed.ehcache,01_PM.TODO]]
+# Ehcache (TERABYTE!!!) cache [[{cache.distributed.ehcache,01_PM.TODO]]
 @[http://www.ehcache.org/]
 - Can be used as tcp service (distributed cache) or process-embedded
   TODO:  Same API for local and distributed objects?
@@ -269,7 +269,7 @@ by Mahdi Yusuf
   (simpler/lighter solution but not so escalable could be to use GOOGLE GUAVA CACHE)
 [[}]]
 
-● Hazelcast in-memory (JAVA) data grid: [[{cache.distributed.hazelcast,01_PM.TODO]]
+# Hazelcast in-memory (JAVA) data grid: [[{cache.distributed.hazelcast,01_PM.TODO]]
 @[https://en.wikipedia.org/wiki/Hazelcast]
 [[}]]
 • JBoss Cache: [[{cache.distributed.hazelcast,01_PM.TODO]]

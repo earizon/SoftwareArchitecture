@@ -1,4 +1,4 @@
-● GraphQL: [[{data.graphql,qa.standards,api,protocol.client_server,data.integration,01_PM.low_code,_PM.TODO]]
+# GraphQL: [[{data.graphql,qa.standards,api,protocol.client_server,data.integration,01_PM.low_code,_PM.TODO]]
 • GraphQL: Facebook-developed language that provides a powerful API to get only
   the dataset you need in a single request, seamlessly combining data sources.
 • Replacement for REST and non-standandard ORM mapping tools that offers
@@ -21,7 +21,7 @@
   Apollo Data Graph Platform: A GraphQL Middleware Layer for the Enterprise
 [[}]]
 
-● GraphQL Engine: [[{data.analytics,01_PM.low_code,_PM.TODO]]
+# GraphQL Engine: [[{data.analytics,01_PM.low_code,_PM.TODO]]
 • Blazing fast, instant realtime GraphQL APIs for DB with fine
   grained access control, also trigger webhooks on database events.
 • POLE POSITION in GitHub for Top 32 Automatic Api Open Source Projects on Github (
@@ -40,4 +40,6 @@
                                      }
 [[}]]
 
+# https://github.com/mswjs/msw
+  Mock Service Worker (MSW) is a seamless REST/GraphQL API mocking library for browser and Node.js.
 

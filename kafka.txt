@@ -1267,10 +1267,10 @@ See also:
 
   - Start the server
   $ $ ~ bin/zookeeper-server-start.sh \                      ← Start Zookeeper
-  $   config/zookeeper.properties 1˃zookeeper.log 2˃⅋1 ⅋
+  $   config/zookeeper.properties 1˃zookeeper.log 2˃&1 &
 
   $ $ ~ bin/kafka-server-start.sh  \                         ← Start Kafka Server
-  $   config/server.properties 1˃kafka.log  2˃⅋1 ⅋ \
+  $   config/server.properties 1˃kafka.log  2˃&1 & \
 
   $ $ bin/kafka-topics.sh --create --zookeeper \             ← Create   TEST  topic
   $   localhost:2181  --replication-factor 1 \               (Alt.brokers can be

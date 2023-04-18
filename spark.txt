@@ -1,6 +1,6 @@
 [[{spark]]
 
-● Spark GENERAL CLUSTER COMPUTING FRAMEWORK [[{architecture.event_stream,big_data.spark,01_PM.WiP]]
+# Spark GENERAL CLUSTER COMPUTING FRAMEWORK [[{architecture.event_stream,big_data.spark,01_PM.WiP]]
 @[http://spark.apache.org/]
 - Zeppelin "Spark Notebook"(video): [[{01_PM.TODO}]]
  @[https://www.youtube.com/watch?v=CfhYFqNyjGc]
@@ -31,7 +31,7 @@
   Apache HBase, Apache Hive, and hundreds of others .
 [[}]]
 
-● Apache Druid:   [[{architecture.real_time.OLAP]]
+# Apache Druid:   [[{architecture.real_time.OLAP]]
 - Complementary to Spark, Druid can be used to accelerate OLAP queries in Spark.
   - Spark: indicated for   NON-interactive  latencies.
   - Druid: indicated for       interactive  (sub-milisec) scenarios.

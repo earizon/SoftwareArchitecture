@@ -1,4 +1,4 @@
-●  Apropos:
+#  Apropos:
 - Visit next Web site for a great experience:
   https://earizon.github.io/txt_world_domination/viewer.html?payload=../SoftwareArchitecture/mongoDB.txt
 
@@ -9,7 +9,7 @@
   in the Pantheon of the Unicode Gods.
 ────────────────────────────────────────────────────────────────────────────────
 
-● MongoDB Summary   [[{db_engine.document_store.mongo]] #[mongo_summary]
+# MongoDB Summary   [[{db_engine.document_store.mongo]] #[mongo_summary]
 
 • 14 Things I Wish I’d Known When Starting with MongoDB [[{01_PM.TODO]]
   https://www.infoq.com/articles/Starting-With-MongoDB
@@ -293,7 +293,7 @@ $ mongo                                  ← Launch mongo shell
                                            upsert=true|false
                                            returnNewDocument: true: return new doc
                                            (vs original).
-                                           upsert==true ⅋⅋ returnNewDocument==false:
+                                           upsert==true && returnNewDocument==false:
                                            → return null.
 
 # db.collecti01.findOne( { _id  : 123 });← Find by ID

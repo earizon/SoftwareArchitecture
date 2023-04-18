@@ -1,14 +1,14 @@
 STORAGE ARCHITECTURE [[{storage]]
-● SAN vs ...  [[{101,storage.hardware,01_PM.TODO]]
+# SAN vs ...  [[{101,storage.hardware,01_PM.TODO]]
 @[https://serversuit.com/community/technical-tips/view/storage-area-network,-and-other-storage-methods.html]
 Storage Area Network, and Other Storage Methods
 [[}]]
 
-● Data Lake:[[{101,storage,01_PM.TODO]]
+# Data Lake:[[{101,storage,01_PM.TODO]]
 @[https://en.wikipedia.org/wiki/Data_lake]
 [[}]]
 
-● UStore!!! [[{storage.distributed,01_PM.TODO]]
+# UStore!!! [[{storage.distributed,01_PM.TODO]]
 @[https://arxiv.org/pdf/1702.02799.pdf]
 Distributed Storage with rich semantics!!!
 
@@ -44,16 +44,16 @@ development and the UStore-backed applications can have better
 performance than the existing implementations. """
 [[}]]
 
-● NFS considered harmful  [[{storage.distributed,01_PM.TODO]]
+# NFS considered harmful  [[{storage.distributed,01_PM.TODO]]
 @[http://www.time-travellers.org/shane/papers/NFS_considered_harmful.html]
 [[}]]
 
-● cluster-FS comparative  [[{storage.distributed,02_doc_has.comparative,01_PM.TODO]]
+# cluster-FS comparative  [[{storage.distributed,02_doc_has.comparative,01_PM.TODO]]
 @[http://zgp.org/linux-tists/20040101205016.E5998@shaitan.lightconsulting.com.html]
 [[}]]
 
 
-● Ceph (exabyte Soft.Defined Storage): [[{storage.ceph,distributed,01_PM.TODO]]
+# Ceph (exabyte Soft.Defined Storage): [[{storage.ceph,distributed,01_PM.TODO]]
 @[http://ceph.com/ceph-storage/]
 Ceph’s RADOS provides you with extraordinary data storage  scalability—
 thousands of client hosts or KVMs accessing petabytes to
@@ -77,7 +77,7 @@ infinite scalability.
 See more at: http://ceph.com/ceph-storage/#sthash.KNp2tGf5.dpuf
 
 
-● When Ceph is Not Enough [[{01_PM.risks]]
+# When Ceph is Not Enough [[{01_PM.risks]]
 Josh Goldenhar, VP Product Marketing, Lightbits Labs
 ...  In this 30-minute webinar, we'll discuss the origins of Ceph and why
   it's a great solution for highly scalable, capacity optimized storage
@@ -98,12 +98,12 @@ Josh Goldenhar, VP Product Marketing, Lightbits Labs
     deployment.  [[}]]
 [[}]]
 
-● GlusterFS [[{storage.distributed,01_PM.TODO]]
+# GlusterFS [[{storage.distributed,01_PM.TODO]]
 - Software defined distributed storage,
 [[}]]
 
 
-● Tachyon memory-centric distributed FS [[{storage.distributed,scalability,01_PM.TODO]]
+# Tachyon memory-centric distributed FS [[{storage.distributed,scalability,01_PM.TODO]]
 @[http://tachyon-project.org/index.html]
 - memory-centric distributed file system enabling reliable file
 sharing at memory-speed across cluster frameworks, such as Spark and
@@ -124,7 +124,7 @@ The project is the storage layer of the Berkeley Data Analytics Stack
 [[}]]
 
 
-● S3QL FUSE FS (Amazon S2, GCS, OpenStack,...)[[{storage.cloud,01_PM.TODO]]
+# S3QL FUSE FS (Amazon S2, GCS, OpenStack,...)[[{storage.cloud,01_PM.TODO]]
 - FUSE-based file system
 - backed by several cloud storages:
   - such as Amazon S2, Google Cloud Storage, Rackspace CloudFiles, or OpenStack
@@ -147,12 +147,12 @@ The project is the storage layer of the Berkeley Data Analytics Stack
   cache), and decrypted/uncompressed on the fly.
 [[}]]
 
-● Nexenta [[{storage,01_PM.TODO]]
+# Nexenta [[{storage,01_PM.TODO]]
 @[https://nexenta.com/]
 - Software-Defined Storage Product Family.
 [[}]]
 
-● Minio.io [[{storage.distributed,storage.cloud,01_PM.TODO]]
+# Minio.io [[{storage.distributed,storage.cloud,01_PM.TODO]]
 @[https://minio.io]
 - Private Cloud Storage
 - high performance distributed object storage server, designed for
@@ -160,7 +160,7 @@ The project is the storage layer of the Berkeley Data Analytics Stack
   world with over 146.6M+ docker pulls.
 [[}]]
 
-● Why Object storage?  [[{storage,01_PM.TODO]]
+# Why Object storage?  [[{storage,01_PM.TODO]]
 @[https://www.ibm.com/developerworks/library/l-nilfs-exofs/index.html]
 
 Object storage is an interesting idea and makes for a much more scalable

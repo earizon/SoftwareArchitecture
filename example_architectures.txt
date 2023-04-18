@@ -1,6 +1,6 @@
 Example / Reference Architectures:
 
-● FILE INTEGRITY MONITORING AT SCALE: (RSA Conf)
+# FILE INTEGRITY MONITORING AT SCALE: (RSA Conf)
   REF: https://www.rsaconference.com/writable/presentations/file_upload/csv-r14-fim-and-system-call-auditing-at-scale-in-a-large-container-deployment.pdf
   KEYPOINT: AUDITING LOG TO GAIN INSIGHTS AT SCALE
 
@@ -21,7 +21,7 @@ Example / Reference Architectures:
                       └─  Kauditd ───┘
 
 
-● Adidas Reference Architecture:[[{testing.bdd,qa.documentation.api]]
+# Adidas Reference Architecture:[[{testing.bdd,qa.documentation.api]]
 Source @[https://adidas.github.io]
  └ UI:
    - Working with latest JS technologies ... building an stable ecosystem.
@@ -107,13 +107,13 @@ Source @[https://adidas.github.io]
 [[}]]
 
 
-● What a typical 100% Serverless Architecture  [[{01_PM.TODO]]
+# What a typical 100% Serverless Architecture  [[{01_PM.TODO]]
   looks like in AWS!
   @[https://medium.com/serverless-transformation/what-a-typical-100-serverless-architecture-looks-like-in-aws-40f252cd0ecb]
 [[}]]
 
 
-● EXAMPLE DATA STORE ARCHITECTURE:
+# EXAMPLE DATA STORE ARCHITECTURE:
 - Mix data store model based on:
   └ Document store:
     - MongoDB        : Store and manage objects directly as documents, keeping their structure intact.
@@ -127,7 +127,7 @@ Source @[https://adidas.github.io]
     - Allows mapping java objects to MongoDB with minimal effort.
 
 
-● Badoo: dating social network with 20 billion Events/day [[{]]
+# Badoo: dating social network with 20 billion Events/day [[{]]
 @[https://www.infoq.com/news/2019/08/badoo-20-billion-events-per-day/]
   - business goal (of the intelligence department): collect,process and report user event information
     to create insights to help the company make formed decisions.
@@ -158,7 +158,7 @@ Source @[https://adidas.github.io]
 
 [[}]]
 
-● Logging@Coinbase [[{]]
+# Logging@Coinbase [[{]]
 @[https://www.infoq.com/news/2019/02/metrics-logging-coinbase]
 
  INITIALLY:                  -> moved to··············>  FINAL VERSION:
@@ -211,7 +211,7 @@ Source @[https://adidas.github.io]
   - Cassandra Query Language (CQL): navigate create/update your data and data-models
   - Spark+Cassandra: perform expressive analytics over large volumes of data
 
-● LinkedIn Marketing Versioned API Framework:
+# LinkedIn Marketing Versioned API Framework:
 https://www.infoq.com/news/2022/08/linkedin-api-versioning/
   - LEGACY ARCHITECTURE:
     various business lines and exposed externally via Rest.li API gateway.
@@ -245,7 +245,7 @@ https://www.infoq.com/news/2022/08/linkedin-api-versioning/
 [[}]]
 
 
-● Owl by Meta: 700 petabytes/day to millions-of-clients [[{ARCHITECTURE.P2P,CACHE.DISTRIBUTED.OWL,ARCHITECTURE.DISTRIBUTED,SCALABILITY.DISTRIBUTED]]
+# Owl by Meta: 700 petabytes/day to millions-of-clients [[{ARCHITECTURE.P2P,CACHE.DISTRIBUTED.OWL,ARCHITECTURE.DISTRIBUTED,SCALABILITY.DISTRIBUTED]]
  https://www.infoq.com/news/2022/08/owl-meta-hot-content-distribute/
 
  https://engineering.fb.com/2022/07/14/data-infrastructure/owl-distributing-content-at-meta-scale/

@@ -1,4 +1,4 @@
-● BigData Tools Matrix: [[{data.cleaning,resource,bigdata,101,01_PM.TODO]]
+# BigData Tools Matrix: [[{data.cleaning,resource,bigdata,101,01_PM.TODO]]
 ---------------------------------------------------------------------------------------------------
 SandBox/Notebook   | Jupiter,...              | DataLab                 | JupiterHub        | MLSutdio
 ---------------------------------------------------------------------------------------------------
@@ -17,7 +17,7 @@ Others             | MongoDB, Cassandra,...   | BigQuery, Bigtable      | Redshi
 [[}]]
 
 
-● Apache Flink — Stateful Computations over Data Streams  [[{]]
+# Apache Flink — Stateful Computations over Data Streams  [[{]]
   https://flink.apache.org/
   Apache Flink is a framework and distributed processing engine for 
   stateful computations over unbounded and bounded data streams. Flink 

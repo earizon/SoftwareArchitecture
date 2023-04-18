@@ -1,9 +1,9 @@
 [[{architecture.messaging]]
-● Domain Driven Design, CQRS and Event Sourcing:
+# Domain Driven Design, CQRS and Event Sourcing:
 @[https://www.kenneth-truyers.net/2013/12/05/introduction-to-domain-driven-design-cqrs-and-event-sourcing/]
 
  #[messaging_summary]
-●  Messaging Architecture Summary  [[{enterprise_patterns.messaging.101,data.integration,architecture.event_stream]]
+#  Messaging Architecture Summary  [[{enterprise_patterns.messaging.101,data.integration,architecture.event_stream]]
                             [[architecture.decoupled,cache.redis,02_DOC_HAS.comparative]]
 • Messaging represents a layer down ESB in some cases.
   Messaging architectures focus on reliable delivery of messages of different nature/timelife.
@@ -101,7 +101,7 @@ Bº##################º
   - Routing: point-to-point / publish-and-subscribe
   - No processing/transformation of message/data
 
-● TODO: @ma [[{01_PM.TODO.NOW]]
+# TODO: @ma [[{01_PM.TODO.NOW]]
   https://medium.com/@philipfeng/modern-open-source-messaging-apache-kafka-rabbitmq-nats-pulsar-and-nsq-ca3bf7422db5
 [[}]]
 
@@ -167,7 +167,7 @@ Bº########º
   · "The many meanings of event-driven architecture,"
     @[https://www.youtube.com/watch?v=STKCRSUsyP0] (By Martin Fowler)
 
-● Message Brokers:
+# Message Brokers:
 - Routing
 - (De-)Multiplexing of messages from/into multiple messages to different recipients
 - Durability
@@ -179,7 +179,7 @@ Bº########º
 - Kafka can also be used as message broker but is not its main intention
 
 
-● ActiveMQ: [[{architecture.messaging,enterprise_patterns,distributed.ha]]
+# ActiveMQ: [[{architecture.messaging,enterprise_patterns,distributed.ha]]
 #[activemq_summary]
 • Based on JAVA
 Bº######################
@@ -220,7 +220,7 @@ Bº####################
   · Very good and free documentation:
   @[https://activemq.apache.org/components/artemis/documentation/latest/book.pdf]
 
-● RabbitMQ:
+# RabbitMQ:
 • Erlang Alternative. Quite popular since it was used as AMQP
   ref.implementation.
 @-[https://www.rabbitmq.com/getstarted.html]
@@ -266,7 +266,7 @@ Bº####################
 See @[#activemq_summary]
 [[}]]
 
-● OpenHFT: microSec Messaging storing to disk [[{architecture.event_stream,architecture.real_time.hard,scalability,01_PM.TODO]]
+# OpenHFT: microSec Messaging storing to disk [[{architecture.event_stream,architecture.real_time.hard,scalability,01_PM.TODO]]
 @[https://github.com/OpenHFT/]
    - Chronicle-Queue: Micro second messaging that stores everything to disk
    - Chronicle-Accelerate: HFT meets Blockchain in Java platform
@@ -296,7 +296,7 @@ See @[#activemq_summary]
 
 [[}]]
 
-● CQRS [[{architecture.event_stream,architecture.CQRS]] #[CQRS_summary]
+# CQRS [[{architecture.event_stream,architecture.CQRS]] #[CQRS_summary]
 REF: @[https://www.redhat.com/architect/pros-and-cons-cqrs]
 • CQRS stands for Command Query Responsibility Segregation
 • The data-processing architecture pattern separates a service's write
@@ -317,7 +317,7 @@ REF: @[https://www.redhat.com/architect/pros-and-cons-cqrs]
 [[enterprise_patterns.messaging.101}]]
 
 
-● CloudEvents:[[{architecture.event_stream,01_PM.standards]] @ma
+# CloudEvents:[[{architecture.event_stream,01_PM.standards]] @ma
 • CloudEvents(CNCF) specification describes event data in common formats to
   provide interoperability across services, platforms and systems.
 
@@ -350,7 +350,7 @@ REF: @[https://www.redhat.com/architect/pros-and-cons-cqrs]
 
 [[}]]
 
-● NSQ Distributed Real Time Msg.: [[{architecture.messaging.nsq,qa,distributed,architecture.real_time,]] @ma
+# NSQ Distributed Real Time Msg.: [[{architecture.messaging.nsq,qa,distributed,architecture.real_time,]] @ma
   https://nsq.io/
   • NSQ promotes distributed+decentralized topologies WITHOUT SINGLE
     POINTS OF FAILURE plus reliable message delivery guarantee.
@@ -362,7 +362,7 @@ REF: @[https://www.redhat.com/architect/pros-and-cons-cqrs]
 [[}]]
 
 
-● Event Stream Architectures: [[{architecture.event_stream,01_PM.TODO]]
+# Event Stream Architectures: [[{architecture.event_stream,01_PM.TODO]]
   Distributed Event Stream Processors
   (https://martinfowler.com/eaaDev/EventSourcing.html
   REF:
@@ -390,7 +390,7 @@ REF: @[https://www.redhat.com/architect/pros-and-cons-cqrs]
   https://www.infoq.com/presentations/netflix-personalization-datasets-streaming
 [[}]]
 
-● Kafka @[./kafka.txt]
+# Kafka @[./kafka.txt]
  - scalable,persistent and fault-tolerant real-time log/event processing cluster.
  - It's NOT a real stream processor  but a broker/message-bus to store stream data
    for comsuption. "Kafka stream" can be use to add data-stream-processor capabilities
@@ -407,7 +407,7 @@ REF: @[https://www.redhat.com/architect/pros-and-cons-cqrs]
    - external commit log for distributed systems.
 
 
-● Flink
+# Flink
  - Includes a powerful windowing system supports many types of windows:
    - Stream windows and win.aggregations are crucial building block for analyzing data streams.
 

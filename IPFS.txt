@@ -1,4 +1,4 @@
-●  Apropos:
+#  Apropos:
 - Visit next Web site for a great experience:
   https://earizon.github.io/txt_world_domination/viewer.html?payload=../SoftwareArchitecture/IPFS.txt
 
@@ -90,7 +90,7 @@ REF: https://blog.infura.io/post/an-introduction-to-ipfs
           Blockchains can naturally fit as IPFS implementations.
 [[}]]
 
-● ipfs.io (go implementation) USAGE: (REF https://ipfs.io/docs/commands/) [[{ipfs.io]]
+# ipfs.io (go implementation) USAGE: (REF https://ipfs.io/docs/commands/) [[{ipfs.io]]
 
   ~/.ipfs  <- Default path for IPFS repository if $IPFS_PATH Env Var is undefined.0
 
@@ -144,7 +144,7 @@ REF: https://blog.infura.io/post/an-introduction-to-ipfs
     }
 [[ipfs.io}]]
 
-● IPFS: "file Pinning" HOW-TO: [[{]]
+# IPFS: "file Pinning" HOW-TO: [[{]]
   https://docs.ipfs.tech/how-to/pin-files/
 
   IPFS semantics (ipfs cat, ipfs get,...) makes object looks like "local"
@@ -174,7 +174,7 @@ REF: https://blog.infura.io/post/an-introduction-to-ipfs
   Pinned objects cannot  garbage-collected with '$ ipfs repo gc'
 [[}]]
 
-● Private IPFS Cluster HOW-TO: [[{]]
+# Private IPFS Cluster HOW-TO: [[{]]
 REF: https://labs.eleks.com/2019/03/ipfs-network-data-replication.html
      By Mykhailo Borysov, ELEKS Research and Development Manager
 
@@ -345,7 +345,7 @@ NEXT) TESTING DATA-REPLICATION:
     ( You should see that this file has been PINNED among all cluster nodes)
 [[}]]
 
-● IPFS IaaS Comparative: [[{01_PM.low_code,storage.scalability,02_doc_has.comparative]]
+# IPFS IaaS Comparative: [[{01_PM.low_code,storage.scalability,02_doc_has.comparative]]
   └ INFURA:
   · - 74 million unique objects
   · - 4.5+TB of data transfer per day (as of 2020-09)
@@ -375,7 +375,7 @@ NEXT) TESTING DATA-REPLICATION:
 
 [[}]]
 
-● car archives: [[{security.backup]]
+# car archives: [[{security.backup]]
   More info at:
   https://github.com/ipld/specs/blob/master/block-layer/content-addressable-archives.md
 
@@ -403,7 +403,7 @@ NEXT) TESTING DATA-REPLICATION:
     $ ipfs-car --list-full path/to/my.car  # list both files-path and their CIDs.
 [[security.backup}]]
 
-● TODO:
+# TODO:
   https://docs.ipfs.tech/concepts/file-systems/#mutable-file-system-mfs
   https://docs.ipfs.tech/concepts/file-systems/#unix-file-system-unixfs
   https://nft.storage/

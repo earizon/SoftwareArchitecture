@@ -1,4 +1,4 @@
-●  Apropos:
+#  Apropos:
 - Visit next Web site for a great experience:
   https://earizon.github.io/txt_world_domination/viewer.html?payload=../SoftwareArchitecture/testing.txt
 
@@ -9,7 +9,7 @@
   in the Pantheon of the Unicode Gods.
 ────────────────────────────────────────────────────────────────────────────────
 
-● ZERO-CODE open source [[testing.101,REST,SOAP,Kafka]] @ma
+# ZERO-CODE open source [[testing.101,REST,SOAP,Kafka]] @ma
   https://github.com/authorjapps/zerocode
   zerocode open source makes it easy to create, change, orchestrate and
   maintain automated tests with the absolute minimum overhead for REST,
@@ -38,7 +38,7 @@
 
 
 
-● Genesis: end-to-end testing:  @ma
+# Genesis: end-to-end testing:  @ma
   Genesis: An End-To-End Testing & Development Platform For Distributed Systems
   https://github.com/EntEthAlliance/genesis/branches
   Outputting data to collect for later analysis is as simple as writing

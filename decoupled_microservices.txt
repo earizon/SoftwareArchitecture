@@ -1,4 +1,4 @@
-● https://dapr.io
+# https://dapr.io
   APIs for building portable and reliable microservices
   Leverage industry best practices and focus on your application??s logic.
 

@@ -1,4 +1,4 @@
-●  Apropos:
+#  Apropos:
 - Visit next Web site for a great experience:
   https://earizon.github.io/txt_world_domination/viewer.html?payload=../SoftwareArchitecture/ddbb_engines.txt
 
@@ -20,7 +20,7 @@ keywords: API management,authentication authorization access,cache,cassandra,
 
 
 
-● EVENTUAL/STRONG CONSISTENCY MODELS  IN DISTRIBUTED DB : [[{db_engine.101,distributed,consensus,02_doc_has.comparative]]
+# EVENTUAL/STRONG CONSISTENCY MODELS  IN DISTRIBUTED DB : [[{db_engine.101,distributed,consensus,02_doc_has.comparative]]
   CONTEXT: DATABASE WITH MULTIPLE REPLICAS:
 
   - REDUNDANCY OF DATA INTRODUCES RELIABILITY.
@@ -48,7 +48,7 @@ keywords: API management,authentication authorization access,cache,cassandra,
 [[}]]
 
 [[{db_engine.101,02_doc_has.comparative]]
-● DB ENGINES TYPES
+# DB ENGINES TYPES
   - DATA TOPOLOGY MODELS COMPARED: [[{db_engine.101,02_doc_has.diagram,02_doc_has.comparative]]
     Different engine types are more/less friendly to different DATA TOPOLOGY MODELS and
     different data topologies are more/less friendly to different data storage/retrieval patterns.
@@ -88,7 +88,7 @@ keywords: API management,authentication authorization access,cache,cassandra,
   @[https://db-engines.com/en/ranking]
   @[https://dzone.com/articles/rant-there-is-no-nosql-data-storage-engine]
 
-● DB ENGINES TYPES: RDBMS  [[{db_engine.rdbm,data.analytics.sql,]]
+# DB ENGINES TYPES: RDBMS  [[{db_engine.rdbm,data.analytics.sql,]]
 - support E-R data model.
 - all inserts in a table must match the table schema.
   (vs dangerous schemaless noSQL engines).
@@ -144,7 +144,7 @@ keywords: API management,authentication authorization access,cache,cassandra,
         ORDER BY ...          · Alias, Sub-queries and WITH ...AS ..
 [[}]]
 
-● DB ENGINES TYPES: GRAPH DBMS [[{db_engine.graph_db,02_doc_has.comparative]]
+# DB ENGINES TYPES: GRAPH DBMS [[{db_engine.graph_db,02_doc_has.comparative]]
 - Most general data modeling type.
 - Represent data in graph structures of nodes (entities) and edges(relations).
 - Graph represent the most general topology. Any state of any real/mathematical model can be
@@ -394,7 +394,7 @@ CONTEXT:
 [[}]]
 [[}]]
 
-● DB ENGINES TYPES:  KEY-VALUE DBMS [[{db_engine.key_value,02_doc_has.comparative]]
+# DB ENGINES TYPES:  KEY-VALUE DBMS [[{db_engine.key_value,02_doc_has.comparative]]
 - SIMPLEST form of DBMS (other than CSV-like systems
   that are mostly a low level storage pattern than a real
   DB engine).
@@ -476,7 +476,7 @@ CONTEXT:
         - JuiceFS: OOSS POSIX FS based on TiKV and S3. [[{BigData}]]
 [[}]]
 
-● DB ENGINES TYPES: SEARCH DBMS [[{db_engine.search]]
+# DB ENGINES TYPES: SEARCH DBMS [[{db_engine.search]]
 - Optimized fork:
   - complex search expressions
   - Full text search
@@ -516,7 +516,7 @@ CONTEXT:
       the graph incrementally on change.
 [[}]]
 
-● DB ENGINES TYPES: Time Series  [[{db_engine.timeseries,02_doc_has.comparative]]
+# DB ENGINES TYPES: Time Series  [[{db_engine.timeseries,02_doc_has.comparative]]
 - designed to efficiently collect, store and query TS.
 - Ex use-case:
   'SELECT SENSOR1_CPU_FREQUENCY / SENSOR2_HEAT'
@@ -613,7 +613,7 @@ CONTEXT:
 @[https://www.techrepublic.com/article/why-time-series-databases-are-exploding-in-popularity/]
 [[}]]
 
-● DB ENGINES TYPES: CONFIGURATION&SERVICE REGISTRY/DISCOVERY [[{db_engine.service_registry,02_doc_has.comparative]]
+# DB ENGINES TYPES: CONFIGURATION&SERVICE REGISTRY/DISCOVERY [[{db_engine.service_registry,02_doc_has.comparative]]
 - Specialized key/value DBMS:
 - TWO PROCESSES MUST EXISTS:
   - SERVICE REGISTRATION PROCESS storing final-app-service (host,port,...)
@@ -684,7 +684,7 @@ CONTEXT:
    https://coreos.com/etcd/docs/latest/learning/why.html
 [[}]]
 
-● DB ENGINES TYPES: WIDE_COLUMN STORES [[{db_engine.wide_column.101,scalability]]
+# DB ENGINES TYPES: WIDE_COLUMN STORES [[{db_engine.wide_column.101,scalability]]
  (also called extensible record stores)
 - "SHORT OF" TWO-DIMENSIONAL KEY-VALUE STORES.
   where key set as well as value can be "huge"
@@ -734,7 +734,7 @@ CONTEXT:
     - Features: Schema, SQL ,Consistency ,Availability ,Scalability ,Replication
 [[}]]
 
-● DB ENGINES TYPES: DOCUMENT STORES [[{db_engine.document_store,02_doc_has.comparative]]
+# DB ENGINES TYPES: DOCUMENT STORES [[{db_engine.document_store,02_doc_has.comparative]]
 - also called document-oriented DBMS.
 - schema-free:
   - different records may have different columns
@@ -768,7 +768,7 @@ CONTEXT:
 [[}]]
 
 
-● DB ENGINES TYPES: DATA(LOG) COLLECT [[{db_engine.log_collect,02_doc_has.comparative]]
+# DB ENGINES TYPES: DATA(LOG) COLLECT [[{db_engine.log_collect,02_doc_has.comparative]]
 - Incomplete but still persistent list of implementations:
   └ FluentD "Improved" logstat (https://www.fluentd.org/)
     - data collector for unified logging layer
@@ -815,7 +815,7 @@ CONTEXT:
   (e.g. ELK) tracing.  [[}]]
 [[}]]
 
-● Logreduce IA filter: [[{db_engine.search,db_engine.timeseries,db_engine.log_collect]]
+# Logreduce IA filter: [[{db_engine.search,db_engine.timeseries,db_engine.log_collect]]
                        [[qa,security.monitoring,aaa,security.ia,01_PM.TODO.NOW]]
   https://opensource.com/article/18/9/quiet-log-noise-python-and-machine-learning
   https://pypi.org/project/logreduce/
@@ -824,7 +824,7 @@ CONTEXT:
 
 [[db_engine.101}]]
 
-● tbls https://github.com/k1LoW/tbls  [[{01_PM.TODO.NOW]]
+# tbls https://github.com/k1LoW/tbls  [[{01_PM.TODO.NOW]]
   - CI-Friendly (golang == docker-friendly) tool for documenting DDBBs.
   FEATURES:
   - Diff database.
@@ -837,7 +837,7 @@ CONTEXT:
 [[}]]
 
 
-● Materialize: Stream 2 PSQL:[[{01_PM.low_code,architecture.event_stream]]
+# Materialize: Stream 2 PSQL:[[{01_PM.low_code,architecture.event_stream]]
                              [[db_engine.rdbm,qa.documentation,01_PM.TODO]]
 @[https://github.com/MaterializeInc/materialize]
 - Streaming database for real-time applications, accepting input data from
@@ -853,7 +853,7 @@ CONTEXT:
 - Support for a large fraction of PostgreSQL, and are actively working
   to support builting PostgreSQL functions.
 
-● schemaspy.org:
+# schemaspy.org:
 • SchemaSpy is generates database to HTML documentation, including
   Entity Relationship diagrams.
 
@@ -879,11 +879,11 @@ CONTEXT:
             -p $PASS                    \
             -o $OUTPUT_HTML_REPORT_DIR
 
-● SchemaCrawler [[{01_PM.TODO]]
+# SchemaCrawler [[{01_PM.TODO]]
 - "Unix friendly" generating mermaid diagram output. [[}]]
 [[}]]
 
-● dqlite.io:[[{db_engine.rdbm.sqlite,architecture.distributed,architecture.embedded]]
+# dqlite.io:[[{db_engine.rdbm.sqlite,architecture.distributed,architecture.embedded]]
 • Dqlite ("distributed SQLite") extends SQLite across a cluster of machines, with
   automatic failover and high-availability to keep your application running. It
   uses C-Raft, an optimised Raft implementation in C, to gain high-performance
@@ -891,7 +891,7 @@ CONTEXT:
   outstanding efficiency and tiny footprint.
 [[}]]
 
-● Dragon dist.GraphDB@FB:[[{db_engine.graph_db,distributed,01_PM.TODO]]
+# Dragon dist.GraphDB@FB:[[{db_engine.graph_db,distributed,01_PM.TODO]]
 @[https://engineering.fb.com/2016/03/18/data-infrastructure/dragon-a-distributed-graph-query-engine/]
 - Facebook Graph load:
  ºmillions of writes and billions of reads per secondº.
@@ -929,7 +929,7 @@ CONTEXT:
   knowledge about the social graph data and user's behaviour.
 [[}]]
 
-● OWL:[[{db_engine.graph_db,db_engine.rdf,01_PM.TODO]]
+# OWL:[[{db_engine.graph_db,db_engine.rdf,01_PM.TODO]]
 @[https://en.wikipedia.org/wiki/Web_Ontology_Language]
 
 https://www.w3.org/wiki/Ontology_editors
@@ -958,7 +958,7 @@ http://owlgred.lumii.lv/
 https://www.cognitum.eu/Semantics/FluentEditor/
 [[}]]
 
-● RocksDB:[[{db_engine.key_value,scalability.distributed]]
+# RocksDB:[[{db_engine.key_value,scalability.distributed]]
 @[https://raw.githubusercontent.com/facebook/rocksdb/gh-pages-old/intro.pdf]
 
 - Local (embedded in library with no network latency) key-value
@@ -997,7 +997,7 @@ https://www.cognitum.eu/Semantics/FluentEditor/
   - "Many". Amongst others, it is used as core storage engine for
     Facebook's Dragon, probably one of the biggest Graph DB in production.
 
-● ZippyDB:  [[{distributed]]
+# ZippyDB:  [[{distributed]]
 @[https://www.infoq.com/news/2021/09/facebook-zippydb/]
 @[https://engineering.fb.com/2021/08/06/-data/zippydb/]
 - By Facebook Engineering.
@@ -1026,7 +1026,7 @@ https://www.cognitum.eu/Semantics/FluentEditor/
 [[}]]
 [[}]]
 
-● Apache Rya:[[{db_engine.graph.rdf.rya,big_data.spark]]
+# Apache Rya:[[{db_engine.graph.rdf.rya,big_data.spark]]
 @[https://searchdatamanagement.techtarget.com/news/252472464/Apache-Rya-matures-open-source-triple-store-database]
 · Started by Adina Crainiceanu, associate professor of computer science at
   the U.S.  Naval Academy. Initial research paper published in 2012
@@ -1039,7 +1039,7 @@ https://www.cognitum.eu/Semantics/FluentEditor/
 · Rya's users include U.S. Navy (autonomous drones,...).
 [[}]]
 
-● etcd Summary [[{db_engine.service_registry.etcd,db_engine.101]]
+# etcd Summary [[{db_engine.service_registry.etcd,db_engine.101]]
 - "etcd" name refers to UNIX "/etc" folder and "d"istributed system.
 - It is designed as a general substrate for large scale distributed systems.
   These are SYSTEMS THAT WILL NEVER TOLERATE SPLIT-BRAIN OPERATION and are

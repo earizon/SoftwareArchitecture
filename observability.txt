@@ -1,6 +1,6 @@
 OBSERVABILITY = LOGING + MONITORING + TRACING [[{observability,101]]
 
-● Distributed Tracing [[{tracing.distributed,db_engine.log_collect.prometheus,qa.standards,01_PM.TODO]]
+# Distributed Tracing [[{tracing.distributed,db_engine.log_collect.prometheus,qa.standards,01_PM.TODO]]
 • OpenTelemetry
 @[https://opentelemetry.io/]
 - Emerging suite of standards for (Cloud Native) Observability.
@@ -14,11 +14,11 @@ OBSERVABILITY = LOGING + MONITORING + TRACING [[{observability,101]]
   data model and protocol, and compatibility with Prometheus.
 [[}]]
 
-● Zipkin [[{tracing.distributed,01_PM.low_code,_PM.TODO]]
+# Zipkin [[{tracing.distributed,01_PM.low_code,_PM.TODO]]
 @[https://zipkin.io/]
 [[}]]
 
-● Jepsen Project  [[{distributed.qa,01_PM.TODO]]
+# Jepsen Project  [[{distributed.qa,01_PM.TODO]]
 @[https://jepsen.io/]
 Jepsen is an effort to improve the safety of distributed databases, queues,
 consensus systems, etc. We maintain an open source software library for systems
@@ -33,7 +33,7 @@ teaches engineers how to evaluate distributed systems correctness for
 themselves.
 [[}]]
 
-● Grafana 9 Brings Big Improvements to Alerting and User Experience  @ma
+# Grafana 9 Brings Big Improvements to Alerting and User Experience  @ma
   https://www.infoq.com/news/2022/07/grafana-9-released/ 
     Changes to the alerting experience, trialed as an option in earlier
   versions of Grafana, have now been made the default, leading to

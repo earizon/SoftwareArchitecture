@@ -1,4 +1,4 @@
-● AAA Architecture [[{aaa]]
+# AAA Architecture [[{aaa]]
 • keycloak: [[{aaa.oauth,qa.standards]]
 @[https://www.keycloak.org/]
 @[https://medium.com/keycloak/keycloak-essentials-86254b2f1872]                   [TODO]

@@ -1,4 +1,4 @@
-●  Apropos:
+#  Apropos:
 - Visit next Web site for a great experience:
   https://earizon.github.io/txt_world_domination/viewer.html?payload=../SoftwareArchitecture/istio_microservicilites.txt
 
@@ -9,7 +9,7 @@
   in the Pantheon of the Unicode Gods.
 ────────────────────────────────────────────────────────────────────────────────
 
-● Summary from:
+# Summary from:
   https://www.infoq.com/articles/microservicilities-istio/
   by Alex Soto, Director of Developer Experience at Red Hat
   reviewed by Michael Redlich, Java Queue Lead Editor

@@ -1,4 +1,4 @@
-●  Apropos:
+#  Apropos:
 - Visit next Web site for a great experience:
   https://earizon.github.io/txt_world_domination/viewer.html?payload=../SoftwareArchitecture/enterprise_patterns.txt
 
@@ -12,7 +12,7 @@
 
 [[{Enterprise_Patterns]]
 
-● ESB Architecture:[[{enterprise_patterns.101,data.integration]]
+# ESB Architecture:[[{enterprise_patterns.101,data.integration]]
 - Can be defined by next feautes:
   - Monitoring of services/messages passed between them
   - wire Protocol bridge between HTTP, AMQP, SOAP, gRPC, CVS in Filesystem,...
@@ -48,7 +48,7 @@ s   |
     |   Message Service                    MQ Series, MSMQ, ...
 [[}]]
 
-● Apache NiFi: Data Routing [[{enterprise_patterns,data.integration,architecture.event_stream]]
+# Apache NiFi: Data Routing [[{enterprise_patterns,data.integration,architecture.event_stream]]
                             [[01_PM.low_code,ui,architecture.decoupled,kafka,]]
 @[https://nifi.apache.org]
 - no-code, .drag-and-drop Web-GUI to build pipelines for
@@ -94,7 +94,7 @@ REFS:
 @[https://stackoverflow.com/questions/65625166/apache-camel-vs-apache-nifi]
 [[}]]
 
-● GraphQL Engine: [[{data.analytics,01_PM.low_code,_PM.TODO]]
+# GraphQL Engine: [[{data.analytics,01_PM.low_code,_PM.TODO]]
 • Blazing fast, instant realtime GraphQL APIs for DB with fine
   grained access control, also trigger webhooks on database events.
 • POLE POSITION in GitHub for Top 32 Automatic Api Open Source Projects on Github (
@@ -113,7 +113,7 @@ REFS:
                                      }
 [[}]]
 
-● NoCoDB: DDBB to spreedsheet:  [[{data.analytics,01_PM.low_code,_PM.TODO]]
+# NoCoDB: DDBB to spreedsheet:  [[{data.analytics,01_PM.low_code,_PM.TODO]]
 @[https://www.nocodb.com/]
 • Second position in GitHub for Top 32 Automatic Api Open Source Projects on Github (
 
@@ -122,18 +122,18 @@ https://awesomeopensource.com/projects/automatic-api
 • Turns any database into a smart spreadsheet.
 [[}]]
 
-● Metabase [[{db_engine,data.analytics,01_PM.low_code,_PM.TODO]]
+# Metabase [[{db_engine,data.analytics,01_PM.low_code,_PM.TODO]]
 https://github.com/metabase/metabase
 • simplest way to get business intelligence and analytics from a DDBB to everyone.
 • Low-code chart (including geo-map) generation.
 [[}]]
 
-● Datasette.io [[{db_engine,data.analytics,01_PM.low_code,_PM.TODO]]
+# Datasette.io [[{db_engine,data.analytics,01_PM.low_code,_PM.TODO]]
 • Spin up a JSON API for any data in minutes.
 • Prototype and prove your ideas without building a custom backend.
 [[}]]
 
-● Redash:  [[{db_engine,data.analytics,01_PM.low_code,_PM.TODO]]
+# Redash:  [[{db_engine,data.analytics,01_PM.low_code,_PM.TODO]]
 - "Make your company Data Driven"
 - Redash is designed to enable anyone, regardless of the level of
   technical sophistication, to harness the power of data big and small.
@@ -169,7 +169,7 @@ https://github.com/metabase/metabase
   OmniSciDB (Formerly MapD)
 [[}]]
 
-● Business Data charts: [[{enterprise_patterns.101]]
+# Business Data charts: [[{enterprise_patterns.101]]
 @[https://www.forbes.com/sites/bernardmarr/2017/07/20/the-7-best-data-visualization-tools-in-2017/#643a48726c30]
 
 • Apache Superset:
@@ -212,7 +212,7 @@ https://github.com/metabase/metabase
 [[}]]
 
 
-● TOGAF  [[{enterprise_patterns,01_PM.TODO]]
+# TOGAF  [[{enterprise_patterns,01_PM.TODO]]
 @[https://en.wikipedia.org/wiki/The_Open_Group_Architecture_Framework]
 The Open Group Architecture Framework (TOGAF) is a framework for enterprise
 architecture that provides an approach for designing, planning, implementing,
@@ -260,11 +260,11 @@ Summary from @[https://www.redhat.com/architect/TOGAF-importance]
     solution blueprints."
 [[}]]
 
-● KOGITO: [[{01_PM.low_code,architecture,01_PM.TODO]]
+# KOGITO: [[{01_PM.low_code,architecture,01_PM.TODO]]
 @[http://kie.org/]
 
-● Kogito == Drools + jBPM + OptaPlanner
-● Drools
+# Kogito == Drools + jBPM + OptaPlanner
+# Drools
   - Drools is a business rule management system with a
     forward-chaining and backward-chaining inference based rules engine,
     allowing fast and reliable evaluation of business rules and complex
@@ -272,7 +272,7 @@ Summary from @[https://www.redhat.com/architect/TOGAF-importance]
     Also use in other projects like https://www.shopizer.com/, and OOSS
     java ecommerce solution based on Spring/Hibernate/Drools/Elastic.
 
-● jBPM
+# jBPM
 @[https://www.jbpm.org/]
   - toolkit for building business applications to help automate business
     processes and decisions.
@@ -294,7 +294,7 @@ Summary from @[https://www.redhat.com/architect/TOGAF-importance]
     - SpringBoot, Thorntail, ... deployments
     - standalone java programs
 
-● OptaPlanner              [[{enterprise_patterns.optimization]]
+# OptaPlanner              [[{enterprise_patterns.optimization]]
   OptaPlanner is an AI constraint solver. It optimizes planning and
   scheduling problems, such as the Vehicle Routing Problem, Employee
   Rostering, Maintenance Scheduling, Task Assignment, School

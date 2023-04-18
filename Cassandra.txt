@@ -1,4 +1,4 @@
-● Cassandra 101 Wide Store DDBB [[{db_engine.wide_column.cassandra,db_engine.101,]]
+# Cassandra 101 Wide Store DDBB [[{db_engine.wide_column.cassandra,db_engine.101,]]
   WARN:
 - Why It's a Poor Choice For a Metadata Database for Object Stores
 @[https://blog.min.io/the-trouble-with-cassandra-based-object-stores/]
@@ -184,14 +184,14 @@ https://rene-ace.com/cassandra-101-understanding-what-is-cassandra/
 - Coordinator node,
 - replication factors,
 - ...
-● Cassandra+Spark:
+# Cassandra+Spark:
 @[https://es.slideshare.net/chbatey/1-dundee-cassandra-101]
 
 • Similar projects:
 - Voldermort: developed by Linked-In.
 @[https://www.project-voldemort.com/voldemort/]
 
-● What's new:
+# What's new:
 - Cassandra 4.0 (2020-10)
 @[https://cassandra.apache.org/doc/latest/new/]
   - Support for Java 11

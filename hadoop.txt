@@ -4,7 +4,7 @@
 Apache Ambari makes Hadoop cluster provisioning, managing, and monitoring dead simple.
 </pre>
 
-● Hadoop "vs" Spark: [[{]]
+# Hadoop "vs" Spark: [[{]]
 @[https://www.infoworld.com/article/3014440/big-data/five-things-you-need-to-know-about-hadoop-v-apache-spark.html]
 Hadoop is essentially a distributed data infrastructure:
  -It distributes massive data collections across multiple nodes
@@ -53,7 +53,7 @@ called resilient distributed datasets distributed across the data cluster.
 recovery from faults or failures," Borne pointed out.
 [[}]]
 
-● Hive: Data WareHouse on top of Hadoop
+# Hive: Data WareHouse on top of Hadoop
 @[https://projects.apache.org/project.html?hive]
 - querying and managing utilities for large datasets
   residing in distributed storage built on top of Hadoop
