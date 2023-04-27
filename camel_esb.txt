@@ -1,0 +1,672 @@
+## External Links:
+@[http://camel.apache.org/manual.html]
+@[http://camel.apache.org/user-guide.html]
+@[http://camel.apache.org/books.html]
+@[http://camel.apache.org/tutorials.html]
+@[http://camel.apache.org/examples.html]
+@[http://camel.apache.org/cookbook.html]
+@[http://camel.apache.org/dsl.html]
+@[http://camel.apache.org/components.html]
+@[http://camel.apache.org/data-format.html]
+@[http://camel.apache.org/languages.html]
+@[http://camel.apache.org/security.html]
+@[http://camel.apache.org/security-advisories.html]
+@[http://camel.apache.org/enterprise-integration-patterns.html]
+
+## Camel "vs" NiFi [[{01_PM.low_code]]
+@[https://stackoverflow.com/questions/65625166/apache-camel-vs-apache-nifi]
+
+* NiFi: no-code application. 99% of NiFi users will never see a
+        line of code. It is a web based GUI with a drag and drop
+        interface to build pipelines.
+* NiFi can perform ETL, and can be used in batch use cases, but it is
+  geared towards data streams. It is not just about moving data from A
+  to B, it can do complex (and performant) transformations, enrichments
+  and normalisations. It comes out of the box with support for many
+  specific sources and endpoints (e.g. Kafka, Elastic, HDFS, S3,
+  Postgres, Mongo, etc.) as well as generic sources and endpoints (e.g.
+  TCP, HTTP, IMAP, etc.).
+* NiFi is not just about messages - it can work natively with a wide
+  array of different formats, but can also be used for binary data and
+  large files (e.g. moving multi-GB video files).
+* NiFi is deployed as a standalone application - it's not a framework
+  or api or library or something that you integrate in to something
+  else. It is a fully self-contained, realised application that is
+  fully featured out of the box with no additional development. Though
+  it can be extended with custom development if required.
+* NiFi is natively clustered - it expects (but isn't required) to be
+  deployed on multiple hosts that work together as a cluster for
+  performance, availability and redundancy.
+
+There is some functional overlap between NiFi and Camel, but they were
+designed very differently:
+
+* Apache Camel is an integration framework, mostly used in distributed solutions.
+  coded in Java. Example solutions are adapters, flows, API's, connectors,
+  cloud functions and so on.
+* Camel and NiFi can be used very well together especially when using a message
+  broker like Apache ActiveMQ or Apache Kafka. Ex:
+  - A java app is enhanced with Camel so that it can send messages to Kafka.
+  - NiFi consumes those messages from Kafka.
+  - Then in the NiFi flow the message is changed in various steps.
+    - In the "middle" of the flow the message is put on another Kafka topic.
+      - A Camel function (CamelK) in the cloud does various operations on the
+        message, when it's finished it put the message on a Kafka topic.
+      - The message goes through a NiFi flow which at the end calls an API
+        created with Camel.
+
+   In a blog I wrote in detail on the various ways to combine Camel and Nifi:
+ @[https://raymondmeester.medium.com/using-camel-and-nifi-in-one-solution-c7668fafe451]
+[[}]]
+
+
+# Architecture: [[{101.architecture,01_PM.TODO]]
+@[http://camel.apache.org/architecture.html]
+
+"""In a Camel-based app, you create (Camel wrappers around) some endpoints
+and connect these endpoints with routes."""
+
+Camel Instance:
+  1 CamelContext  (rerpesents the Camel runtime system)
+    -  Component1  (= factory of Endpoint instances)
+       + Endpoint_Instance1
+       + Endpoint_Instance2
+       + ...
+    -  Component2
+    -  ...
+- A Component is essentially a factory of Endpoint instances.
+
+Endpoint := web app URL, JMS Destination,...
+^^^^^^^^
+You can create a Producer or Consumer on Endpoints to exchange messages with it.
+
+
+- Apache Camel uses URIs to work directly with any kind of Transport
+  or messaging model such as HTTP, ActiveMQ, JMS, JBI, SCA, MINA or CXF,
+  as well as pluggable Components and Data Format options.
+
+- It consists of an small library with minimal dependencies for easy
+  embedding in any Java application. Apache Camel lets you work with the
+  same API regardless which kind of Transport is used
+[[}]]
+
+## Initializing the Context [[{]]
+myCamelContext.getEndpoint(
+    "pop3://john.smith@mailserv.example.com?password=myPassword");
+     ^^^^
+     component (EndPoint factory) name
+     internally the CamelContext mantain a
+     map "component name" <-> component java Class
+     - The context will invoke something like
+       MailComponentInstance.createEndpoint(
+           "pop3:john.smith@mailserv.example.com?password=myPassword");
+
+The name-to-class context map is populated through :
+ alt 1, programatically:
+    contextInstance.addComponent(String name, Component compInstance);
+ alt 2, lazy initialization:
+file: META-INF/services/org/apache/camel/component/myComponentName
+class=com.example.myproject.myComponentClass
+
+A single class can be mapped to different names:
+  MailClass → ["pop3", "imap", ...]
+[[}]]
+
+# core concepts [[{]]
+## «Message»  [[{]]
+@[http://camel.apache.org/maven/camel-2.13.0/camel-core/apidocs/org/apache/camel/Message.html]
+Message:
+-------
+ID            ← String
+Headers       ← Stored as <a href="http://camel.apache.org/maven/camel-2.13.0/camel-core/apidocs/org/apache/camel/util/CaseInsensitiveMap.html">org.apache.camel.util.CaseInsensitiveMap</a> by default, extending HashMap<String,Object>.
+                 headers are used to add hints about the content encoding, auth info, ....
+                 Camel also populates headers for its own purposes.
+Attchments    ← mostly used to match the requirements of some protocols
+                 and components: WebService component
+                 (SOAP-MTOM support, e-mail attachments, ...).
+                 They are stored in the message as Map<String,DataHandler>.
+Fault Flag    ← indicates normal or faulted message
+Body          ← Payload, stored as an "Object" allowing for any kind of data.
+
+- A Message flow in one direction, from sender to receiver.
+  It's not possible to reuse the same message to reply back.
+  Another new message is needed.
+- The Message interface provides an abstraction for a single message,
+   such as a request, reply or exception message.
+- There are concrete classes that implement the Message interface for
+  each Camel-supported communications technology. For example, the
+  JmsMessage class provides a JMS-specific implementation of the Message
+  interface. The public API of the Message interface provides get- and
+  set-style methods to access the message id, body and individual
+  header fields of a message.
+- The Exchange interface provides an abstraction for an exchange of
+  messages, that is, a request message and its corresponding reply or
+  exception message.
+-ºIn Camel terminology, request, reply and exception messages are calledº
+ ºin , out and fault messagesº
+[[}]]
+
+## «Exchange» (message Wrapper)  [[{]]
+@[http://camel.apache.org/exchange.html]
+- «org.apache.camel.Exchange»
+
+- The Exchange object acts as a container(wrapper) around Messages to
+  allow the support of a wide set of Message Exchange Patterns (MEP),
+  adding all the needed meta-data by the the routing logic.
+
+- MEP are described in the org.apache.camel.ExchangePattern enumeration
+@[http://camel.apache.org/maven/current/camel-core/apidocs/org/apache/camel/ExchangePattern.html]
+
+- Camel supports the following MEP:
+  - InOnly
+  - InOptionalOut
+  - InOut
+  - OutIn
+  - OutOptionalIn
+  - RobustInOnly
+  - RobustOutOnly
+
+┌────────────────────────────────────┐- Exchange ID: String
+│ Exchange                           │- MED defined th Mes.Exchange Pattern
+│ ┌─────────────┐   ┌─────────────┐  │- Exception: Used by the error handler and set
+│ │Exchange ID  │   │MED          │  │             to any error during processing.
+│ └─────────────┘   └─────────────┘  │
+│ ┌─────────────┐   ┌─────────────┐  │- Properties: Map<String, Object>. Looks like
+│ │Exception    │   │Properties   │  │  message headers but lifetime is different.
+│ └─────────────┘   └─────────────┘  │  It exists during the whole exchange execution.
+│ ┌──────────────┐  ┌──────────────┐ │
+│ │in─Message    │  │out─Message   │ │- in-message : Mandatory.
+│ │ ┌───────────┐│  │ ┌───────────┐│ │
+│ │ │Message ID ││  │ │Message ID ││ │- out-message: Only set in InOutMEP
+│ │ │Headers    ││  │ │Headers    ││ │
+│ │ │Attachments││  │ │Attachments││ │
+│ │ │Body       ││  │ │Body       ││ │
+│ │ └───────────┘│  │ └───────────┘│ │
+│ └──────────────┘  └──────────────┘ │
+└────────────────────────────────────┘
+
+
+Ex.:
+public interface Foo {
+  Object someInOutMethod(String input);    // ← Default InOut if class|interface is not @InOnly annotated
+  String anotherInOutMethod(Cheese input); // ← Default InOut if class|interface is not @InOnly annotated
+
+  @InOnly
+  void someInOnlyMethod(Document input);
+}
+
+See Also:
+- @[http://camel.apache.org/event-message.html"   >Event Message   </a>
+- http://camel.apache.org/request-reply.html"   >Request Reply   </a>
+- http://camel.apache.org/exchange-pattern.html">Exchange Pattern</a>
+[[}]]
+
+## «CamelContext» [[{]]
+@[http://camel.apache.org/maven/current/camel-core/apidocs/org/apache/camel/CamelContext.html]
+- runtime system and the loading container of all resources
+  required for the execution of the routing.
+
+                       ┌───────────┐
+                       │ Endpoints │
+┌────────────┐         └─────┬─────┘          ┌─────────────────┐
+│ Components │               │                │Route Definitions│
+└──────────┬─┘               │                └─┬───────────────┘
+           │                 v                  │ Mediation logic
+           └────────→ ┌─────────────────┐ ←─────┘ defined by users
+                      │                 │
+ ┌───────────────┐º1  │                 │     ┌────────────┐º2
+ │Type Converters├──→ │    C A M E L    │ ←───┤Data Formats│
+ └───────────────┘    │                 │     └────────────┘
+                      │  C O N T E X T  │
+ ┌─────────┐º3        │                 │     ┌─────────┐º4
+ │Registry ├────────→ │                 │ ←───┤Languages│
+ └─────────┘          └─────────────────┘     └─────────┘
+
+*1 Type converters: Transforms a message of one type to another
+*2 data formats   : Used to define the format of a message body
+*3 registry       : Camel will query it to look up for the beans used
+                    in the routing
+*4 languages      : describes expressions and predicates used in
+                    the routing by a language (xpath, xquery, ...)
+
+<span xsmall>LIFE CYCLE</span>
+
+    *(start)
+    │
+    v      (resume)
+ ┌───────┐←────────────────┌─────────┐*2
+ │Started│                 │Suspended│
+ └───────┘────────────────→└─────────┘
+    ^   │        (suspend)*3    │
+    │   │                       │
+    │   │(stop)*3               │
+    │   └─────→┌───────┐ *1     │
+    │          │Stopped│ ←──────┘
+    └──────────└───────┘   (stop)
+    (start)
+
+-  When the context starts, it also starts various components
+   and endpoints, and activates the routing rules.
+
+*1 STOPPED : all routes, components, .. loaded will be stopped and
+            ºall internal cache, metrics, and states will be lostº
+*2 SUPENDED: stops the routing of the messages
+             keeps context resources and internal data
+             (metrics, cache, states, and so on).
+
+ºend users are supposed to use only suspend and resume operations.º
+
+*3 stop and resume operations will ensure that all inflight messages
+  are completely processed.
+
+
+Graceful shutdowns:
+  «org.apache.camel.spi.ShutdownStrategy»
+            ^
+            │
+            │
+       «org.apache.camel.impl.DefaultShutdownStrategy»
+         - first phase: graceful shutdown, by suspending or
+                        stopping all consumer (the first endpoint
+                        that creates the exchanges), and waiting
+                        for the completion of all inflight messages.
+         - second phase: After a timeout (5 min by default), if
+                        there are still some inflight messages, the
+                        strategy kills the exchanges, forcing a
+                        suspend or stop.
+
+ºCamel Context Configurationº
+(DSL or XML)
+Configurations consist on:
+  - routing          configuration
+  - mediation-rules  configuration
+  (implement the various Enterprise Integration Patterns)
+[[}]]
+
+# Full Journey  [[{]]
+ºSUMMARYº
+ - Create a CamelContext
+ - (Optional) configure/tweak components or endpoints
+ - Add desired routing rules
+   (Many time a user will limit to define such routing rules)
+ - Start the context with
+   cammelContextInstance.start(); // ← Does not block indefinitely
+                                       rather, starts internal threads
+                                       to each Component and Endpoint
+
+ - Eventually invoke the:
+   cammelContextInstance.stop(); // ← Waits for all internal Component
+                                      and Endpoint threads to stop
+ºFULL JOURNEY-(programatically)º
+CamelContext context = new DefaultCamelContext();
+
+// Alt 1: Add compents implicetely at route definition {{{
+context.addRoutes( new RouteBuilder() {
+    public void configure() {
+        from(º"test-jms:queue:test.queue"º)
+        .to("file://test");
+    }
+});
+// }}}
+// Alt 2: Add compents explicetely  {{{
+ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(
+      "vm://localhost?broker.persistent=false");
+
+// Note we can explicit name the component
+context.addComponent("test-jms",
+JmsComponent.jmsComponentAutoAcknowledge(connectionFactory))
+// }}}
+
+// Testing our setup - not-needed in production {{{
+ProducerTemplate testingProducer = context.createProducerTemplate();
+}}}
+
+// start the context {{{
+context.start();
+// }}}
+
+// start the context {{{
+for (int i = 0; i < 10; i++)
+    testingProducer.
+       sendBody("ºtest-jms:queue:test.queueº",
+                "Test Message: " + i);
+//
+ºFull Journey-(xml)º
+(<bean ...> are references to spring bean ids)
+<route>
+  <from uri="jms:queue:order" />
+  <multicast>
+    <to uri="log:org.company.log.Category" />
+    <pipeline>                     ←-- Messages are routed as pipes
+      <bean ref="validateOrder" />     or filters
+      <bean ref="registerOrder" />
+      <to uri="mina:tcp://mainframeip:4444?texline=true" />
+      <bean ref="sendConfirmEmail" /> ←-- gets input from mainframe
+    </pipeline>
+  </multicast>
+</route>
+
+In the Spring XML we will have something like:
+....
+<bean id="validateOrder" class="com.mycompany.MyOrderValidator" />
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                POJO object with no deps on Camel
+                                Camel will use "intelligent" Bean Binding
+                                to fill it with the incomming payload
+[[}]]
+
+## Components[[{]]
+@[http://camel.apache.orgcomponent.html]
+- A Component is essentially a factory of Endpoint instances.
+### Components configuration
+You can explicitly configure Component instances in Java code
+or an IoC container like Spring or Guice, or they can be
+auto-discovered using URIs.
+[[}]]
+
+## Endpoint [[{]]
+  <a href="http://camel.apache.orgendpoint.html"></a>
+@[http://camel.apache.org/endpoint-annotations.html]
+@[http://camel.apache.org/endpointcompleter.html]
+[[}]]
+
+## Processor [[{]]
+@[http://camel.apache.orgprocessor.html]
+- The Processor interface represents a class that processes a message.
+
+Processor signature:
+ | package org.apache.camel;
+ | public interface Processor {
+ |   void process(Exchange exchange) throws Exception;
+ | }
+                  ^^^^^^^^
+                  - Notice it uses an Exchange rather
+                    than a Message for extra-flexibility.*1
+                  - An implementation initially might call
+                    exchange.getIn()
+                    to get the input message and process it.
+                     If an error occurs  then it will call
+                    exchange.setException()
+
+- An application-level developer might implement the Processor
+  interface with a class that executes some business logic.
+
+  Ex 1: ChoiceProcessor implements the message router pattern,
+  using a cascading if-then-else statement to route a message from
+  an input queue to one of several output queues.
+  Ex 2: FilterProcessor discards messages that do not satisfy
+  a stated predicate (boolean condition).
+
+<span TODO xsmall>ProcessorFactory</span>
+@[http://camel.apache.orgprocessorfactory.html]
+[[}]]
+
+## Routes/RouteBuilders/DSL  [[{]]
+- A route is the step-by-step movement of a Message from an
+  input queue, through arbitrary types of decision making
+ (such as filters and routers) to a destination queue (if any).
+-  Camel provides two ways for an application developer to
+  specify routes:
+  -  XML config file.
+  -  Java DSL (domain-specific language).
+[[}]]
+
+## Error Handling  [[{]]
+@[http://camel.apache.org/error-handling-in-camel.html]
+[[}]]
+
+
+## Ex. Java DSL [[{]]
+RouteBuilder builder = new RouteBuilder() {
+    public void configure() {
+        from( "queue:a").
+        filter(header( "foo").isEqualTo("bar")).
+        to("queue:b");
+
+        from("queue:c").
+        choice().
+          when(header("foo").isEqualTo("bar")).to("queue:d").
+          when(header("foo").isEqualTo("cheese")).to("queue:e").
+          otherwise().to("queue:f");
+    }
+};
+CamelContext myCamelContext = new DefaultCamelContext();
+myCamelContext.addRoutes(builder); // ←- will inform the builder instance
+                                         about the current context and then
+                                         invoque its configure method.
+[[}]]
+
+
+## Bean Method Binding [[{]]
+- B.B. defines both which methods are invoked and also how the
+  Message is converted into the parameters of the method when
+  it is invoked.
+
+BINDING ALGORITHM:
+  - If the message contains the header CamelBeanMethodName,
+    then that method is invoked, converting the body to
+    the type of the method's argument.
+
+
+  - (Camel 2.8+) you can qualify parameter types to select
+    exactly which method to use among overloads with the
+    same name.
+  - (Caml 2.9+) you can specify parameter values directly
+    in the method option (see below for more details).
+
+  - you can explicitly specify the method name in the
+    DSL or when using "POJO-Consuming" "POJO-producing".
+
+  - If the bean has a method marked with the @Handler annotation,
+    then that method is selected
+
+  - if the bean can be converted to a "Processor" using the
+    "Type Converter" mechanism, then this is used to process
+    the message.
+    The ActiveMQ component uses this mechanism to allow any
+    JMS MessageListener to be invoked directly by Camel without
+    having to write any integration glue code.
+
+  - if the body of the message can be converted to a
+    <a href="http://camel.apache.org/maven/current/camel-core/apidocs/org/apache/camel/component/bean/BeanInvocation.html">BeanInvocation</a>
+    the default payload used by the ProxyHelper.html
+    http://camel.apache.org/maven/current/camel-core/apidocs/org/apache/camel/component/bean/ProxyHelper.html
+    then that is used to invoke the method and pass its arguments,
+    otherwise the type of the body is used to find a matching method;
+    - an error is thrown if a single method cannot be chosen unambiguously.
+    - you can also use Exchange as the parameter itself, but then the
+      return type must be void.
+
+  - if the bean class is private (or package-private), interface methods
+    will be preferred (Camel 2.9+) since Camel can't invoke class
+    methods on such beans.
+
+  - In cases where Camel cannot choose a method to invoke, an
+    AmbiguousMethodCallException is thrown.
+
+  - By default the return value is set on the outbound message body
+[[}]]
+
+## Bean Parameter Binding:  [[{]]
+- When a method has been chosen for invocation, Camel will bind
+  to the parameters of the method.
+
+- The following Camel-specific types are automatically bound,
+  so that, if you declare any of these types, they will be
+  provided by Camel.:
+
+    org.apache.camel.Exchange
+    org.apache.camel.Message
+    org.apache.camel.CamelContext
+    org.apache.camel.TypeConverter
+    org.apache.camel.spi.Registry
+    java.lang.Exception
+
+- More interestingly, Camel will also try to bind the body of the Exchange
+  to the first parameter of the method signature (albeit not of any of the
+  types above). Eor instance, if we declare a parameter as String body,
+  then Camel will bind the IN-body to this type.
+   Camel will also automatically convert to the type declared in the
+  method signature.
+
+Ex 1:
+  Camel will bind the IN-body to the body parameter and convert it to a String.
+
+  public String doSomething(String body)
+
+Ex 2:
+
+public String doSomething(String body, Registry registry)
+                                       ^^^^^^^^
+                                       automatically bound type
+                                       we can use to lookup beans.
+
+Ex 3:
+public String doSomething(String body, Exchange exchange, TypeConverter converter)
+                                       ^^^^^^^^
+                                       automatically bound type
+
+
+Ex 4:
+- Use a Pojo to handle a given custom exception InvalidOrderException:
+public String badOrder(String body, InvalidOrderException invalid)
+[[}]]
+
+
+## Annotation-Based Expression Language  [[{]]
+Languages supported in Camel to bind expressions to method
+parameters when using Bean Integration
+ANNOTATION
+----------
+@Bean
+@BeanShell
+@Constant
+@EL
+@Groovy
+@Header
+@JavaScript
+@MVEL
+@OGNL
+@PHP
+@Ruby
+@Simple
+@XPath
+@XQuery
+
+Ex:
+public class Foo {
+   @MessageDriven(uri = "activemq:my.queue")
+   public void doSomething(
+       @XPath( "/foo/bar/text()") String correlationID,
+        @Body String body) {
+          // process the inbound message here
+        }
+}
+
+(Ex 2 and 3 will require first adding next line to Spring registry:
+<bean    id="myCorrelationIdGenerator"
+      class="com.mycompany.MySimpleIdGenerator" /> )
+
+Ex 2: using @Bean binding annotation: free Pojo
+public class Foo {
+@MessageDriven(uri = "activemq:my.queue")
+    public void doSomething(
+    @Bean("myCorrelationIdGenerator") String correlationID,
+    @Body                             String body) {
+        // process the inbound message here
+    }
+}
+
+Ex 3: spring bean with the id myCorrelationIdGenerator
+     where we can compute the id.
+
+    @Header and @Body annotation to help Camel know
+    what to bind here from the Message from the Exchange
+    being processed
+
+public class MyIdGenerator {
+    private UserManager userManager;
+
+    public String generate(
+          @Header(name = "user") String user,
+          @Body                 String payload) throws Exception {
+        User user = userManager.lookupUser(user);
+        String userId = user.getPrimaryId();
+        String     id = userId + generateHashCodeForPayload(payload);
+        return id;
+    }
+}
+[[}]]
+
+## Exchange Pattern Annotations [[{]]
+http://camel.apache.org/manual/camel-manual-2.22.2.html#chapter-cook-book
+[[}]]
+
+
+# TO-DO/Unordered [[{01_PM.BACKLOG]]
+## Javadoc separate  hierarchy [[{]]
+Camel provides a separate Javadoc hierarchy for each communications
+technology supported by Camel. Because of this, you will find
+documentation on, say, the JmsEndpoint class in the JMS Javadoc
+hierarchy , while documentation for, say, the FtpEndpoint class is
+in the FTP Javadoc hierarchy
+[[}]]
+
+## Asynchronous processing  [[{]]
+From Camel 2.18 onwards you can return a CompletionStage
+implementation (e.g. a CompletableFuture) to implement asynchronous
+processing.
+[[}]]
+
+## Annotations to bind services and business logic [[{]]
+@[http://camel.apache.org/manual/camel-manual-2.22.2.html#chapter-cook-book]
+"""For example, if you want to implement some kind of message passing,
+   remoting, reliable load balancing or asynchronous processing in your
+   application we recommend you use Camel annotations to bind your
+   services and business logic to Camel Components which means you can
+   then easily switch between things like
+
+ *  in JVM messaging with SEDA
+ *  using JMS via ActiveMQ or other JMS providers for reliable load balancing, grid or publish and subscribe
+ *  for low volume, but easier administration since you're probably already using a database you could use
+    - Hibernate or JPA to use an entity bean / table as a queue
+    - iBatis to work with SQL
+    - JDBC for raw SQL access
+ *  use JavaSpace
+"""
+[[}]]
+
+## Business Activity Monitoring [[{]]
+The Camel BAM module provides a Business Activity Monitoring (BAM)
+framework for testing business processes across multiple message
+exchanges on different Endpoint instances.
+
+Consider, for example, a simple system in which you submit Purchase
+Orders into system A and then receive Invoices from system B. You
+might want to test that, for a given Purchase Order, you receive a
+matching Invoice from system B within a specific time period.
+[[}]]
+
+## Extract-Transform-Load (ETL) Example
+@[http://camel.apache.org/etl-example.html]
+
+## The European Commission’s Developers Like It...
+@[https://www.cbronline.com/feature/apache-camel]
+
+The Apache Software Foundation (ASF) oversaw 339 projects in 2019 — with a
+robust community of over 3,000 committers tweaking a huge 59,309,787 lines of code.
+
+The most active project, by commits, was Apache Camel — a tool designed to
+allow enterprise developers to integrate a huge range of applications.
+
+Apache Camel lacks the brand recognition of fellow ASF projects Hadoop, Kafka
+, or Spark; all widely used by well-known businesses, many of which have
+build critical components of their architecture on such open source software.
+
+## HTTP Proxy routes with URL Rewriting Functionality [[{]]
+Camel 2.11+
+
+https://dzone.com/articles/camel-211-http-proxy-routes
+[[}]]
+
+[[01_PM.BACKLOG}]]
