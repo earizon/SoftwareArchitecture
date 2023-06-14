@@ -1,8 +1,8 @@
 [[{spark]]
 
-# Spark GENERAL CLUSTER COMPUTING FRAMEWORK [[{architecture.event_stream,big_data.spark,01_PM.WiP]]
+# Spark GENERAL CLUSTER COMPUTING FRAMEWORK [[{architecture.event_stream,big_data.spark,PM.WiP]]
 @[http://spark.apache.org/]
-- Zeppelin "Spark Notebook"(video): [[{01_PM.TODO}]]
+- Zeppelin "Spark Notebook"(video): [[{PM.TODO}]]
  @[https://www.youtube.com/watch?v=CfhYFqNyjGc]
 
 - initially designed around the concept of RESILIENT DISTRIBUTED DATASETS (RDDs).

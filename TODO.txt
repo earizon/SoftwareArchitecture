@@ -154,19 +154,19 @@ https://dzone.com/articles/using-apache-spark-and-spring-batch-for-processing?ed
 # Authentication Service Auth0:
   https://www.youtube.com/channel/UCUlQ5VoIzE_kFbYjzUwHTKA
 
-# REST-driven data mng.: [[{data.management,01_PM.low_code,radarradar,,_PM.TODO]]
+# REST-driven data mng.: [[{data.management,PM.low_code,PM.TODO]]
 @[https://slime.aitnologies.es]
-• Manage your data following the REST principles. Data first
-• Let data describe the exposed backend, just push new data to view
+## Manage your data following the REST principles. Data first
+## Let data describe the exposed backend, just push new data to view
   its endpoints.
-• Low code. Forget the boilerplate. Implement only your business logic
-• Start free, upgrade later
-• Quick start:
+## Low code. Forget the boilerplate. Implement only your business logic
+## Start free, upgrade later
+## Quick start:
   $ docker run -d -p 5000:5000 \
       -e security:adminpassword=slimeAdmin \
       aitnologies/slime:community
 
-• Slime features:
+## Slime features:
   • Data  : store and retrieve json data along its relationships.
   • Search: query data using (extended) GraphQL.
   • Logic : implement business logic using server-JS
@@ -233,7 +233,7 @@ https://dzone.com/articles/using-apache-spark-and-spring-batch-for-processing?ed
 # File format comparative: Avro, JSON, ORC , Parquet
   https://www.slideshare.net/HadoopSummit/file-format-benchmark-avro-json-orc-parquet
 
-# TypeDB:  [[{graph_networks,01_PM.low_code,data.analytics.sql,02_DOC_HAS.comparative,qa,_PM.TODO]]
+# TypeDB:  [[{graph_networks,PM.low_code,data.analytics.sql,02_DOC_HAS.comparative,qa,PM.TODO]]
 @[https://github.com/graknlabs/grakn]
 · previously known as Grakn?
 · Growing interest in Google Trends [2021]
@@ -401,25 +401,6 @@ Used among others by Bayer, Roche, IBM, Capgemini, AstraZeneca, Rolls-Royce, ...
 # SQLite is not a toy database | Anton Zhiyanov
   https://antonz.org/sqlite-is-not-a-toy-database/
 
-# 3GraphQL Reference Guide: Building Flexible and Understandable APIs
-  https://www.infoq.com/articles/GraphQL-ultimate-guide/ 
-
-# Netflix Open Sources Their Domain Graph Service Framework:
-  GraphQL for Spring Boot
-  https://www.infoq.com/news/2021/02/netflix-graphql-spring-boot
-
-# GraphQL vs REST:
-https://hackernoon.com/graphql-vs-rest-how-to-choose-one-over-the-other
-  Conclusion
-  GraphQL is great for applications where related and nested data are
-  fetched because you can use the full power of its query
-  language. GraphQL is also well suited for mobile development as
-  bandwidth usage is optimized by avoiding over-fetching and
-  under-fetching. But after weighing the pros and cons, we see that
-  GraphQL is not always the best option. If you need a clear and
-  convenient API without overhead, or you want to use HTTP capabilities
-  like caching or authentication, you should choose REST.
-
 
 # Crucial, WD y Samsung son pillados vendiendo SSDs de inferior [[storage.hardware]]
   rendimiento sin informar en las especificaciones
@@ -437,36 +418,11 @@ https://hackernoon.com/graphql-vs-rest-how-to-choose-one-over-the-other
 # Practical API Design Using gRPC at Netflix:
   https://www.infoq.com/news/2021/09/practical-api-design-netflix/?itm_source=oficina24x7.com
 
-# PayPal Adopts GraphQL: Gains Increased Developer Productivity
-  https://www.infoq.com/news/2021/10/paypal-graphql/
-
-  Today, GraphQL is being used by several production apps across
-  PayPal. It is now a default pattern to use GraphQL for building new
-  UI apps. Many existing apps are in the process of migrating to
-  GraphQL. GraphQL is being used by common platforms such as Identity,
-  Payments, and Compliance to provide a consistent experience across
-  all PayPal products. Our API developers have started using GraphQL to
-  build APIs. Braintree released its public GraphQL API.
-
-  Kapoor reports that PayPal sees many advantages with using GraphQL. A
-  primary benefit is developer productivity. Tools like GraphiQL and
-  Playground help increase productivity by allowing developers to play
-  around with the API and explore documentation. Increased
-  productivity, in turn, helps shipping faster. Kapoor elaborates:
-  We were able to get rid of a lot of plumbing that made it harder to
-  provide feature updates and keep feature parity. Before, we had to
-  ship out an SDK in every language that our merchant worked in. Now,
-  we can provide one single GraphQL endpoint that merchants can
-  integrate with no matter which language they use.
-
 # Version Vector:
   https://martinfowler.com/articles/patterns-of-distributed-systems/version-vector.html
 
 # Request Batch
   https://martinfowler.com/articles/patterns-of-distributed-systems/request-batch.html
-
-# What's New in Grafana v7.4
-  https://grafana.com/docs/grafana/latest/whatsnew/whats-new-in-v7-4/
 
 # Indestructible Storage in the Cloud with Apache Bookkeeper  [[storage.bookkeeper,comparative,]]
   WARN: Not to be confused with Zookeeper (configuration and discovery) DDBB !!!
@@ -561,21 +517,21 @@ https://hackernoon.com/graphql-vs-rest-how-to-choose-one-over-the-other
   valuable feedback on the ideas in this paper. We also thank the
   CIDR reviewers for their feedback
 
-# Idempotency HTTP Header:[[{standards,payments,api_management,qa,protocol,01_PM.TODO]]
+# Idempotency HTTP Header:[[{standards,payments,api_management,qa,protocol,PM.TODO]]
 @[https://tools.ietf.org/id/draft-idempotency-header-01.html]
 By J. Jena ( PayPal, Inc.), S. Dalal
 
-• request header carrying an idempotency key in order to make
+## request header carrying an idempotency key in order to make
   non-idempotent HTTP methods such as POST or PATCH  fault-tolerant .
   e.g.:
   Idempotency-Key: "8e03978e-40d5-43e8-bc93-6894a57f9324"
                    └──────────────────┬─────────────────┘
           Value must be unique for each different payload.
-• Idempotent method: In mathematics and computer science is a method
+## Idempotent method: In mathematics and computer science is a method
   that can be applied multiple times without changing the result beyond.
   Calling once or ten times must give the same result and it is an
   important property in building a fault-tolerant HTTP API.
-• Problem context:
+## Problem context:
   client sends POST request to server and gets a timeout.
   Q: Is resource actually created or not?
   Q: Can client retry (safely) the request?
@@ -583,35 +539,8 @@ By J. Jena ( PayPal, Inc.), S. Dalal
   transfer MUST NOT be allowed.
 [[}]]
 
-# hasura/graphql-engine:  [[{01_PM.low_code]]
-https://github.com/hasura/graphql-engine
 
-- accelerates API development 10x
-- Autogenerate GraphQL or REST APIs with
-  built in authorization from (ddbb) data, instantly.
-- powerful queries with Built-in filtering / pagination / pattern
-  search / bulk insert / update / delete mutations
-- Works with existing, live databases. 1-minute setup for
-  ready-to-use GraphQL API
-- Realtime: Convert any GraphQL query to a live query by using
-  subscriptions
-- Merge remote schemas: Access custom GraphQL schemas for business
-  logic via a single GraphQL Engine endpoint.
-- Extend with Actions: Write REST APIs to extend Hasura’s schema with
-  custom business logic.
-- Trigger webhooks or serverless functions: On Postgres
-  insert/update/delete events
-- Scheduled Triggers: Execute custom business logic at specific
-  points in time using a cron config or a one-off event.
-- Fine-grained access control: Dynamic access control that integrates
-  with your auth system (eg: auth0, firebase-auth)
-- Admin UI & Migrations: Admin UI & Rails-inspired schema migrations
-- Supports PostgreSQL (and its flavours), MS SQL Server, Big Query.
-  more databases coming soon.
-[[}]]
-
-
-# Dapr  [[{01_PM.low_code,sidecar}]]
+# Dapr  [[{PM.low_code,sidecar}]]
 
 
 # Time-Sensitive Networking:
@@ -642,9 +571,6 @@ https://github.com/hasura/graphql-engine
 
 # Kestra: a Scalable OOSS Orchestration and Scheduling Platform
   https://www.infoq.com/news/2022/03/kestra-orchestration-platform/
-
-# Federated GraphQL with Apollo
-  https://www.infoq.com/presentations/graphql-major-league-baseball/
 
 # When NOT to use Apache Kafka? - Kai Waehner
   https://www.kai-waehner.de/blog/2022/01/04/when-not-to-use-apache-kafka/
@@ -763,10 +689,10 @@ https://github.com/hasura/graphql-engine
     Use Case: Blob         -> Blob             S3            Blob Storage Cloud Storage    HDFS, MinIO,
 
 
-# InfluxDB (Elas.Search Alt for TimeSeries):[[{elk,db_engine.timeseries.influxdb,01_PM.ext_resource]]
+# InfluxDB (Elas.Search Alt for TimeSeries):[[{elk,db_engine.timeseries.influxdb,PM.ext_resource]]
 @[https://logz.io/blog/influxdb-vs-elasticsearch/]
 
-• awesome influxdb:
+## awesome influxdb:
 https://github.com/PoeBlu/awesome-influxdb
 A curated list of awesome projects, libraries, tools, etc. related to InfluxDB
 Tools whose primary or sole purpose is to feed data into InfluxDB.
@@ -826,19 +752,19 @@ Facebook’s Switch from ntpd to chrony for a More Accurate, Scalable NTP Servic
 [[}]]
 
 # Apache Beam: [[{architecture.batch,architecture.event_stream]]
-• Apache Beam provides an advanced unified programming model, allowing
+## Apache Beam provides an advanced unified programming model, allowing
   you to implement batch and streaming data processing jobs that can
   run on any execution engine.
-• Allows to execute pipelines on multiple environments such as Apache
+## Allows to execute pipelines on multiple environments such as Apache
   Apex, Apache Flink, Apache Spark among others.
 [[}]]
 
 # Apache Ignite: [[{architecture.olap,architecture.oltp,db_engine.rdbm,architecture.realtime,scalability]]
-• Apache Ignite is a high-performance, integrated and distributed
+## Apache Ignite is a high-performance, integrated and distributed
   in-memory platform for computing and transacting on large-scale data
   sets in real-time, orders of magnitude faster than possible with
   traditional disk-based or flash technologies.
-• Can be used to dramatically increase RDBMS (SQL) Online Analytics Processing (OLAP)
+## Can be used to dramatically increase RDBMS (SQL) Online Analytics Processing (OLAP)
   and Online Transaction Processing (OLTP).
 @[https://www.gridgain.com/resources/papers/accelerate-mysql-olap-oltp-use-cases]
 [[}]]
@@ -930,7 +856,7 @@ The fallacies are[1]
 # Time Series + Spark:
    https://github.com/AmadeusITGroup/Time-Series-Library-with-Spark
 
-# NATS:[[{architecture.messaging,qa,kafka,mqtt,01_PM.low_code]]
+# NATS:[[{architecture.messaging,qa,kafka,mqtt,PM.low_code]]
   NATS is simple and secure messaging made for developers and
   operators who want to spend more time developing modern applications
   and services than worrying about a distributed communication system.
@@ -995,18 +921,18 @@ The fallacies are[1]
   - Augmenting or Replacing Legacy Messaging Systems
   [[}]]
 
-# Serverless Architecture:[[{architecture.serverless,01_PM.low_code,computing.kubernetes]]
+# Serverless Architecture:[[{architecture.serverless,PM.low_code,computing.kubernetes]]
 · Also known as (AWS non official name) "Lambda" architecture.
 · LinkedIn drops Lambda Arch to remove complexity                         [[comparative]]
 @[https://www.infoq.com/news/2020/12/linkedin-lambda-architecture/]
 ───────────────────────
 · OpenFaas (k8s):
 @[https://www.openfaas.com/]
-· Serverless Functions, Made Simple.                                  [_PM.low_code]
+· Serverless Functions, Made Simple.                                  [PM.low_code]
   OpenFaaS makes it simple to deploy both functions and existing code to Kubernetes.
 [[}]]
 
-# CliG Dev: [[{01_PM.low_code,qa.ui,qa.usability]]
+# CliG Dev: [[{PM.low_code,qa.ui,qa.usability]]
 @[https://clig.dev/]
 Command Line Interface Guidelines
 [[}]]
@@ -1024,7 +950,7 @@ Command Line Interface Guidelines
 [[}]]
 
 
-# Apache AirFlow: [[{01_PM.low_code,integration,ui,cloud,cloud,monitoring]]
+# Apache AirFlow: [[{PM.low_code,integration,ui,cloud,cloud,monitoring]]
    https://dzone.com/articles/apache-airflow-20-a-practical-jump-start?edition=676391
 - community driven platfom to programmatically author, schedule and monitor workflows.
 
@@ -1059,28 +985,28 @@ Command Line Interface Guidelines
   · https://github.com/BasPH/data-pipelines-with-apache-airflow
 [[}]]
 
-# Jailer SQL "Explorer":[[{SQL,01_PM.low_code,data_architecture.management]]
+# Jailer SQL "Explorer":[[{SQL,PM.low_code,data_architecture.management]]
 @[https://github.com/Wisser/Jailer]
-• Jailer Database:  tool for database subsetting and relational data browsing.
-• The Subsetter exports consistent, referentially intact row-sets
+## Jailer Database:  tool for database subsetting and relational data browsing.
+## The Subsetter exports consistent, referentially intact row-sets
   from relational databases, generates topologically sorted SQL-DML,
   DbUnit datasets and hierarchically structured XML.
-• The Data Browser allows bidirectional navigation through the
+## The Data Browser allows bidirectional navigation through the
   database by following foreign-key-based or user-defined relationships.
 
 FEATURES
-• Exports consistent and referentially intact row-sets from your      [[qa.testing]]
+## Exports consistent and referentially intact row-sets from your      [[qa.testing]]
   productive database and imports the data into your development and
   test environment.
-• Improves database performance by removing and archiving obsolete   [[qa]]
+## Improves database performance by removing and archiving obsolete   [[qa]]
   data without violating integrity.
-• Generates topologically sorted SQL-DML, hierarchically structured
+## Generates topologically sorted SQL-DML, hierarchically structured
   XML and DbUnit datasets.
-• Data Browsing. Navigate bidirectionally through the database by
+## Data Browsing. Navigate bidirectionally through the database by
   following foreign-key-based or user-defined relationships.
-• SQL Console with code completion, syntax highlighting and
+## SQL Console with code completion, syntax highlighting and
   database metadata visualization.
-• A demo database is included with which you can get a first
+## A demo database is included with which you can get a first
    impression without any configuration effort.
 [[}]]
 
@@ -1097,14 +1023,14 @@ stage, provided by Huff0 and FSE library.
 https://www.enterprisestorageforum.com/cloud-storage/object-storage-protocol-could-mean-the-end-for-posix.html
 [[}]]
 
-# Kafka: Removing Zookeeper Dependency: kafka.zookeeper,01_PM.TODO
+# Kafka: Removing Zookeeper Dependency: kafka.zookeeper,PM.TODO
 https://www.infoq.com/podcasts/kafka-zookeeper-removing-dependency/
 
 # Noclassified Identity Technologies [[{architecture.identity]]
-• Modern Authentication (OpenID Connect, Oauth, SAML 2.0)
-• Microsoft EMS, Azure Log Analytics Server, Active Directory,
-• Kerberos, Tiering ModelMicrosoft PKI (HSM, Certificate Management),
-• Venafi CMSZero Trust Concept, B2B Guest Concept
+## Modern Authentication (OpenID Connect, Oauth, SAML 2.0)
+## Microsoft EMS, Azure Log Analytics Server, Active Directory,
+## Kerberos, Tiering ModelMicrosoft PKI (HSM, Certificate Management),
+## Venafi CMSZero Trust Concept, B2B Guest Concept
 [[}]]
 
 # Dual graph: [[{db_engine.graph_db]]
@@ -1142,7 +1068,7 @@ make effective use of the level of parallelism in this environment.
 
 # RedHat Node.js Ref. Arch.: #[nodejs_ref_arch]
 [[{architecture.event_stream,architecture.messaging,architecture.serverless,cloud,]]
-[[ cache,api,aaa,aaa.mfa,devops,data.graphql,distributed.ha,kafka,monitoring,redis]]
+[[ cache,api,aaa,aaa.mfa,devops,protocol.graphql,distributed.ha,kafka,monitoring,redis]]
 @[https://github.com/nodeshift/nodejs-reference-architecture]
 
   Functional Components           Development                     Operations
@@ -1165,23 +1091,23 @@ make effective use of the level of parallelism in this environment.
 
 # Apache Calcite: [[{data.analytics.sql,scalability,]]
 " The foundation for your next high-performance database "
-• Industry-standard SQL parser, validator and JDBC driver:
-• Query optimization:
+## Industry-standard SQL parser, validator and JDBC driver:
+## Query optimization:
   Represent your query in relational algebra, transform using planning
   rules, and optimize according to a cost model.
-• "Any data, anywhere"
+## "Any data, anywhere"
   Connect to third-party data sources, browse metadata, and optimize by
   pushing the computation to the data.
 [[}]]
 
 
 
-# Search UI: React+ElasticSearch "site search" accelerator: [[{db_engine.search,01_PM.low_code]]
+# Search UI: React+ElasticSearch "site search" accelerator: [[{db_engine.search,PM.low_code]]
   https://github.com/ProjectOpenSea/search-ui
   https://www.elastic.co/enterprise-search/search-ui?size=n_6_n
-• React Library for the fast development of modern, engaging search experiences
+## React Library for the fast development of modern, engaging search experiences
   quickly without re-inventing the wheel.
-• Use it with Elastic App Search or Elastic Site Search to have a
+## Use it with Elastic App Search or Elastic Site Search to have a
   search experience up and running in minutes.
 [[}]]
 
@@ -1257,13 +1183,7 @@ make effective use of the level of parallelism in this environment.
 @[https://cucumber.io/docs/guides/10-minute-tutorial/]
 
 # Infra vs App Monitoring: [[{tracing.101,architecture.decoupled,computing.kubernetes]]
-<pre zoom labels="
-See also @[http://www.oficina24x7.com/JAVA/java_map.html#mdc_summary]
-BºInfrastructure Monitoring:º
-  - Prometheus + Grafana
-    (Alternatives include Monit, Datadog, Nagios, Zabbix, ...)
-
-BºApplication distributed tracing/Monitoring (End-to-End Request Tracing)º
+  Application distributed tracing/Monitoring (End-to-End Request Tracing)
   - Jaeger (OpenTracing compatible), Zipkin, New Relic
     (Alternatives include AppDynamics, Instana, ...)
   -ºtrack operations inside and across different systemsº.
@@ -1378,7 +1298,7 @@ Bº(Bulk) Log Managementº
                                           ┘
 
 
-• Jaeger Components Schema:
+## Jaeger Components Schema:
 
   BºDATA INPUTº
     Application                             jaeger-collector
@@ -1410,7 +1330,7 @@ Bº(Bulk) Log Managementº
   - https://lmax-exchange.github.io/disruptor/
   - https://dzone.com/articles/when-disruptor-not-good-fit
 
-# Solr (ElasticSearch Alternative) [[{db_engine.search.solr,02_DOC_HAS.comparative,01_PM.TODO]]
+# Solr (ElasticSearch Alternative) [[{db_engine.search.solr,02_DOC_HAS.comparative,PM.TODO]]
 @[http://lucene.apache.org/solr/]
 - blazing-fast, search platform built on Apache Lucene
 - Doesn't include analytics engine like ElasticSearch
@@ -1456,7 +1376,7 @@ Bº(Bulk) Log Managementº
 - For SQL API|Gremlin API|Table API default consistency level
   configured on theºA.Cosmos DB accountºis used.
 
-• Cassandra vs Cosmos DB:
+## Cassandra vs Cosmos DB:
   Cassandra 4.x       Cosmos DB           Cosmos DB
                       (multi-region)      (single region)
   ONE, TWO, THREE     Consistent prefix   Consistent prefix
@@ -1466,7 +1386,7 @@ Bº(Bulk) Log Managementº
   LOCAL_QUORUM        Bounded staleness   Strong
   LOCAL_SERIAL        Bounded staleness   Strong
 
-• MongoDB 3.4 vs Cosmos DB
+## MongoDB 3.4 vs Cosmos DB
 
 MongoDB 3.4         Cosmos DB           Cosmos DB
                     (multi-region)      (single region)
@@ -1480,7 +1400,7 @@ Local               Consistent prefix   Consistent prefix
    can choose to do fast Apache TinkerPop Gremlin traversals for
    property graph or tuned SPARQL queries over RDF graphs..."
 
-# Genesis Distributed Testing  [[{testing,distributed.qa,01_PM.TODO]]
+# Genesis Distributed Testing  [[{testing,distributed.qa,PM.TODO]]
 @[https://docs.whiteblock.io/introduction_to_testing.html]
 The following are types of tests one can perform on a distributed system:
 - Functional Testing is conducted to test whether a system performs as it was
@@ -1511,10 +1431,10 @@ These processes and tools are further described in this documentation.
 
 [[}]]
 
-• New Linux Foundation Project Aims to Open Up and Standardize Edge Computing
+## New Linux Foundation Project Aims to Open Up and Standardize Edge Computing
 https://www.datacenterknowledge.com/edge-computing/new-linux-foundation-project-aims-open-and-standardize-edge-computing
 
-• Soft. Arch 101: Listening to Postgres: @ma
+## Soft. Arch 101: Listening to Postgres: @ma
   Listening to Postgres: How LISTEN and NOTIFY Syntax Promote High Availability at the Application Layer
   Shaun Thomas —11/8/2022
 
@@ -1795,11 +1715,7 @@ Debezium is a log-based CDC and ensures that all data changes are captured, prov
 
 More details may be found in the Debezium 2.0 release notes and this roadmap for information on plans for future releases.
 
-# New Grafana Releases Tighten Integration between Metrics and Tracing
-https://www.infoq.com/news/2022/10/grafana-92-metrics-tracing/ 
-Grafana Labs have recently released two new minor versions of their multi-platform open source analytics and interactive visualization web application. The release of version 9.1 back in August was followed by 9.2 this week. These two new versions bring a variety of improvements on their major milestone 9.0 release which we reported on earlier this year, and tightens the integration between metrics and tracing.TracingGrafana's distributed tracing product Tempo has new beta functionality. Firstly, metrics queries can now be linked to traces, which lets users quickly see relevant metric trends in user journey traces and spans. Secondly, Application Performance Management (APM) data from Tempo is now available in Grafana itself - in the form of a table showing RED (rate, errors, duration) Metrics, allowing closer correlation between tracing and metrics data.VisualisationsIn response to many support requests needing lots of "back and forth" from admins concerning problems with building panels, there is a new "get help" option available. This is a response to delays in responding to problems, cause by the support team not initially receiving enough information to properly debug a problem. The new option collects a snapshot of configuration and data to send to the support team - helping the team to diagnose and solve problems faster. In an alpha preview, it's now possible to make public dashboards, with users able to share specific dashboards to anyone - in a read-only view and with just the dashboard's default time range - without authentication. And it's now possible to use SQL-style inner and outer joins to transform data collected from external sources before displaying it in a visualisation.LokiVersion 9.0 came with a new query editor for Loki - Grafana's log aggregation system - and this has been built upon to provide dropdowns to select variables in the query variable editor. This simplifies the process of creating and editing variables used in log queries.Authentication and AuthorisationGrafana's Terraform provider has been improved. This allows admins to assign roles to users and teams using a "role_assignment" resource in Terraform.  This allows admins to deploy Grafana in a repeatable and versionable way using configuration-as-code. For those admins using the UI for assigning roles - there is also a new picker in the user interface to make it easier to create teams and assign permissions. A further improvements allows admins to group roles together, helping to reduce admin overhead.It's now possible to embed Grafana URLs in other applications by adding a JWT token to the URL. This causes Grafana to validate and authenticate the request as a specific user and seamlessly display the dashboard.In the enterprise versions, further OAuth improvements allow admins using many OAuth providers for SSO to map the groups and roles from that provider onto Grafana admin roles, easing the configuration of privileged users in Grafana. Also, role-based access control (RBAC) is now possible for Grafana plugins, integrations and solutions.Also containing improvements to the UI for Google Cloud Monitoring, and many other improvements and fixes, Grafana 9.2 is available now.
-
-# Netflix Custom High-Throughput Priority Queue Backed by Redis, Kafka and Elasticsearch
+ Netflix Custom High-Throughput Priority Queue Backed by Redis, Kafka and Elasticsearch
   https://www.infoq.com/news/2022/10/netflix-timestone-priority-queue/
 
 # zinclabs/zinc @ma
@@ -1856,29 +1772,7 @@ roadmap
   TCP and gRPC protocols
   https://github.com/TykTechnologies/tyk
 
-# graphql
-https://betterprogramming.pub/graphql-from-excitement-to-deception-f81f7c95b7cf
-
-# GraphQL taxonomy:  [[{]]
-  Software teams adopt GraphQL to accelerate feature delivery and
-  improve the developer experience. But as adoption grows, companies
-  struggle with scaling GraphQL across teams. The solution to scaling
-  GraphQL is a single, unified data graph federated across multiple
-  teams. A federated graph provides consistency and stability for the
-  organization while empowering teams to go faster and adapt the graph
-  over time. Teams also benefit from shared infrastructure and
-  learnings. This e-book covers the key considerations for
-  consolidating to a federated graph.
-
-  What you’ll learn:
-      Why and when you should consolidate your GraphQL efforts into a unified graph
-      How consolidation helps scale GraphQL across your company
-      How to become a Graph Champion to ensure successful rollout of your graph
-      How to design a consolidated architecture with Federation
-      Federated schema design best practices
-[[}]]
-
-# Kensa: OS Labs accelerated GraphQL monitoring tool [[{]]
+# Kensa: OS Labs accelerated GraphQL monitoring tool [[{monitoring]]
 https://medium.com/@raygkim/kensa-8cdecfae73af
 [[}]]
 
@@ -1945,3 +1839,105 @@ https://hardzone.es/noticias/componentes/fin-ssd-sata/
 
 # (Dapr) v1.10 Released:  (Distributed Application Runtime)
   https://www.infoq.com/news/2023/03/dapr-version-one-ten-released/
+
+# Apache Software Stack [[{02_doc_has.taxonomy]]
+Technology  Apache Airflow  An open-source workflow management platform used to programmatically author, schedule and monitor workflows.
+Technology  Apache Ant  A Java library and command-line tool that allows to drive processes described in build files as targets and extension points dependent upon each other. Ant supplies a number of built-in tasks allowing to compile, assemble, test and run Java applications. Ant can also be used effectively to build non Java applications, for instance C or C++ applications.
+Technology  Apache Axis An open-source, XML based Web service framework. It consists of a Java and a C++ implementation of the SOAP server, and various utilities and APIs for generating and deploying Web service applications. Using Apache Axis, developers can create interoperable, distributed computing applications. Axis development takes place under the auspices of the Apache Software Foundation.
+Technology  Apache Camel  Open source integration framework that provides java based implementation of the Enterprise Integration Patterns, including rule based message routing, transformation and mediation capabilities.
+Technology  Apache Cassandra  A free and open-source distributed database management system designed to handle large amounts of data across many commodity servers.
+Technology  Apache CouchDB  A non-relational or NoSQL database developed to fully embrace the web. In CouchDB, data is stored within JSON documents which can be accessed and its indices can be queried via HTTP
+Technology  Apache CouchDB Administration A set of processes that help install, support and manage CouchDB, a database open source software.
+Technology  Apache CXF  Open source, fully featured Web services framework that originated as the combination of two open source projects: Celtix developed by IONA Technologies (acquired by Progress Software in 28) and Xfire. It helps you build and develop services using frontend programming APIs, like JAX WS and JAX RS
+Technology  Apache Flex Develop and deliver the next level of Web application development and rich Internet application solutions using Adobe/Macromedia Flex which offers a much more robust experience for the user where productivity is bolstered by ease of use, streamlined workflow, and real time interactivity that is impossible to accomplish in hypertext markup language (HTML).
+Technology  Apache Flink  An open source stream processing framework developed by the Apache Software Foundation. The core of Apache Flink is a distributed streaming dataflow engine written in Java and Scala. Flink executes arbitrary dataflow programs in a data-parallel and pipelined manner.
+Technology  Apache Flume  A service for efficiently collecting, aggregating, and moving large amounts of log data. It is an architecture based on streaming data flows. It uses an extensible data model that allows for online analytic applications.
+Technology  Apache Hadoop Open source, Java-based programming framework that supports the processing and storage of extremely large data sets in a distributed computing environment
+Technology  Apache Hadoop Administration  A set of processes that help install support and manage Apache Hadoop, an open-source software framework used for distributed storage and processing of big datasets using the MapReduce programming model.
+Technology  Apache Hive A data warehouse infrastructure built on top of Hadoop for providing data summarization, query, and analysis. It gives an SQL-like interface to query data stored in various databases and file systems that integrate with Hadoop.
+Technology  Apache HTTP Server  Open source web server that delivers content that can be accessed through the internet. This includes HTML documents, multimedia such as images, CSS style sheets, and client-side scripts such as JavaScript
+Technology  Apache Ivy  Transitive dependency manager which works to resolve project dependencies
+Technology  Apache Jena A Java framework for building Semantic Web applications. Jena provides a collection of tools and Java libraries to help you to develop semantic web and linked-data apps, tools and servers.
+Technology  Apache JMeter An application used to test performance both on static and dynamic resources. Simulates a heavy load on a server, group of servers, network or object to test its strength or to analyze overall performance under different load types
+Technology  Apache Kafka  A high-throughput distributed publish-subscribe messaging system that can handle hundreds of megabytes of reads and writes per second from thousands of clients.
+Technology  Apache Kudu An Open-source column-oriented cross-platform Software ecosystem for Apache Hadoop intended for structured data that supports low latency random access together with analytical access patterns. It is compatible with data processing frameworks in the Hadoop environment. It provides Hadoop storage layer, to enable fast analytics on fast data.
+Technology  Apache Lucene A text search engine library written entirely in Java. It is a technology suitable for nearly any application that requires full-text search, especially cross-platform.
+Technology  Apache Maven  A software project management and comprehension tool that based on the concept of a project object model (POM), can manage a project's build, reporting and documentation from a central piece of information.
+Technology  Apache Mesos  Apache Mesos is a cluster manager that provides resource isolation and sharing across distributed applications or frameworks. It abstracts CPU, memory, storage, and other compute resources away from machines (physical or virtual), enabling fault-tolerant and elastic distributed systems to be built and run.
+Technology  Apache MXNet  An open-source deep learning framework that allows you to define, train, and deploy deep neural networks on a wide array of devices, from cloud infrastructure to mobile devices. Identify, build, develop and design these neural networks on the devices.
+Technology  Apache MyFaces  An Apache software foundation project that creates and maintains an open-source JSF implementation along with several libraries of JSF components that can be deployed on the core implementation.
+Technology  Apache NiFi A software project from the Apache Software Foundation which enables the automation of data flow between systems through moving and tracking data. It is written using flow-based programming and a web-based user interface to manage dataflows in real time.
+Technology  Apache Oozie  A workflow scheduler system to manage Apache Hadoop jobs.
+Technology  Apache OpenNLP  A machine learning based toolkit for the processing of natural language text. It supports the most common NLP tasks, such as language detection, tokenization, sentence segmentation, part-of-speech tagging, named entity extraction, chunking, parsing and coreference resolution.
+Technology  Apache OpenOffice Open-source office productivity software suite. Used for word processing, spreadsheets, presentations, graphics, databases. It stores all data in an international open standard format and can also read and write files from other common office software packages.
+Technology  Apache Pig  A platform for creating programs that run on Apache Hadoop. The language for this platform is called Pig Latin.
+Technology  Apache ServiceMix A flexible, open-source integration container that unifies the features and functionality of Apache ActiveMQ, Camel, CXF, and Karaf into a platform you can use to build your own integrations solutions.
+Technology  Apache Solr An open source enterprise search platform, written in Java, from the Apache Lucene project. Its major features include full-text search, hit highlighting, faceted search, real-time indexing, dynamic clustering, database integration, NoSQL features[1] and rich document (e.g., Word, PDF) handling.
+Technology  Apache Spark  Open-source cluster-computing framework which is used for large-scale data processing.
+Technology  Apache Spark Operations A set of processes that help install, support and manage Apache Spark, an open-source cluster-computing framework.
+Technology  Apache Sqoop  A command-line interface application for transferring data between relational databases and Hadoop. It supports incremental loads of a single table or a free form SQL query as well as saved jobs which can be run multiple times to import updates made to a database since the last import.
+Technology  Apache Storm  Open source distributed real time computation system that is used to process unbounded streams of data for real time processing
+Technology  Apache Struts An open source framework used for developing Java Web applications using the model-view-controller (MVC) design pattern.
+Technology  Apache Subversion (SVN) An open source version control system, used to maintain both current and historical versions of files such as source code, Web pages and documentation.
+Technology  Apache Tapestry An open-source framework for creating dynamic, robust, highly scalable web applications in Java. Tapestry complements and builds upon the standard Java Servlet API, and so it works in any servlet container or application server.
+Technology  Apache Tomcat Administration  An open source Java Servlet Container developed by the Apache Software Foundation (ASF). Tomcat implements several Java EE specifications including Java Servlet, JavaServer Pages (JSP), Java EL, and WebSocket, and provides a `pure Java` HTTP web server environment in which Java code can run.
+Technology  Apache Tomcat Application Deployment  A web application that can be used interactively (via HTML GUI) or programmatically (via URL based API) to deploy and manage web applications.
+Technology  Apache Velocity A platform that helps organizations designed and manage a template language to reference objects defined in Java code, to achieve separation between the presentation tier and business tier in Web applications.
+Technology  Apache Wicket A component-based Web application framework for the Java programming language.
+Technology  Apache Zookeeper  A centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services.
+
+# Meta Switches to MySQL Raft to Improve Reliability and Operational Simplicity
+https://www.infoq.com/news/2023/05/meta-facebook-mysql-raft/
+
+...Peter Zaitsev, founder at Percona and open source advocate, asks
+instead:
+    Why is Facebook building MySQL Raft rather than using or
+improving MySQL Group Replication?
+
+... One of the largest MySQL deployments in the world, Meta’s MySQL
+datastore is a massively sharded, geo-replicated deployment with
+millions of shards. Powering the social graph and services like
+Messaging, Ads, and Feed, the cluster holds petabytes of data,
+running on thousands of servers in several regions and data centers.
+Anirban Rahut, Abhinav Sharma, Yichen Shen, and Ahsanul Haque,
+software and production engineers at Meta, explain.
+
+Raft for MySQL is based on Apache Kudu, with Meta modifying it for
+the needs of MySQL and publishing a fork as an open-source project,
+kuduraft. New features added to kuduraft are FlexiRaft, an option to
+support two different intersecting quorum, and proxying, the ability
+to use a proxy intermediate node and reduce network bandwidth.
+Furthermore, the compression and log abstraction improvements allow
+the compression of binary log payloads before distribution and
+different physical logfile implementations.
+
+https://kudu.apache.org/
+ Apache Kudu is an open source distributed data storage engine
+ (C++ library)
+
+Kudu is specifically designed for use cases that require fast
+analytics on fast (rapidly changing) data. Engineered to take
+advantage of next-generation hardware and in-memory processing, Kudu
+lowers query latency significantly for engines like Apache Impala,
+Apache NiFi, Apache Spark, Apache Flink, and more.
+
+https://github.com/facebook/kuduraft
+Raft C++ Library  based on the Raft implementation in Apache Kudu
+
+
+[[}]]
+
+## Jepsen Project  [[{distributed.qa,PM.TODO]]
+@[https://jepsen.io/]
+Jepsen is an effort to improve the safety of distributed databases, queues,
+consensus systems, etc. We maintain an open source software library for systems
+testing, as well as blog posts and conference talks exploring particular
+systems’ failure modes. In each analysis we explore whether the system lives
+up to its documentation’s claims, file new bugs, and suggest recommendations
+for operators.
+
+Jepsen pushes vendors to make accurate claims and test their software
+rigorously, helps users choose databases and queues that fit their needs, and
+teaches engineers how to evaluate distributed systems correctness for
+themselves.
+[[}]]

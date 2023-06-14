@@ -1,10 +1,10 @@
 # AAA Architecture [[{aaa]]
-• keycloak: [[{aaa.oauth,qa.standards]]
+## keycloak: [[{aaa.oauth,qa.standards]]
 @[https://www.keycloak.org/]
 @[https://medium.com/keycloak/keycloak-essentials-86254b2f1872]                   [TODO]
 @[https://medium.com/keycloak/keycloak-realm-client-configuration-dfd7c8583489]
 
-• See also @[../WebTechnologies/map.html#keycloak_angular_openid]
+* See also @[../WebTechnologies/map.html#keycloak_angular_openid]
 
 """Add authentication to applications and secure services with minimum fuss"""
 -  No need to deal with storing users or authenticating users.
@@ -65,11 +65,11 @@ Ex Use Case:
                   - "create-student-grade"
                   - "view-student-grade"
                   - "view-student-profile"
-                  → go to tab "Client Scopes" → Default Client Scopes and   
+                  → go to tab "Client Scopes" → Default Client Scopes and
                     add “roles” and “profile” to Assigned Default Client
                     Scopes.
                     → go to "jakarta-school details" page → Mappers →
-                      Create Protocol Mappers: 
+                      Create Protocol Mappers:
                       - Set mappers to display the client roles on the
                         Userinfo API:
                         Name               : roles
@@ -88,7 +88,7 @@ Ex Use Case:
                           Last Name     : M
                           User Enabled  : ON
                          *Email Verified: OFF*
-                        → Go to tab "Role Mappings" → Client Roles 
+                        → Go to tab "Role Mappings" → Client Roles
                           (for each user in jakarta-school)
                           Check that roles perm. are enabled:
                           "create-student-grade"
@@ -98,43 +98,43 @@ Ex Use Case:
 
  *Spring Boot Java App using Keycloak for AA*
   - pom.xml:
-    ˂?xml version="1.0" encoding="UTF-8"?˃
-    ...  
-        ˂dependencies˃
-        ...  
-            ˂dependency˃
-                ˂groupId˃com.auth0˂/groupId˃
-                ˂artifactId˃jwks-rsa˂/artifactId˃
-                ˂version˃0.12.0˂/version˃
-            ˂/dependency˃
-    
-            ˂dependency˃
-                ˂groupId˃com.auth0˂/groupId˃
-                ˂artifactId˃java-jwt˂/artifactId˃
-                ˂version˃3.8.3˂/version˃
-            ˂/dependency˃
-        ˂/dependencies˃
-    ˂/project˃
+    <?xml version="1.0" encoding="UTF-8"?>
+    ...
+        <dependencies>
+        ...
+            <dependency>
+                <groupId>com.auth0</groupId>
+                <artifactId>jwks-rsa</artifactId>
+                <version>0.12.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.auth0</groupId>
+                <artifactId>java-jwt</artifactId>
+                <version>3.8.3</version>
+            </dependency>
+        </dependencies>
+    </project>
 
   - Config. properties file:
     server.error.whitelabel.enabled=false
     spring.mvc.favicon.enabled=false
     server.port = 8082
-    
+
     keycloak.client-id=jakarta-school
     keycloak.client-secret=197bc3b4-64b0-452f-9bdb-fcaea0988e90
     keycloak.scope=openid, profile
     keycloak.authorization-grant-type=password
-    
+
     keycloak.authorization-uri=http://localhost:8080/auth/realms/education/protocol/openid-connect/auth
     keycloak.user-info-uri=http://localhost:8080/auth/realms/education/protocol/openid-connect/userinfo
     keycloak.token-uri=http://localhost:8080/auth/realms/education/protocol/openid-connect/token
     keycloak.logout=http://localhost:8080/auth/realms/education/protocol/openid-connect/logout
     keycloak.jwk-set-uri=http://localhost:8080/auth/realms/education/protocol/openid-connect/certs
     keycloak.certs-id=vdaec4Br3ZnRFtZN-pimK9v1eGd3gL2MHu8rQ6M5SiE
-    
+
     logging.level.root=INFO
-    
+
   - Config: Get the Keycloak public certificate ID from:
     Keycloak → Education → Keys → Active (with RSA-generated key selected).
 
@@ -145,13 +145,13 @@ Ex Use Case:
       private String keycloakLogout;
 
       public void logout(String refreshToken) throws Exception {
-        MultiValueMap˂String, String˃ map = new LinkedMultiValueMap˂˃();
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("client_id",clientId);
         map.add("client_secret",clientSecret);
-        map.add("refresh_token",refreshToken); // ← R*WARN*: Use refresh 
+        map.add("refresh_token",refreshToken); // ← R*WARN*: Use refresh
                                                //   (vs access) token
 
-        HttpEntity˂MultiValueMap˂String, String˃˃ request = new HttpEntity˂˃(map, null);
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, null);
         restTemplate.postForObject(keycloakLogout, request, String.class);
       }
 
@@ -159,15 +159,15 @@ Ex Use Case:
       @Value("${keycloak.user-info-uri}")
       private String keycloakUserInfo;
       private String getUserInfo(String token) {
-        MultiValueMap˂String, String˃ headers = new LinkedMultiValueMap˂˃();
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add("Authorization", token);
-        HttpEntity˂MultiValueMap˂String, String˃˃ request =
-          new HttpEntity˂˃(null, headers);
+        HttpEntity<MultiValueMap<String, String>> request =
+          new HttpEntity<>(null, headers);
         return restTemplate.postForObject(keycloakUserInfo, request, String.class);
       }
 
     - Authorization (== "role valid for a given API"?) alternatives:
-      - Alt 1. determine what role a bearer token brings by verifying it 
+      - Alt 1. determine what role a bearer token brings by verifying it
                against Keycloak’s userinfo API
              R*Drawback:* multiple roundtrip request needed
         following response from Keycloak is expected:
@@ -233,7 +233,7 @@ Ex Use Case:
                         (RSAPublicKey) jwk.getPublicKey(), null);
               algorithm.verify(jwt);                // ←  *check signature*
 
-              List˂String˃ roles = ((List)jwt.getClaim("realm_access").
+              List<String> roles = ((List)jwt.getClaim("realm_access").
                                     asMap().get("roles"));
               if(!roles.contains("teacher"))        //  ←  *check roles*
                   throw new Exception("not a teacher role");
@@ -249,9 +249,9 @@ Ex Use Case:
           }
 [[}]]
 
-• FreeIPA:
+## FreeIPA:
 @[https://www.reddit.com/r/linuxadmin/comments/apbjtc/freeipa_groups_and_linux_usernames/]
 
-• (Community-driven) User Controlled Authorization Network (UCAN) STANDARD.
+## (Community-driven) User Controlled Authorization Network (UCAN) STANDARD.
   E.g use in nft.storage: https://github.com/nftstorage/nft.storage/issues/851
 [[aaa}]]

@@ -1,13 +1,13 @@
-# https://dapr.io
+# https://dapr.io [[{]]
   APIs for building portable and reliable microservices
   Leverage industry best practices and focus on your application??s logic.
 
-• https://github.com/mstrYoda/awesome-dapr
+## https://github.com/mstrYoda/awesome-dapr
   Official Projects
   Dapr.io - Dapr, Distributed application runtime.
   Dapr Components Contrib,
   Cli, Dashboard, Go SDK, .Net SDK, DotNet SDK, Java SDK, Rust SDK,
   Javascript SDK,, Python SDK,, C++ SDK,, PHP SDK, Quickstarts, Samples
 
-https://github.com/mstrYoda/awesome-dapr
-
+* https://github.com/mstrYoda/awesome-dapr
+[[}]]

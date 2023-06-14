@@ -11,7 +11,7 @@
 
 # MongoDB Summary   [[{db_engine.document_store.mongo]] #[mongo_summary]
 
-• 14 Things I Wish I’d Known When Starting with MongoDB [[{01_PM.TODO]]
+## 14 Things I Wish I’d Known When Starting with MongoDB [[{PM.TODO]]
   https://www.infoq.com/articles/Starting-With-MongoDB
 
 14 Things I Wish I’d Known When Starting with MongoDB
@@ -308,7 +308,7 @@ $ mongo                                  ← Launch mongo shell
 # db.collecti01.deleteOne( filter, opts) ← or deleteMany(filter, opts)
 
 
-• MONGODB READ-CONCERN LEVELS:  [[{db_engine.101]]
+## MONGODB READ-CONCERN LEVELS:  [[{db_engine.101]]
 - Control consistency and isolation properties of data reads
   ( from replica sets & replica set shards ).
   LOCAL       : returns data from instace without guaranteing that
@@ -322,7 +322,7 @@ $ mongo                                  ← Launch mongo shell
                 writes
   SNAPSHOT    : Only available for transactions on multi documents.
 
-• MONGODB WRITE CONCERN LEVELS:
+## MONGODB WRITE CONCERN LEVELS:
   - Control level of acknowledgment for a given write operation
     sent to mongod and mongos (for sharded collections)
 
@@ -337,7 +337,7 @@ $ mongo                                  ← Launch mongo shell
 [[}]]
 
  WARN: On failure MongoDB does not rollback the data, data may eventually get stored.
-• MongoDB INDEXES:
+## MongoDB INDEXES:
   _id Index (Default index, can NOT be dropped)
   1. Single Field:
   2. Multikey Field:

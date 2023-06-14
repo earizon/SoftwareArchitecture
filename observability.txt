@@ -1,56 +1,129 @@
-OBSERVABILITY = LOGING + MONITORING + TRACING [[{observability,101]]
+# OBSERVABILITY = LOGING + MONITORING + TRACING [[{observability.101]]
 
-# Distributed Tracing [[{tracing.distributed,db_engine.log_collect.prometheus,qa.standards,01_PM.TODO]]
-• OpenTelemetry
+## Distributed request-tracing with Zipkin b3 standard [[{tracing.distributed.b3,standards.b3,PM.low_code]]
+
+The b3 standards allows to automatically trace distributed calls
+with zero-code
+
+    TraceContext    Request Headers
+    @Client+Server
+    Tracer
+    ─────────────
+    TraceId         X-B3-TraceId      : (128|64) bits shared by every span
+                                         (32|16) lower-hex character encoding.
+    ParentSpanId    X-B3-ParentSpanId : 64 bits, position of parent  operation in trace tree
+                                        ("empty" for root)
+    SpanId          X-B3-SpanId       : 64 bits,      position of current operation in trace tree
+
+    Sampling        X-B3-Sampled       <·· (Optional, can be sent alone), otherwise it always refer
+      decision                             to the trace ID (vs span ID)
+    └───┬────┘                             e.g:
+        ·                                  X-B3-Sampled: 0 <·· Deny (NoOp@Server Tracer)
+        ·                                  X-B3-Sampled: 1 <·· Accept
+  * Defer  : (absence of sampling state)
+             Used by proxies,... for pre-provisioning trace identifiers.
+             (not yet sent to tracer)
+  * Deny   : achieve probabilistic rate or prevent certain paths from tracing (health checks,...).
+  * Accept : Ensure that certain paths are always traced (in a probablistic way,..),
+  * Debug: : `X-B3-Flags: 1` (least common use case) like Accept, but additionally reporting
+             `Span.debug = true` for each span in the trace.
+
+# B3 Encodings (done by libraries/frameworks/proxies) include :
+*  multi-header HTTP headers (2012): X-B3-... headers
+* single-header HTTP:                X-B3-${name}
+* [binary encoding]
+* Custom Encodings
+
+Note: Http headers are case-insensitive, other transports are NOT. Default ot lowercase keys.
+
+## Single Header
+`b3={TraceId}-{SpanId}-{SamplingState}-{ParentSpanId}`
+
+For example, the following state encoded in multiple headers:
+```
+X-B3-TraceId: 80f...
+X-B3-ParentSpanId: 05e3...
+X-B3-SpanId: e457b5a2e4d86bd1
+X-B3-Sampled: 1
+```
+
+Becomes one `b3` header, for example:
+```
+b3: 80f...-e457b5a2e4d86bd1-1-05e3...
+```
+
+*Note:* When only propagating a sampling decision, the header is still named `b3`, but only contains the sampling state.
+
+A deny decision encodes as:
+```
+b3: 0
+```
+
+## 128-bit trace ID:
+* supported:  Can start traces with 128-bit trace IDs, propagates and reports them as 128-bits
+* epoch128: Can start traces with 128-bit trace IDs which are prefixed with epoch seconds
+
+NOTE: When trace ID is 128-bits and the first 32 bits are epoch seconds,
+      the ID can be translated into an Amazon Web Services ID.
+      Tracers who do this can tunnel through ELBs, for example.
+
+See also:
+* [w3c standard](https://www.w3.org/blog/2019/12/trace-context-enters-proposed-recommendation/)
+[[}]]
+
+## OpenTelemetry [[{]]
 @[https://opentelemetry.io/]
 - Emerging suite of standards for (Cloud Native) Observability.
 - integration with modern observability SaaS providers like
   Honeycomb, Datadog, Stackdriver, ...
 
-• OpenTelemetry Announces Roadmap for Metrics Specification:
+## OpenTelemetry Announces Roadmap for Metrics Specification:
 @[https://www.infoq.com/news/2021/03/opentelemetry-metrics-roadmap/]
   The OpenTelemetry project announced its roadmap for its metrics
   specification. The roadmap includes a stable metrics API/SDK, metrics
   data model and protocol, and compatibility with Prometheus.
 [[}]]
 
-# Zipkin [[{tracing.distributed,01_PM.low_code,_PM.TODO]]
+## Zipkin [[{tracing.distributed,PM.low_code,PM.TODO]]
 @[https://zipkin.io/]
 [[}]]
 
-# Jepsen Project  [[{distributed.qa,01_PM.TODO]]
-@[https://jepsen.io/]
-Jepsen is an effort to improve the safety of distributed databases, queues,
-consensus systems, etc. We maintain an open source software library for systems
-testing, as well as blog posts and conference talks exploring particular
-systems’ failure modes. In each analysis we explore whether the system lives
-up to its documentation’s claims, file new bugs, and suggest recommendations
-for operators.
+## Autometrics!! [[{low_code,qa.UX]]
+@[https://github.com/autometrics-dev]
+* Why Autometrics?  Simplifying code-level observability
 
-Jepsen pushes vendors to make accurate claims and test their software
-rigorously, helps users choose databases and queues that fit their needs, and
-teaches engineers how to evaluate distributed systems correctness for
-themselves.
+Many modern observability tools promise to make life "easy for
+developers" by automatically instrumenting your code with an agent or
+eBPF. Others ingest tons of logs or traces -- and charge high fees
+for the processing and storage.
+
+Most of these tools treat your system as a black box and use complex
+and pricey processing to build up a model of your system. This,
+however, means that you need to map their model onto your mental
+model of the system in order to navigate the mountains of data.
+
+Autometrics takes the opposite approach. Instead of throwing away
+valuable context and then using compute power to recreate it, it
+starts inside your code. It enables you to understand your production
+system at one of the most fundamental levels: from the function:
+  It makes it easy to instrument any function with the most useful
+metrics: request rate, error rate, and latency. Autometrics uses
+instrumented function names to generate Prometheus queries so you
+don't need to hand-write complicated PromQL.
+
+   │instrument code with  │··>│Write queries│
+   │function─level metrics│   │automatically│
+                                   ·
+    ┌·····························─┘
+    ·
+    ├··>│ Insert links to│··┐
+    ·   │ charts in IDE  │  ·
+    ·                       ·     │ Easier debugging │
+    ├··>│ Easily define  │  ├····>│ for developers   │
+    ·   │ alerts/SLOs    │  ·     │ & more reliable  │
+    ·                       ·     │ software for     │
+    └··>│ Dashboards to  │··┘     │ users            │
+        │ Visualize data │
+
 [[}]]
-
-# Grafana 9 Brings Big Improvements to Alerting and User Experience  @ma
-  https://www.infoq.com/news/2022/07/grafana-9-released/ 
-    Changes to the alerting experience, trialed as an option in earlier
-  versions of Grafana, have now been made the default, leading to
-  several improvements:
-    Alerts are now streamlined and simplified across multiple data
-  sources and Grafana deployments. 
-    Alerts are now available based on a single rule, regardless of
-  whether they are tied to a specific panel or dashboard. This removes
-  a limitation that was previously in place.
-    Alerts can now be multi-dimensional - so a single alert can
-  be triggered by more than one item triggering the rule.   
-    Grouping and routing of alerts are also improved, with
-  notification policies allowing admins to bundle alerts together -
-  preventing a potential storm of notifications when multiple alerts
-  fire.   
-   Granular alert muting and silencing are also now possible, allowing
-  admins to prevent notifications at certain times (such as weekends), and to
-  turn off notifications for an already existent alert temporarily.
-
-[[observability}]]
+[[observability.101}]]

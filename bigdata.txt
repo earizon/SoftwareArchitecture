@@ -1,43 +1,43 @@
-# BigData Tools Matrix: [[{data.cleaning,resource,bigdata,101,01_PM.TODO]]
----------------------------------------------------------------------------------------------------
-SandBox/Notebook   | Jupiter,...              | DataLab                 | JupiterHub        | MLSutdio
----------------------------------------------------------------------------------------------------
-Hadoop grid        | Cloudera/HortonWorks,... | DataProc                | EMR               | HDinsights
----------------------------------------------------------------------------------------------------
-Ingest             | Kafka                    | Pub/Sub                 | Kinesys           | Event Hub
----------------------------------------------------------------------------------------------------
-Stream Processing  | Apache Flume/ETL         | DataFlow                | Data Pipeline     | Data Factory
----------------------------------------------------------------------------------------------------
-Neural Networks    | TensorFlow               | Mach.Learning Eng+APIs  | Tensorflow on AWS | MLStudio
----------------------------------------------------------------------------------------------------
-DwH                | Teradata Sybase IQ       | BigQuery                | Redshift          | AzureDB DWH
----------------------------------------------------------------------------------------------------
+# BigData Tools Matrix: [[{data.cleaning,resource,bigdata,101,PM.TODO]]
+-------------------------------------------------------------------------------------------------
+SandBox/Notebook | Jupiter,...              | DataLab                 | JupiterHub        | MLSutdio
+-------------------------------------------------------------------------------------------------
+Hadoop grid      | Cloudera/HortonWorks,... | DataProc                | EMR               | HDinsights
+-------------------------------------------------------------------------------------------------
+Ingest           | Kafka                    | Pub/Sub                 | Kinesys           | Event Hub
+-------------------------------------------------------------------------------------------------
+Stream Processing| Apache Flume/ETL         | DataFlow                | Data Pipeline     | Data Factory
+-------------------------------------------------------------------------------------------------
+Neural Networks  | TensorFlow               | Mach.Learning Eng+APIs  | Tensorflow on AWS | MLStudio
+-------------------------------------------------------------------------------------------------
+DwH              | Teradata Sybase IQ       | BigQuery                | Redshift          | AzureDB DWH
+-------------------------------------------------------------------------------------------------
 
-Others             | MongoDB, Cassandra,...   | BigQuery, Bigtable      | Redshift          | CosmosDB
+Others           | MongoDB, Cassandra,...   | BigQuery, Bigtable      | Redshift          | CosmosDB
 [[}]]
 
 
 # Apache Flink — Stateful Computations over Data Streams  [[{]]
   https://flink.apache.org/
-  Apache Flink is a framework and distributed processing engine for 
-  stateful computations over unbounded and bounded data streams. Flink 
-  has been designed to run in all common cluster environments, perform 
+  Apache Flink is a framework and distributed processing engine for
+  stateful computations over unbounded and bounded data streams. Flink
+  has been designed to run in all common cluster environments, perform
   computations at in-memory speed and at any scale.
-  Flink integrates with all common cluster resource managers such as 
-  Hadoop YARN and Kubernetes, but can also be setup to run as a 
+  Flink integrates with all common cluster resource managers such as
+  Hadoop YARN and Kubernetes, but can also be setup to run as a
   stand-alone cluster.
 
-    Flink is designed to run stateful streaming applications at any 
-  scale. Applications are parallelized into possibly thousands of tasks 
-  that are distributed and concurrently executed in a cluster. 
-  Therefore, an application can leverage virtually unlimited amounts of 
-  CPUs, main memory, disk and network IO. Moreover, Flink easily 
-  maintains very large application state. Its asynchronous and 
-  incremental checkpointing algorithm ensures minimal impact on 
-  processing latencies while guaranteeing exactly-once state 
+    Flink is designed to run stateful streaming applications at any
+  scale. Applications are parallelized into possibly thousands of tasks
+  that are distributed and concurrently executed in a cluster.
+  Therefore, an application can leverage virtually unlimited amounts of
+  CPUs, main memory, disk and network IO. Moreover, Flink easily
+  maintains very large application state. Its asynchronous and
+  incremental checkpointing algorithm ensures minimal impact on
+  processing latencies while guaranteeing exactly-once state
   consistency.
 
-    Users reported impressive scalability numbers for Flink 
+    Users reported impressive scalability numbers for Flink
   applications running in their production environments, such as
   - applications processing multiple trillions of events per day,
   - applications maintaining multiple terabytes of state, and

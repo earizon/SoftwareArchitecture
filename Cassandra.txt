@@ -15,7 +15,7 @@
   - NOTE: It is not unusual to see Cassandra clusters
     with 100+ nodes in production enviroments.
 
-• Cassandra whitepaper:
+* Cassandra whitepaper:
   - DISTRIBUTED KEY-VALUE (of KEY-VALUE) STORE.
   - developed at Facebook.
   - data and processing spread out across many commodity servers
@@ -112,17 +112,17 @@ cluster 1 ←→ 1+ Keyspace 1 ←→ N Column Family   ←→ 0+ Row
   - Replication set at            which map to a single
     Data Center bounds            complete token ring
 
-• Cassandra CQL:
+## Cassandra CQL:
   - similar syntax to SQL
   - works with table data.
   - Available Shells: cqlsh | DevCenter | JDBC/ODBC drivers
 
-• Cassandra Coordinator Node:
+## Cassandra Coordinator Node:
   - Node where client connects for a read/write request
     acting as a proxy between the client and Cassandra
     internals.
 
-• Cassandra Key Components:
+## Cassandra Key Components:
  Gossip
     A peer-to-peer communication protocol in which nodes periodically exchange
 state information about themselves and about other nodes they know about. This
@@ -187,7 +187,7 @@ https://rene-ace.com/cassandra-101-understanding-what-is-cassandra/
 # Cassandra+Spark:
 @[https://es.slideshare.net/chbatey/1-dundee-cassandra-101]
 
-• Similar projects:
+## Similar projects:
 - Voldermort: developed by Linked-In.
 @[https://www.project-voldemort.com/voldemort/]
 
@@ -209,7 +209,7 @@ https://rene-ace.com/cassandra-101-understanding-what-is-cassandra/
       in the form of SSTables.
   - Transient Replication (experimental)
 
-• Cassandra cstat: Orchestration Tool by Spotify
+## Cassandra cstat: Orchestration Tool by Spotify
 @[https://github.com/spotify/cstar]
 
 @[www.infoq.com/news/2018/10/spotify-cstar]
@@ -244,7 +244,7 @@ https://rene-ace.com/cassandra-101-understanding-what-is-cassandra/
    OS X or Linux with python3, and Bourne style shell."""
 
 
-• Dynamo vs Cassandra[[{02_doc_has.comparative]]
+## Dynamo vs Cassandra [[{02_doc_has.comparative]]
   https://sujithjay.com/data-systems/dynamo-cassandra/
   Dynamo vs Cassandra : Systems Design of NoSQL Databases
 

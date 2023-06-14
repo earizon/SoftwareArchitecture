@@ -49,7 +49,7 @@ s   |
 [[}]]
 
 # Apache NiFi: Data Routing [[{enterprise_patterns,data.integration,architecture.event_stream]]
-                            [[01_PM.low_code,ui,architecture.decoupled,kafka,]]
+                            [[PM.low_code,ui,architecture.decoupled,kafka,]]
 @[https://nifi.apache.org]
 - no-code, .drag-and-drop Web-GUI to build pipelines for
   data route+transform (99% NiFi users will never see a line of code)
@@ -94,13 +94,13 @@ REFS:
 @[https://stackoverflow.com/questions/65625166/apache-camel-vs-apache-nifi]
 [[}]]
 
-# GraphQL Engine: [[{data.analytics,01_PM.low_code,_PM.TODO]]
-• Blazing fast, instant realtime GraphQL APIs for DB with fine
+# GraphQL Engine: [[{data.analytics,PM.low_code,PM.TODO]]
+## Blazing fast, instant realtime GraphQL APIs for DB with fine
   grained access control, also trigger webhooks on database events.
-• POLE POSITION in GitHub for Top 32 Automatic Api Open Source Projects on Github (
+## POLE POSITION in GitHub for Top 32 Automatic Api Open Source Projects on Github (
   https://awesomeopensource.com/projects/automatic-api
 
-• Ex:
+## Ex:
   PostgreSQL data                   GraphQL subscription                      UI (Web, Mobile, ...)
 
   ORDERS TABLE                       subscription fetchOrder {    ·········─→ event pushed to update UI
@@ -113,27 +113,27 @@ REFS:
                                      }
 [[}]]
 
-# NoCoDB: DDBB to spreedsheet:  [[{data.analytics,01_PM.low_code,_PM.TODO]]
+# NoCoDB: DDBB to spreedsheet:  [[{data.analytics,PM.low_code,PM.TODO]]
 @[https://www.nocodb.com/]
-• Second position in GitHub for Top 32 Automatic Api Open Source Projects on Github (
+## Second position in GitHub for Top 32 Automatic Api Open Source Projects on Github (
 
 https://awesomeopensource.com/projects/automatic-api
-• Open Source "Airtable Alternative"
-• Turns any database into a smart spreadsheet.
+## Open Source "Airtable Alternative"
+## Turns any database into a smart spreadsheet.
 [[}]]
 
-# Metabase [[{db_engine,data.analytics,01_PM.low_code,_PM.TODO]]
+# Metabase [[{db_engine,data.analytics,PM.low_code,PM.TODO]]
 https://github.com/metabase/metabase
-• simplest way to get business intelligence and analytics from a DDBB to everyone.
-• Low-code chart (including geo-map) generation.
+## simplest way to get business intelligence and analytics from a DDBB to everyone.
+## Low-code chart (including geo-map) generation.
 [[}]]
 
-# Datasette.io [[{db_engine,data.analytics,01_PM.low_code,_PM.TODO]]
-• Spin up a JSON API for any data in minutes.
-• Prototype and prove your ideas without building a custom backend.
+# Datasette.io [[{db_engine,data.analytics,PM.low_code,PM.TODO]]
+## Spin up a JSON API for any data in minutes.
+## Prototype and prove your ideas without building a custom backend.
 [[}]]
 
-# Redash:  [[{db_engine,data.analytics,01_PM.low_code,_PM.TODO]]
+# Redash:  [[{db_engine,data.analytics,PM.low_code,PM.TODO]]
 - "Make your company Data Driven"
 - Redash is designed to enable anyone, regardless of the level of
   technical sophistication, to harness the power of data big and small.
@@ -172,7 +172,7 @@ https://github.com/metabase/metabase
 # Business Data charts: [[{enterprise_patterns.101]]
 @[https://www.forbes.com/sites/bernardmarr/2017/07/20/the-7-best-data-visualization-tools-in-2017/#643a48726c30]
 
-• Apache Superset:
+## Apache Superset [[{]]
   @[https://www.phoronix.com/scan.php?page=news_item&px=Apache-Superset-Top-Level]
   Superset is the project's big data visualization and business
   intelligence web solution. Apache Superset allows for big data
@@ -192,27 +192,12 @@ https://github.com/metabase/metabase
 
   Superset also works well with services like NewRelic, StatsD and
   DataDog.
-
-• Low-Level Data charts:
-  | Kibana  (TODO)
-  |- "A Picture's Worth a Thousand Log Lines"
-  |- visualize (Elasticsearch) data and navigate
+[[}]]
   |  the Elastic Stack, learning  understanding
   |  the impact rain might have on your quarterly
   |  numbers
 
-• Grafana  (TODO)
-@[https://grafana.com/]
-  - time series analytics
-  - Integrates with Prometheus queries
-  @[https://logz.io/blog/grafana-vs-kibana/]
-  - 7.0+ includes new plugin architecture, visualizations,
-    transformations, native trace support, ...
-  https://grafana.com/blog/2020/05/18/grafana-v7.0-released-new-plugin-architecture-visualizations-transformations-native-trace-support-and-more/
-[[}]]
-
-
-# TOGAF  [[{enterprise_patterns,01_PM.TODO]]
+# TOGAF  [[{enterprise_patterns,PM.TODO]]
 @[https://en.wikipedia.org/wiki/The_Open_Group_Architecture_Framework]
 The Open Group Architecture Framework (TOGAF) is a framework for enterprise
 architecture that provides an approach for designing, planning, implementing,
@@ -227,10 +212,10 @@ of 2016, The Open Group claims that TOGAF is employed by 80% of Global 50
 companies and 60% of Fortune 500 companies.[3]
 
 Summary from @[https://www.redhat.com/architect/TOGAF-importance]
-• organization created in 1996. 850-global members as of 2021-11
+## organization created in 1996. 850-global members as of 2021-11
   advancing in technology standards services, certifications,
   research, and training.
-• The Open Group is behind many world-class architectural and digital
+## The Open Group is behind many world-class architectural and digital
   standards, including:
   - Open Agile Architecture (O-AA) Standard
   - ArchiMate Modeling Language
@@ -260,7 +245,7 @@ Summary from @[https://www.redhat.com/architect/TOGAF-importance]
     solution blueprints."
 [[}]]
 
-# KOGITO: [[{01_PM.low_code,architecture,01_PM.TODO]]
+# KOGITO: [[{PM.low_code,architecture,PM.TODO]]
 @[http://kie.org/]
 
 # Kogito == Drools + jBPM + OptaPlanner

@@ -1,4 +1,4 @@
-<pre zoom labels="big_data.hadoop,storage.distributed,devops,01_PM.low_code,">
+<pre zoom labels="big_data.hadoop,storage.distributed,devops,PM.low_code,">
 <span xsmall>Ambari: Hadoop Cluster Provision</span>
 @[https://projects.apache.org/project.html?ambari]
 Apache Ambari makes Hadoop cluster provisioning, managing, and monitoring dead simple.

@@ -13,7 +13,7 @@
 @[http://camel.apache.org/security-advisories.html]
 @[http://camel.apache.org/enterprise-integration-patterns.html]
 
-## Camel "vs" NiFi [[{01_PM.low_code]]
+## Camel "vs" NiFi [[{PM.low_code]]
 @[https://stackoverflow.com/questions/65625166/apache-camel-vs-apache-nifi]
 
 * NiFi: no-code application. 99% of NiFi users will never see a
@@ -60,7 +60,7 @@ designed very differently:
 [[}]]
 
 
-# Architecture: [[{101.architecture,01_PM.TODO]]
+# Architecture: [[{101.architecture,PM.TODO]]
 @[http://camel.apache.org/architecture.html]
 
 """In a Camel-based app, you create (Camel wrappers around) some endpoints
@@ -603,7 +603,7 @@ http://camel.apache.org/manual/camel-manual-2.22.2.html#chapter-cook-book
 [[}]]
 
 
-# TO-DO/Unordered [[{01_PM.BACKLOG]]
+# TO-DO/Unordered [[{PM.BACKLOG]]
 ## Javadoc separate  hierarchy [[{]]
 Camel provides a separate Javadoc hierarchy for each communications
 technology supported by Camel. Because of this, you will find
@@ -669,4 +669,4 @@ Camel 2.11+
 https://dzone.com/articles/camel-211-http-proxy-routes
 [[}]]
 
-[[01_PM.BACKLOG}]]
+[[PM.BACKLOG}]]

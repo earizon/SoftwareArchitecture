@@ -9,7 +9,7 @@
   in the Pantheon of the Unicode Gods.
 ────────────────────────────────────────────────────────────────────────────────
 
-# ZERO-CODE open source [[testing.101,REST,SOAP,Kafka]] @ma
+# ZERO-CODE Automated Tests [[testing.101,REST,SOAP,Kafka]] @ma
   https://github.com/authorjapps/zerocode
   zerocode open source makes it easy to create, change, orchestrate and
   maintain automated tests with the absolute minimum overhead for REST,
@@ -35,10 +35,7 @@
   - Yandex Search Engine(Russia) - Load and Stress Testing aka
     Performance Testing
 
-
-
-
-# Genesis: end-to-end testing:  @ma
+# Genesis: end-to-end testing:  [[{testing.e2e]]
   Genesis: An End-To-End Testing & Development Platform For Distributed Systems
   https://github.com/EntEthAlliance/genesis/branches
   Outputting data to collect for later analysis is as simple as writing
@@ -46,5 +43,4 @@
   test on the test details page in the dashboard, build your own
   metrics and analytics dashboards with Kibana, and write your own
   custom data analysis and reports using Jupyter Notebooks.
-
-
+[[}]]

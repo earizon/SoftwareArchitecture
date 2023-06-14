@@ -48,8 +48,7 @@ REF: https://blog.infura.io/post/an-introduction-to-ipfs
                 (In a future different hash-functions/lengths could be added)
 
 
-• IMPLEMENTING FILE-SYSTEMS ON TOP OF IPFS: [[{]]
-  ========================================
+## IMPLEMENTING FILE-SYSTEMS ON TOP OF IPFS: [[{]]
   - file names&paths are NOT part of the IPFS object.
     Path names will be the result of concatenating link.name + link.name + ...
   - Two files with different names and the same content will map
@@ -345,7 +344,7 @@ NEXT) TESTING DATA-REPLICATION:
     ( You should see that this file has been PINNED among all cluster nodes)
 [[}]]
 
-# IPFS IaaS Comparative: [[{01_PM.low_code,storage.scalability,02_doc_has.comparative]]
+# IPFS IaaS Comparative: [[{PM.low_code,storage.scalability,02_doc_has.comparative]]
   └ INFURA:
   · - 74 million unique objects
   · - 4.5+TB of data transfer per day (as of 2020-09)

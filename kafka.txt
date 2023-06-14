@@ -54,7 +54,7 @@ design patterns.
 [[}]]
 
 # Kafka Summary [[{]]
-• External Links:
+* External Links:
   - @[http://kafka.apache.org/documentation/]
   - Clients: (Java,C/C--,Python,Go,...)
     @[https://cwiki.apache.org/confluence/display/KAFKA/Clients]
@@ -160,20 +160,20 @@ can wait for ACK.         ↓                          CONSUMER   |    CONSUMER 
      multiple consumer groups
 [[}]]
 
-# data-schema Support [[{kafka.101,enterprise_patterns,01_PM.TODO]]
+# data-schema Support [[{kafka.101,enterprise_patterns,PM.TODO]]
 # Apache AVRO format
-• Efficient compac way to store data in disk.
-• "Imported" from Hadoop's World.
-• Efficient: Binary format, containing only data (vs JSON/JSON-schema field name+data)
+* Efficient compac way to store data in disk.
+* "Imported" from Hadoop's World.
+* Efficient: Binary format, containing only data (vs JSON/JSON-schema field name+data)
   libraries (avro-tools.jar, kafka-avro-console-consumer,...) used to write/read.
-• Schema never goes inside the message, only the "SchemaID".
-• Support for (fast) Google’s Snappy Compression.
-• Support for on-demand deserialization of columns (vs full data) .
-• It's not a column store (like Parquet, supporting better compression and insertion    [comparative]
+* Schema never goes inside the message, only the "SchemaID".
+* Support for (fast) Google’s Snappy Compression.
+* Support for on-demand deserialization of columns (vs full data) .
+* It's not a column store (like Parquet, supporting better compression and insertion    [comparative]
   predicates), but it adapts better to big fragments of data.
 @[https://www.slideshare.net/HadoopSummit/file-format-benchmark-avro-json-orc-parquet]
 
-• Example:
+* Example:
   JAVA Class         ←··→ Avro Schema
   =================       ======================
   public class User {     {
@@ -185,9 +185,9 @@ can wait for ACK.         ↓                          CONSUMER   |    CONSUMER 
                             ]
                           }
 
-• No data is null by default                             [million_dolar_mistake]
+* No data is null by default                             [million_dolar_mistake]
 
-• Enterprise Patterns:
+* Enterprise Patterns:
   • Define global or by-product dictionary of Business events.
   • Manage Avro schemas within a Source Control Management ( "Git" )
     (Notice also Avro support for schema evolution)
@@ -471,7 +471,7 @@ Confluent Schema Registry:
     import java.util.stream.IntStream;
 
     public class AvroProducer {
-        private static Producer˂Long, Employee˃ createProducer() {
+        private static Producer<Long, Employee> createProducer() {
             final String
               serClassName = LongSerializer.class.getName();
               KafkaAvroClN = Serializer    .class.getName();
@@ -489,17 +489,17 @@ Confluent Schema Registry:
             //        CONFIGURE KafkaAvroSerializer.
             props.put(                     SCHEMA_REG_URL_CONFIG ,   // ← Set Schema Reg.
                                           "http://localhost:8081");       URL
-            return new KafkaProducer˂˃(props);
+            return new KafkaProducer<>(props);
         }
 
         private final static String TOPIC = "new-employees";
 
         public static void main(String... args) {
-            Producer˂Long, Employee˃ producer = createProducer();
+            Producer<Long, Employee> producer = createProducer();
             Employee bob = Employee.newBuilder().setAge(35)
                     .setFirstName("Bob").set...().build();
             IntStream.range(1, 100).forEach(index->{
-                producer.send(new ProducerRecord˂˃(TOPIC, 1L * index, bob));
+                producer.send(new ProducerRecord<>(TOPIC, 1L * index, bob));
             });
             producer.flush();
             producer.close();
@@ -588,7 +588,7 @@ https://docs.confluent.io/current/schema-registry/schema_registry_tutorial.html
 [[}]]
 
 # API Summary [[{]]
-[[{kafka,01_PM.ext_resource,02_DOC_HAS.comparative]]
+[[{kafka,PM.ext_resource,02_DOC_HAS.comparative]]
 @[https://medium.com/@stephane.maarek/the-kafka-api-battle-producer-vs-consumer-vs-kafka-connect-vs-kafka-streams-vs-ksql-ef584274c1e]
 ┌──────────────────────────────────────────────────────────────────┐
 │   ┌───────────────┐                           ┌──────────────┐   │
@@ -679,7 +679,7 @@ KSQL :
    (as of 2019-11, gaps can be filled)
 [[}]]
 
-# Message Delivery Semantics  [[{kafka,01_PM.TODO]]
+# Message Delivery Semantics  [[{kafka,PM.TODO]]
 @[http://kafka.apache.org/documentation.html#semantics]
 [[}]]
 
@@ -699,10 +699,10 @@ KSQL :
      // set how to turn key|value ProducerRecord instances into bytes.
      kafkaconf.put("key.serializer"  , "org.apache.kafka.common.serialization.StringSerializer");
      kafkaconf.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-     producer˂string, string˃ producer = new kafkaproducer˂˃(kafkaconf);
+     producer<string, string> producer = new kafkaproducer<>(kafkaconf);
 
      producer.send(                        // ← sending-topics is async: (added to buffer
-         new ProducerRecord˂string, string˃(    of pending records)
+         new ProducerRecord<string, string>(    of pending records)
              "my-topic",
              integer.tostring(i),
              integer.tostring(i)
@@ -719,7 +719,7 @@ KSQL :
        ------------------------
         automatically retry unless
         config.retries == 0
-        WARN : config.retries ˃ 0 opens up the possibility of duplicates .
+        WARN : config.retries > 0 opens up the possibility of duplicates .
                Kafka0.11+ idempotent mode avoid the risk
                -"enable.idempotence" setting -
                WARN : avoid application level re-sends in this case.
@@ -760,7 +760,7 @@ see full list @ @[http://kafka.apache.org/documentation/#producerconfigs]
 @[http://kafka.apache.org/26/javadoc/index.html?org/apache/kafka/clients/consumer/KafkaConsumer.html]
 @[http://kafka.apache.org/11/javadoc/index.html?org/apache/kafka/streams/KafkaStreams.html]
 
-Class KafkaConsumer˂K,V˃
+Class KafkaConsumer<K,V>
 
 - client consuming records from cluster.
 - transparently handles failure of Kafka brokers,
@@ -810,11 +810,11 @@ Basics:
     configProps.setProperty("auto.commit.interval.ms", "1000");
     configProps.setProperty("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
     props.setProperty("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-    KafkaConsumer˂String, String˃ consumer = new KafkaConsumer˂˃(configProps);
+    KafkaConsumer<String, String> consumer = new KafkaConsumer<>(configProps);
     consumer.subscribe(Arrays.asList("foo", "bar"));
     while (true) {
-        ConsumerRecords˂String, String˃ records = consumer.poll(Duration.ofMillis(100));
-        for (ConsumerRecord˂String, String˃ record : records)
+        ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
+        for (ConsumerRecord<String, String> record : records)
             System.out.printf("offset = %d, key = %s, value = %s%n", record.offset(), record.key(), record.value());
            if (isManualCommit /*enable.auto.commit == false*/) {
                ... ;  consumer.commitSync();  ...
@@ -837,13 +837,13 @@ Basics:
 
 [[}]]
 
-# Connect [[{kafka.101,01_PM.TODO]]
+# Connect [[{kafka.101,PM.TODO]]
 @[http://kafka.apache.org/11/javadoc/index.html?overview-summary.html]
 (<a TODO href="http://kafka.apache.org/documentation.html#connect">more info</a>)
 - allows reusable producers or consumers that connect Kafka
   topics to existing applications or data systems.
 
-• Connectors List:
+## Connectors List:
 @[https://docs.confluent.io/current/connect/connectors.html]
 @[https://docs.confluent.io/current/connect/managing/connectors.html]
 - Kafka connectors@github
@@ -859,21 +859,21 @@ Basics:
 - AWS|Azure|GCD|Salesforce "*"
 - ...
 
-• Config:
+## Config:
 @[http://kafka.apache.org/documentation/#connectconfigs]
 [[}]]
 
-# AdminClient [[{kafka,01_PM.TODO]]
+# AdminClient [[{kafka,PM.TODO]]
 @[http://kafka.apache.org/11/javadoc/index.html?org/apache/kafka/clients/admin/AdminClient.html]
 
 - administrative client for Kafka, which supports managing and inspecting
   topics, brokers, configurations and ACLs.
 
-• Config:
+## Config:
 @[http://kafka.apache.org/documentation/#adminclientconfigs]
 [[}]]
 
-# Streams [[{kafka,architecture.event_stream,01_PM.TODO]]
+# Streams [[{kafka,architecture.event_stream,PM.TODO]]
 @[http://kafka.apache.org/25/documentation/streams/]
 See also:
 @[http://kafka.apache.org/11/javadoc/index.html?org/apache/kafka/streams/KafkaStreams.html]
@@ -925,18 +925,18 @@ See also:
                 Serdes.String().getClass());
 
       final StreamsBuilder builder = new StreamsBuilder();
-      KStream˂String, String˃ txtLineStream
+      KStream<String, String> txtLineStream
         = builder.stream("TextLinesTopic");
-      KTable˂String, Long˃ wordCounts = txtLineStream
+      KTable<String, Long> wordCounts = txtLineStream
           .flatMapValues(
-                          textLine -˃
+                          textLine ->
                           Arrays.asList(
                              textLine.toLowerCase().split("\\W+")
                           )
                         )
-          .groupBy      ( (key, word) -˃ word )
+          .groupBy      ( (key, word) -> word )
           .count        ( Materialized.
-                          ˂  String, Long, KeyValueStore˂Bytes, byte[]˃ ˃
+                          <  String, Long, KeyValueStore<Bytes, byte[]> >
                           as("counts-store"));
       wordCounts.
         toStream().
@@ -1089,7 +1089,7 @@ See also:
               by increasing on latency and cost in Streams yet:
 
 
-• Streams Config:
+## Streams Config:
 See details: @[http://kafka.apache.org/documentation/#streamsconfigs]
 - Core config:
   - application.id     : string unique within the Kafka cluster
@@ -1151,7 +1151,7 @@ See details: @[http://kafka.apache.org/documentation/#streamsconfigs]
   - upgrade.from :
   - windowstore.changelog.additional.retention.ms:
 
-• Examples:
+## Examples:
 @[https://github.com/confluentinc/kafka-streams-examples]
   - Examples: Runnable Applications
   - Examples: Unit Tests
@@ -1173,7 +1173,7 @@ See details: @[http://kafka.apache.org/documentation/#streamsconfigs]
   - Examples: Event Streaming Platform
 [[}]]
 
-# KSQL(ksqlDB) [[{kafka,01_PM.TODO]]
+# KSQL(ksqlDB) [[{kafka,PM.TODO]]
 @[https://www.confluent.io/]
 @[https://www.confluent.io/blog/ksql-open-source-streaming-sql-for-apache-kafka/]
 
@@ -1208,16 +1208,16 @@ See also:
 
 # Zeebe Streams  [[{enterprise_patterns,kafka,TODO]]
 @[https://www.infoq.com/news/2019/05/kafka-zeebe-streams-workflows]
-• Kafka events are sometimes part of a business process with tasks
+* Kafka events are sometimes part of a business process with tasks
   spread over several microservices. To handle complex business
   processes a workflow engine can be used, but to match Kafka it must
   meet the same scalability Kafka provides.
-• Zeebe is a workflow engine currently developed and designed to
+* Zeebe is a workflow engine currently developed and designed to
   meet these scalability requirements.
 [[}]]
 
-# Developer Tools  [[{kafka,01_PM.low_code,protocol.client_server,_PM.TODO]]
-• Pixy
+# Developer Tools  [[{kafka,PM.low_code,protocol.client_server,PM.TODO]]
+## Pixy dual API (gRPC,REST) proxy for Kafka
 @[https://github.com/mailgun/kafka-pixy]
   Kafka-Pixy is a dual API (gRPC and REST) proxy for Kafka with
   automatic consumer group control. It is designed to hide the
@@ -1225,7 +1225,7 @@ See also:
   API that is trivial to implement in any language.
 [[}]]
 
-# Docker Img For Developers [[{kafka,01_PM.low_code,computing.containerization,]]
+# Docker Img For Developers [[{kafka,PM.low_code,computing.containerization,]]
 @[https://github.com/lensesio/fast-data-dev]
 - Apache Kafka docker image for developers; with Lenses (lensesio/box)
   or Lenses.io's open source UI tools (lensesio/fast-data-dev). Have a
@@ -1257,8 +1257,8 @@ See also:
   | WantedBy=multi-user.target
 [[}]]
 
-# DevOps [[{kafka.devops,01_PM.TODO]]
-• Quick start
+# DevOps [[{kafka.devops,PM.TODO]]
+## Quick start
 @[http://kafka.apache.org/documentation.html#quickstart]
   PRE-SETUP
   Download tarball from mirror @[https://kafka.apache.org/downloads],
@@ -1267,10 +1267,10 @@ See also:
 
   - Start the server
   $ $ ~ bin/zookeeper-server-start.sh \                      ← Start Zookeeper
-  $   config/zookeeper.properties 1˃zookeeper.log 2˃&1 &
+  $   config/zookeeper.properties 1>zookeeper.log 2>&1 &
 
   $ $ ~ bin/kafka-server-start.sh  \                         ← Start Kafka Server
-  $   config/server.properties 1˃kafka.log  2˃&1 & \
+  $   config/server.properties 1>kafka.log  2>&1 & \
 
   $ $ bin/kafka-topics.sh --create --zookeeper \             ← Create   TEST  topic
   $   localhost:2181  --replication-factor 1 \               (Alt.brokers can be
@@ -1349,7 +1349,7 @@ See also:
     "test.txt" → connect-test  → sink connector → "test.sink.txt"
 
 
-• See also: Ansible Install:
+* See also: Ansible Install:
 @[https://github.com/confluentinc/cp-ansible]
 @[https://docs.confluent.io/current/installation/cp-ansible/index.html]
   - Installs Confluent Platform packages.
@@ -1367,26 +1367,27 @@ See also:
      plaintext, SSL, SASL_SSL, and Kerberos.
 
 # Configuration
-• Broker Config:
+## Broker Config:
 @[http://kafka.apache.org/documentation/#configuration]
   Main params:
   - broker.id
   - log.dirs
   - zookeeper.connect
 
-• Topics config: @[http://kafka.apache.org/documentation/#topicconfigs"
+## Topics config
+ @[http://kafka.apache.org/documentation/#topicconfigs"
 
-• Compaction: kafka.devops, kakfa.performance
+## Compaction: kafka.devops, kakfa.performance
 http://kafka.apache.org/documentation.html#compaction
 [[}]]
 
-# Strimzi k8s Operator [[{kafka.devops.k8s,01_PM.low_code,kafka.security,_PM.TODO]]
+# Strimzi k8s Operator [[{kafka.devops.k8s,PM.low_code,kafka.security,PM.TODO]]
   "Kafka on K8s in a few minutes"
-• Strimzi: RedHat OOSS project that provides container images and
+* Strimzi: RedHat OOSS project that provides container images and
   operators for running production-ready Kafka on k8s and OpenShift.
-• K8s native experience, using kubectl to manage the Kafka cluster and GitOps.
-• Monitoring and observability integration with Prometheus.
-• TODO:
+* K8s native experience, using kubectl to manage the Kafka cluster and GitOps.
+* Monitoring and observability integration with Prometheus.
+* TODO:
 @[https://developers.redhat.com/blog/2019/06/06/accessing-apache-kafka-in-strimzi-part-1-introduction/]
 @[https://developers.redhat.com/blog/2019/06/07/accessing-apache-kafka-in-strimzi-part-2-node-ports/]
 @[https://developers.redhat.com/blog/2019/06/10/accessing-apache-kafka-in-strimzi-part-3-red-hat-openshift-routes/]
@@ -1395,7 +1396,7 @@ http://kafka.apache.org/documentation.html#compaction
 
 [[}]]
 
-# Pulsar vs Kafka [[{architecture.event_stream.pulsar,kafka,02_DOC_HAS.comparative,01_PM.TODO]]
+# Pulsar vs Kafka [[{architecture.event_stream.pulsar,kafka,02_DOC_HAS.comparative,PM.TODO]]
 - Pulsar is a younger project   inspired and informed by Kafka .
   Kafka on the other side has a bigger community.
 
@@ -1508,22 +1509,25 @@ http://kafka.apache.org/documentation.html#compaction
 @[https://streamnative.io/blog/tech/pulsar-vs-kafka-part-1]
 [[}]]
 
-# KubeMQ: Kafka alternative [[{kafka.devops,02_DOC_HAS.comparative,01_PM.TODO]]
+# KubeMQ: Kafka alternative [[{kafka.devops,02_DOC_HAS.comparative,PM.TODO]]
 @[https://dzone.com/articles/seamless-migration-from-kafka-to-kubemq?edition=699391]
-• Non free product.
+* Non free product.
   · Free for stand alone single pod.
   · Professional for SMBs: Deploy on up to 20 k8s clusters.
   · Professional for Dist. product: Corporate license .
   · Enterprise: Enhanced SLA spport.
-• Kafka monolithic architecture is more suited for on-premise clusters or high-end multi-VM setups. Spinning up a multi-node cluster on a standalone workstation for testing purposes can be a challenge.
-• KubeMQ messaging service is built from the ground up with Kubernetes in mind:
+* Kafka monolithic architecture is more suited for on-premise
+  clusters or high-end multi-VM setups. Spinning up a multi-node
+  cluster on a standalone workstation for testing purposes can be a
+  challenge.
+* KubeMQ messaging service is built from the ground up with Kubernetes in mind:
   - It is Statless  and Ephemeral.
   - When config. changes are needed, nodes are shut down and replaced requiring
   - Container images is "just" 30MB, suitable for local development.
     zero -configuration setup or post-install tweaking :
     A 'channel' is the only object developers need to create (forget about
     brokers, exchanges, orchestrators ... KubeMQ's Raft replaces ZooKeeper).
-• KubeMQ message delivery patterns include:
+* KubeMQ message delivery patterns include:
   • Pub/Sub with or without persistence
   • Request/Reply (synchronous, asynchronous)
   • At Most Once Delivery
@@ -1532,13 +1536,12 @@ http://kafka.apache.org/documentation.html#compaction
   • RPC
   (Comparatively, Kafka only supports Pub/Sub with persistence and streaming.
    RPC and Request/Reply patterns are not supported by Kafka at all).
-
-• kubemqctl: cli interface analogous to kubectl.
-• KubeMQ Sources allows to connect to an existing Kafka input topic to simplify
+* kubemqctl: cli interface analogous to kubectl.
+* KubeMQ Sources allows to connect to an existing Kafka input topic to simplify
   migration from Kafka.
 [[}]]
 
-# Akka+Kotlin:Data Pipes [[{kafka.akka,01_PM.TODO]]
+# Akka+Kotlin:Data Pipes [[{kafka.akka,PM.TODO]]
 @[https://www.kotlindevelopment.com/data-pipelines-kotlin-akka-kafka/]
 - Objective:
   Create a "GitHub monitor" that build an analytics component that
@@ -1575,10 +1578,10 @@ http://kafka.apache.org/documentation.html#compaction
   }
 
   Each time we receive a response from GitHub, we parse it and send individual events downstream.
-  fun events(): Source˂JsonNode, NotUsed˃ =
-    poll().flatMapConcat { response -˃
+  fun events(): Source<JsonNode, NotUsed> =
+    poll().flatMapConcat { response ->
       response.nodesOpt
-        .map { nodes -˃ Source.from(nodes) }
+        .map { nodes -> Source.from(nodes) }
         .orElse(Source.empty())
     }
 
@@ -1589,10 +1592,10 @@ http://kafka.apache.org/documentation.html#compaction
   that we have to write for integrating with Kafka.
   Publishing events into a Kafka topic look like:
 
-  fun write(events: Source˂JsonNode, NotUsed˃)
-      : CompletionStage˂Done˃
+  fun write(events: Source<JsonNode, NotUsed>)
+      : CompletionStage<Done>
         =  events.map {                                        // ← maps GitHub event to(Kafka)ProducerRecord
-             node -˃ ProducerRecord˂ByteArray, String˃
+             node -> ProducerRecord<ByteArray, String>
                         ("kotlin-events",
                          objectMapper.writeValueAsString(node) // ← serialize JsonNode as a String
                         )
@@ -1604,12 +1607,12 @@ http://kafka.apache.org/documentation.html#compaction
 
 - The other way around, reading from Kafka, is also super simple.
 
-  fun read(): Source˂JsonNode, NotUsed˃ =
+  fun read(): Source<JsonNode, NotUsed> =
     Consumer.plainSource(
         settings,
         Subscriptions.assignmentWithOffset(
             TopicPartition("kotlin-events", 0), 0L))
-       .map { record -˃ objectMapper.readTree(record.value()) }
+       .map { record -> objectMapper.readTree(record.value()) }
        .mapMaterializedValue { NotUsed.getInstance() }
 
   At this point, we have a copy of GitHub's events feed for github.com/Kotlin stored in Kafka,
@@ -1619,7 +1622,7 @@ so we can time travel and run different analytics jobs on our local dataset.
  we want to filter out PushEvents from the stream
  and update a Postgres database with the results.
  - Alpakka Slick (JDBC) Connector is used to connect to PostgreSQL.
-   fun createTableIfNotExists(): Source˂Int, NotUsed˃ {
+   fun createTableIfNotExists(): Source<Int, NotUsed> {
      val ddl =
        """
          |CREATE TABLE IF NOT EXISTS kotlin_push_events(
@@ -1632,15 +1635,15 @@ so we can time travel and run different analytics jobs on our local dataset.
          |);
          |CREATE UNIQUE INDEX IF NOT EXISTS id_index ON kotlin_push_events (id);
        """.trimMargin()
-     return Slick.source(session, ddl, { _ -˃ 0 })
+     return Slick.source(session, ddl, { _ -> 0 })
    }
 
  - Similarly, the function to update the database looks like this.
 
-   fun Source˂PushEvent, NotUsed˃.updateDatabase() :
-       CompletionStage˂Done˃ =
+   fun Source<PushEvent, NotUsed>.updateDatabase() :
+       CompletionStage<Done> =
            createTableIfNotExists().flatMapConcat { this }
-       .runWith(Slick.sink˂PushEvent˃(session, 20, { event -˃
+       .runWith(Slick.sink<PushEvent>(session, 20, { event ->
          """
            |INSERT INTO kotlin_push_events
            |(id, name, timestamp, repository, branch, commits)
@@ -1659,12 +1662,12 @@ so we can time travel and run different analytics jobs on our local dataset.
    We are almost done, what's left is filtering and mapping from JsonNode to
    PushEvent and composing the methods together.
 
-   fun Source˂JsonNode, NotUsed˃.filterPushEvents(): Source˂PushEvent, NotUsed˃ =
-     filter { node -˃ node["type"].asText() == "PushEvent" }
-       .map { node -˃ objectMapper.convertValue(node, PushEvent::class.java) }
+   fun Source<JsonNode, NotUsed>.filterPushEvents(): Source<PushEvent, NotUsed> =
+     filter { node -> node["type"].asText() == "PushEvent" }
+       .map { node -> objectMapper.convertValue(node, PushEvent::class.java) }
 
    And finally, all the functions composed together look like this.
-   fun run(events: Source˂JsonNode, NotUsed˃): CompletionStage˂Done˃ =
+   fun run(events: Source<JsonNode, NotUsed>): CompletionStage<Done> =
      events
        .filterPushEvents()
        .updateDatabase()
@@ -1687,11 +1690,11 @@ You can find the complete source code on GitHub.
 [[}]]
 
 
-# Unordered [[{01_PM.TODO]]
-• Security     : https://kafka.apache.org/documentation/#security
-• Burrow Monit : @[https://dzone.com/articles/kafka-monitoring-with-burrow]
-• Best Pracites: @[https://www.infoq.com/articles/apache-kafka-best-practices-to-optimize-your-deployment]
-• Mirror Maker (geo-replica):
+# Unordered [[{PM.TODO]]
+## Security     : https://kafka.apache.org/documentation/#security
+## Burrow Monit : @[https://dzone.com/articles/kafka-monitoring-with-burrow]
+## Best Pracites: @[https://www.infoq.com/articles/apache-kafka-best-practices-to-optimize-your-deployment]
+## Mirror Maker (geo-replica): [[{scalability,security]]
 @[https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=27846330]
   fka's mirroring feature makes it possible to maintain a replica of an
   existing Kafka cluster. The following diagram shows how to use the
@@ -1699,27 +1702,28 @@ You can find the complete source code on GitHub.
   (mirror) Kafka cluster. The tool uses a Kafka consumer to consume
   messages from the source cluster, and re-publishes those messages to
   the local (target) cluster using an embedded Kafka producer.
-• Kafka Backup:
+[[}]]
+## Kafka Backup [[{]]
 @[https://github.com/itadventurer/kafka-backup]
 - Kafka Backup is a tool to back up and restore your Kafka data
   including all (configurable) topic data and especially also consumer
   group offsets. To the best of our knowledge, Kafka Backup is the only
   viable solution to take a cold backup of your Kafka data and restore
   it correctly.
-
-• Leasson Learned:
+[[}]]
+## Leasson Learned
 @[https://www.confluent.io/blog/stories-front-lessons-learned-supporting-apache-kafka/]
   - Under-replicated Partitions Continue to Grow Inexplicably
   - Kafka Liveness Check and Automation Causes Full Cluster Down
   - Adding a New Broker Results in Terrible Performance
 
-• Faust (Python Streams):
+## Faust (Python Streams)
 @[https://github.com/robinhood/faust]
   - Faust provides both stream processing and event processing, sharing
     similarity with tools such as Kafka Streams, Apache
     Spark/Storm/Samza/Flink,
 
-• Confluent Schema Registry
+## Confluent Schema Registry
   https://docs.confluent.io/current/schema-registry/index.html
   Confluent Schema Registry provides a serving layer for your metadata. It
   provides a RESTful interface for storing and retrieving Apache Avro® schemas.

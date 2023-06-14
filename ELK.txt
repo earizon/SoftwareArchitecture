@@ -23,7 +23,7 @@ Elastic Search ELK:
         server performance.
     """
 
-# Cerebro: ELK admin GUI: [[{elk,01_PM.low_code,qa,troubleshooting,01_PM.TODO]]
+# Cerebro: ELK admin GUI: [[{elk,PM.low_code,qa,troubleshooting,PM.TODO]]
 @[https://www.redhat.com/sysadmin/cerebro-webui-elk-cluster]
 - OOSS (MIT License) elasticsearch web admin tool built using Scala,
   Play Framework, AngularJS, and Bootstrap.
@@ -36,7 +36,7 @@ Elastic Search ELK:
 [[}]]
 
 
-# Logstash (Collector) [[{]elk.logstash,data.collection,01_PM.TODO]
+# Logstash (Collector) [[{]elk.logstash,data.collection,PM.TODO]
 - pipeline to ingest/transform/load logs  into a store like Elastic Search
   (It is common to replace Logstash with Fluentd)
 
@@ -83,7 +83,7 @@ Elastic Search ELK:
          (each pod has a Fluentd sidecar)
        - high throughput.
 
-# Kibana (ELK UI) Summary: [[{elk.kibana,02_DOC_HAS.comparative,01_PM.TODO]]
+# Kibana (ELK UI) Summary: [[{elk.kibana,02_DOC_HAS.comparative,PM.TODO]]
 - Analytical UI results extracted from ElasticSearch.
 - Kibana Alternatives:
   - Grafana: lower level UI for infrastructure data visualization.

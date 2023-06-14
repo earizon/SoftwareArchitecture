@@ -5,10 +5,10 @@
  #[messaging_summary]
 #  Messaging Architecture Summary  [[{enterprise_patterns.messaging.101,data.integration,architecture.event_stream]]
                             [[architecture.decoupled,cache.redis,02_DOC_HAS.comparative]]
-• Messaging represents a layer down ESB in some cases.
+* Messaging represents a layer down ESB in some cases.
   Messaging architectures focus on reliable delivery of messages of different nature/timelife.
   On top of them, ESB add data management/processing/transformation.
-• In general a message in message driven architectures represents some information that
+* In general a message in message driven architectures represents some information that
  *MUST* be processed, while an event in event stream architecture ("Kafka", "Pulse", fast
   distributed queues) represent a more generic information that MUST or MUST not be processed.
     Event streams can most of the time be used to build a message stream architecture on top
@@ -101,7 +101,7 @@ Bº##################º
   - Routing: point-to-point / publish-and-subscribe
   - No processing/transformation of message/data
 
-# TODO: @ma [[{01_PM.TODO.NOW]]
+# TODO: @ma [[{PM.TODO.NOW]]
   https://medium.com/@philipfeng/modern-open-source-messaging-apache-kafka-rabbitmq-nats-pulsar-and-nsq-ca3bf7422db5
 [[}]]
 
@@ -161,7 +161,7 @@ Bº########º
   ...
   - Java JMS
 
-• See also:
+* See also:
   ·@[../WebTechnologies/map.html#asyncapi_summary] standard to model   [standard]
     event-driven async APIs.
   · "The many meanings of event-driven architecture,"
@@ -181,7 +181,7 @@ Bº########º
 
 # ActiveMQ: [[{architecture.messaging,enterprise_patterns,distributed.ha]]
 #[activemq_summary]
-• Based on JAVA
+* Based on JAVA
 Bº######################
 Bº# ActiveMQ "Classic" #
 Bº######################
@@ -202,13 +202,11 @@ Bº######################
              → "Queues" tab → "Create" button
                DONE!!!
 
-Bº####################
-Bº# ActiveMQ Artemis #
-Bº####################
-• Multiprotocol("polyglot") broker (AMQP, OpenWire, MQTT, STOMP, HTTP, ...)
-• Single / multi-cluster.
-• Java based
-• next generation High-performance, non-blocking architecture
+## ActiveMQ Artemis
+* Multiprotocol("polyglot") broker (AMQP, OpenWire, MQTT, STOMP, HTTP, ...)
+* Single / multi-cluster.
+* Java based
+* next generation High-performance, non-blocking architecture
   · Web interface.
   · JMS 1.1, 2.0 with full client implementation including JNDI
   ·ºHigh availabilityºusing shared storage or network replication
@@ -220,17 +218,16 @@ Bº####################
   · Very good and free documentation:
   @[https://activemq.apache.org/components/artemis/documentation/latest/book.pdf]
 
-# RabbitMQ:
-• Erlang Alternative. Quite popular since it was used as AMQP
-  ref.implementation.
+# RabbitMQ
+* Erlang Alternative. Quite popular since it was used as AMQP
+  ref.implementation. It's at the core of Whatsapp!!!
 @-[https://www.rabbitmq.com/getstarted.html]
-• Based on Erlang (Rºvery reduce developer communityº)
-• Multiprotocol("polyglot") broker (AMQP, MQTT, STOMP, ...)
+* Based on Erlang (Rºvery reduce developer communityº)
+* Multiprotocol("polyglot") broker (AMQP, MQTT, STOMP, ...)
   e.g.: RabbitMQ Web Stomp allows for example to expose messaging in a browser
         through websockets.
 
-• P: Producer, C: consumer
-
+* P: Producer, C: consumer
   P →  │││queue_name │││ ──→ C                                Work queues
                          └─→ C                               ------------------
 
@@ -262,11 +259,10 @@ Bº####################
   │                                                   │
   └─── Reply               ─── │││ response │││ ──────┘
          correlation_id=abc
-
 See @[#activemq_summary]
 [[}]]
 
-# OpenHFT: microSec Messaging storing to disk [[{architecture.event_stream,architecture.real_time.hard,scalability,01_PM.TODO]]
+# OpenHFT: microSec Messaging storing to disk [[{architecture.event_stream,architecture.real_time.hard,scalability,PM.TODO]]
 @[https://github.com/OpenHFT/]
    - Chronicle-Queue: Micro second messaging that stores everything to disk
    - Chronicle-Accelerate: HFT meets Blockchain in Java platform
@@ -298,38 +294,36 @@ See @[#activemq_summary]
 
 # CQRS [[{architecture.event_stream,architecture.CQRS]] #[CQRS_summary]
 REF: @[https://www.redhat.com/architect/pros-and-cons-cqrs]
-• CQRS stands for Command Query Responsibility Segregation
-• The data-processing architecture pattern separates a service's write
+* CQRS stands for Command Query Responsibility Segregation
+* The data-processing architecture pattern separates a service's write
   tasks from its read tasks:
-• Separating write activity from ready activities allows you to use the
+* Separating write activity from ready activities allows you to use the
   best database technology for the task at hand, for example, a stream-event
   engine (Kafka/Pulse/...) for writing and a non-SQL database for reading.
-• While reading and writing to the same database is acceptable for
+* While reading and writing to the same database is acceptable for
   small applications, distributed applications operating at web-scale
   require a segmented approach.
-• Typically there's more read activity than write activity. Also,
+* Typically there's more read activity than write activity. Also,
   read activity is immutable. Thus, replicas dedicated to reading data
    can be spread out over a variety of geolocations.
-• This approach allows users to get the data that closest to them
+* This approach allows users to get the data that closest to them
   resulting in a more efficient and scalable solution.
 [[}]]
 
 [[enterprise_patterns.messaging.101}]]
 
 
-# CloudEvents:[[{architecture.event_stream,01_PM.standards]] @ma
-• CloudEvents(CNCF) specification describes event data in common formats to
+# CloudEvents [[{architecture.event_stream,PM.standards]] @ma
+* CloudEvents(CNCF) specification describes event data in common formats to
   provide interoperability across services, platforms and systems.
-
-• Events are everywhere but event producers tend to describe events          [[qa]]
+* Events are everywhere but event producers tend to describe events          [[qa]]
   differently and developers must constantly re-learn how to consume events.
   This also limits the potential for libraries, tooling and infrastructure
   to aide the delivery of event data across environments, like SDKs,
   event routers or tracing systems.
-
-• Core Specification:
+* Core Specification:
   CloudEvents                 v1.0.1 WIP
-• Optional Specifications:
+* Optional Specifications:
   AMQP Protocol Binding       v1.0.1  WIP
   AVRO Event Format           v1.0.1  WIP
   HTTP Protocol Binding       v1.0.1  WIP
@@ -340,14 +334,12 @@ REF: @[https://www.redhat.com/architect/pros-and-cons-cqrs]
   WebSockets Protocol Binding      -  WIP
   Protobuf Event Format       v1.0-rc1
   Web hook                    v1.0.1  WIP
-
-• Additional Documentation:
+* Additional Documentation:
   CloudEvents Adapters              - WIP
   CloudEvents SDK Requirements      - WIP
   Documented Extensions             - WIP
   Primer                       v1.0.1 WIP
   Proprietary Specifications        - WIP
-
 [[}]]
 
 # NSQ Distributed Real Time Msg.: [[{architecture.messaging.nsq,qa,distributed,architecture.real_time,]] @ma
@@ -362,7 +354,7 @@ REF: @[https://www.redhat.com/architect/pros-and-cons-cqrs]
 [[}]]
 
 
-# Event Stream Architectures: [[{architecture.event_stream,01_PM.TODO]]
+# Event Stream Architectures: [[{architecture.event_stream,PM.TODO]]
   Distributed Event Stream Processors
   (https://martinfowler.com/eaaDev/EventSourcing.html
   REF:
