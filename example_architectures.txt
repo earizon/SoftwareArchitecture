@@ -260,3 +260,76 @@ https://www.infoq.com/news/2022/08/linkedin-api-versioning/
     - Hotness: Clients may read an object within a few seconds of each other,
                or their reads may be spread over hours.
   [[}]]
+
+# How LinkedIn Serves Over 4.8 Million Member Profiles per Second [[{]]
+https://www.infoq.com/news/2023/07/linkedin-member-profile-caching/
+
+LinkedIn introduced Couchbase as a centralized caching tier for
+scaling member profile reads to handle increasing traffic that had
+outgrown their existing database cluster. The new solution achieved
+over 99% hit rate, and helped reduce tail latencies by more than 60%
+and costs by 10% annually.
+
+For many years, LinkedIn has been serving member profiles directly
+from their Espresso document platform, which is built on top of MySQL
+and uses Avro for serialization, Apache Helix, and Databus
+(LinkedIn’s change capture system). Espresso routers handle profile
+requests directing read/write requests to the correct storage node
+and use an off-heap cache (OHC) for hot keys.
+
+Source:
+https://engineering.linkedin.com/blog/2023/upscaling-profile-datastore
+-while-reducing-costs
+
+With storage requests doubling yearly and peaking at over 4.8 million
+requests per second, the Espresso cluster serving member profiles has
+reached its scalability limitations. Rather than reworking the core
+components of the Espresso platform, the team decided to introduce a
+caching tier using Couchbase, considering that over 99% of requests
+are reads.
+
+Estella Pham and Guanlin Lu, staff software engineers at LinkedIn,
+explain why the team chose Couchbase for caching:
+
+    At LinkedIn, we have used Couchbase as a distributed key-value
+cache for various applications. It is chosen for the enhancements
+that it confers over memcached, including data persistence between
+server restarts, replication such that one node can fail out of a
+cluster with all documents still being available, and dynamic
+scalability in that nodes can be added or removed with no downtime.
+
+The new caching layer, combining OCH and Couchbase caches, is
+integrated into Espresso to avoid client-side changes. The design
+focuses on resilience against Couchbase failures, cache data
+availability, and data divergence prevention. Espresso routers retry
+requests in case of transient failures and monitor Couchbase health
+to avoid dispatching requests to unhealthy buckets. Profile data is
+replicated three times, and routers fail over to one of the follower
+replicas if the leader replica is unavailable.
+
+All profile data is cached in every data center and updated by Apache
+Samza jobs in near real-time based on write operations captured by
+Espresso, and periodically based on database snapshots. All cache
+updates use Couchbase Compare-And-Swap (CAS) to detect concurrent
+updates and retry the update if necessary.
+
+Source:
+https://engineering.linkedin.com/blog/2023/upscaling-profile-datastore
+-while-reducing-costs
+
+Following the changes, the Profile Backend service became responsible
+for some operations that Espresso previously handled. It dynamically
+evaluates field projections and returns a subset of profile data from
+the complete profile stored in the cache. It also deals with Avro
+schema conversions, fetching schema versions from the registry at
+runtime if necessary.
+
+The LinkedIn team has implemented further performance optimizations,
+streamlining reading data from Avro/binary format, and achieved
+around 30% improvement in deserialization times. The introduction of
+the new hybrid caching approach allowed the reduction of Espresso
+nodes by 90%. Considering the new infrastructure required to run the
+Couchebase cluster, cache update jobs, and increased compute
+resources for backend services, the overall costs for servicing
+member profile requests have dropped by 10% annually.
+[[}]]

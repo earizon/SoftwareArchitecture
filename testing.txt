@@ -1,13 +1,7 @@
-#  Apropos:
-- Visit next Web site for a great experience:
-  https://earizon.github.io/txt_world_domination/viewer.html?payload=../SoftwareArchitecture/testing.txt
+## Apropos:
+  Content is versioned in git.  commits, issues and pull-requests welcome!
 
-- If you want to contribute to great gistory of this
-  document you can take the next flight to:
 @[https://www.github.com/earizon/SoftwareArchitecture]
-  Your commits and pull-request will be immortalized
-  in the Pantheon of the Unicode Gods.
-────────────────────────────────────────────────────────────────────────────────
 
 # ZERO-CODE Automated Tests [[testing.101,REST,SOAP,Kafka]] @ma
   https://github.com/authorjapps/zerocode

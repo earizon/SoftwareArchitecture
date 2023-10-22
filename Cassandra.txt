@@ -14,6 +14,10 @@
     keeping them from ever moving past simple archival workloads.
   - NOTE: It is not unusual to see Cassandra clusters
     with 100+ nodes in production enviroments.
+- WARN: Discord migrates from Cassandra to ScyllaDB to escalate.
+  https://www.infoq.com/news/2023/06/discord-cassandra-scylladb/
+  From 177 Cassandra nodes to 72 ScyllaDB nodes while reducing tail latencies
+  for reads and writes.
 
 * Cassandra whitepaper:
   - DISTRIBUTED KEY-VALUE (of KEY-VALUE) STORE.

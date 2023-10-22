@@ -1,3 +1,9 @@
+# martin kleppmann Blog [[{]]
+https://martin.kleppmann.com/2015/05/11/please-stop-calling-databases-cp-or-ap.html
+
+https://martin.kleppmann.com/2015/03/04/turning-the-database-inside-out.html
+[[}]]
+
 # Soft Arch: DDBB engines 101: @ma The technology behind GitHub’s new code search | The GitHub Blog
 https://github.blog/2023-02-06-the-technology-behind-githubs-new-code-search/
 
@@ -1025,13 +1031,6 @@ https://www.enterprisestorageforum.com/cloud-storage/object-storage-protocol-cou
 
 # Kafka: Removing Zookeeper Dependency: kafka.zookeeper,PM.TODO
 https://www.infoq.com/podcasts/kafka-zookeeper-removing-dependency/
-
-# Noclassified Identity Technologies [[{architecture.identity]]
-## Modern Authentication (OpenID Connect, Oauth, SAML 2.0)
-## Microsoft EMS, Azure Log Analytics Server, Active Directory,
-## Kerberos, Tiering ModelMicrosoft PKI (HSM, Certificate Management),
-## Venafi CMSZero Trust Concept, B2B Guest Concept
-[[}]]
 
 # Dual graph: [[{db_engine.graph_db]]
  - Wikipedia

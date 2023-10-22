@@ -257,3 +257,11 @@ https://github.com/hasura/graphql-engine
   Apollo Data Graph Platform: A GraphQL Middleware Layer for the Enterprise
 [[}]]
 
+## GraphQL Code Generator (10.1k starts) [[{]]
+https://github.com/dotansimha/graphql-code-generator
+- Automatically generates code out of GraphQL schema and Documents.
+  (query/mutation/subscription/fragment).
+- frontend or backend,
+[[}]]
+
+

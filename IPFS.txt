@@ -1,14 +1,6 @@
-#  Apropos:
-- Visit next Web site for a great experience:
-  https://earizon.github.io/txt_world_domination/viewer.html?payload=../SoftwareArchitecture/IPFS.txt
-
-- If you want to contribute to great gistory of this
-  document you can take the next flight to:
+## Apropos:
+  Content is versioned in git.  commits, issues and pull-requests welcome!
 @[https://www.github.com/earizon/SoftwareArchitecture]
-  Your commits and pull-request will be immortalized
-  in the Pantheon of the Unicode Gods.
-────────────────────────────────────────────────────────────────────────────────
-
 
 INTERPLANETARY FILE SYSTEM (IPFS) [[{ipfs]]
 
@@ -406,4 +398,25 @@ NEXT) TESTING DATA-REPLICATION:
   https://docs.ipfs.tech/concepts/file-systems/#mutable-file-system-mfs
   https://docs.ipfs.tech/concepts/file-systems/#unix-file-system-unixfs
   https://nft.storage/
+_____________________________________________________________
+https://www.youtube.com/watch?v=totVQXYS1N8&t=5s&ab_channel=media.ccc.de
+Wrangling Codes: Native vs Adjunt
+  Some codes can represent any arrangement of maps and list and whatever map keys you want, etc… JSON and CBOR and other general serialization formats can do this.
+  Some codes hav opinions about what they can store. Protobufs, for example, must have pre-enumerated fields. Git, for example, can be ssen as IPLD, but only with some known fields.
+
+NODE:
+All of the Data Model kinds (map, list, int, str, etc) are a `Node`. So a JSON document is just a Node tree. (including links, it’s a Node Graph –specifically, a DAG!)
+… IS HYPERGENERIC:
+You can operate on Nodes by asking them what type they are at runtime. This is a lot like the ‘reflect’ capabilities in strongly-typed programming languages you’re already familiar with.
+
+TRAVERSALS ARE GENERIC OVER NODE:
+(basically, we’re saying you can build `jq`` here… and it would work equally well over JSON, CBOR, or any other codec you can provide.)
+
+ACT LIKE ONE DATA MODEL `KIND`: Imagine we want a map…  SERIALIZIE AS ANOTHER: But it’s backed by a…: [ B+ tree, Or HAMT (Hash Array Mapped Trie) Or … whatever. It can even be several ‘blocks’ connected by Links…
+
+
+ADVANED LAYOUTS: * Work for maps, list and bytes!, Thi of it like how Java has
+  ``HashMap<K,V> implements Mpa<K,V>` … except the parameters are all flipped: We think of it like
+`Map<K,V><HashMap>` … You have to provide the code
+
 [[ipfs}]]

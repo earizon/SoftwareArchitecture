@@ -1,9 +1,5 @@
-#  Apropos:
-- Visit next Web site for a great experience:
-  https://earizon.github.io/txt_world_domination/viewer.html?payload=../SoftwareArchitecture/ddbb_engines.txt
-
-- If you want to contribute to great gistory of this
-  document you can take the next flight to:
+## Apropos:
+  Content is versioned in git.  commits, issues and pull-requests welcome!
 @[https://www.github.com/earizon/SoftwareArchitecture]
   Your commits and pull-request will be immortalized
   in the Pantheon of the Unicode Gods.
@@ -761,6 +757,8 @@ CONTEXT:
 - not to be confused with column oriented storage of RDMS.
   Last one is an internal concept for improving performance storing
   table-data column-by-column vs record-by-record).
+
+- ScyllaDB
 
 - Incomplete but still persistent list of implementations:
   └ CASSANDRA
