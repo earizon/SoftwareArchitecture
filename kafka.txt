@@ -9,21 +9,20 @@ Jonas Boner ... talked about event driven services (EDA) and
 event stream processing (ESP)... on distributed systems.
 
 ... background on EDA evolution over time:
-- Tuxedo, Terracotta and Staged Event Driven Architecture (SEDA).
+* Tuxedo, Terracotta and Staged Event Driven Architecture (SEDA).
 
- events represent facts
-- Events drive autonomy in the system and help to reduce risk.
-- increase loose coupling, scalability, resilience, and traceability.
-- ... basically inverts the control flow in the system
-- ... focus on the behavior of systems as opposed to the
+Events represent facts
+* Events drive autonomy in the system and help to reduce risk.
+* increase loose coupling, scalability, resilience, and traceability.
+* ... basically inverts the control flow in the system
+* ... focus on the behavior of systems as opposed to the
   structure of systems.
-
-- TIP for developers:
+* TIP for developers:
   Do not focus on just the "things" in the system
   (Domain Objects), but rather focus on what happens (Events)
-- Promise Theory:
-  - proposed by Mark Burgess
-  - use events to define the Bounded Context through
+* Promise Theory:
+  * proposed by Mark Burgess
+  * use events to define the Bounded Context through
     the lense of promises.
 
 quoting Greg Young:
@@ -35,11 +34,11 @@ system. Time becomes a crucial factor of the system."""
 auditing and traceability. We can replay it on system failures and for data replication."""
 
 Boner discussed the following patterns for event driven architecture:
-- Event Loop
-- Event Stream
-- Event Sourcing
-- CQRS for temporal decoupling
-- Event Stream Processing
+* Event Loop
+* Event Stream
+* Event Sourcing
+* CQRS for temporal decoupling
+* Event Stream Processing
 
 Event stream processing technologies like Apache Flink, Spark Streaming,
 Kafka Streams, Apache Gearpump and Apache Beam can be used to implement these
@@ -48,18 +47,18 @@ design patterns.
 
 # Kafka Summary [[{]]
 * External Links:
-  - @[http://kafka.apache.org/documentation/]
-  - Clients: (Java,C/C--,Python,Go,...)
+  * @[http://kafka.apache.org/documentation/]
+  * Clients: (Java,C/C--,Python,Go,...)
     @[https://cwiki.apache.org/confluence/display/KAFKA/Clients]
-  - Official JAVA JavaDoc API:
+  * Official JAVA JavaDoc API:
     @[http://kafka.apache.org/11/javadoc/overview-summary.html]
-  - Papers, ppts, ecosystem, system tools, ...:
+  * Papers, ppts, ecosystem, system tools, ...:
     @[https://cwiki.apache.org/confluence/display/KAFKA/Index]
-  - Kafka Improvement Proposals (KIP)
+  * Kafka Improvement Proposals (KIP)
     @[https://cwiki.apache.org/confluence/display/KAFKA/Kafka+Improvement+Proposals]
-  - Data pipelines with Kotlin+Kafka+(async)Akka
+  * Data pipelines with Kotlin+Kafka+(async)Akka
     @[../JAVA/kotlin_map.html?query=data+pipelines+kafka]
- - Cheatsheets:
+ * Cheatsheets:
   @[https://lzone.de/cheat-sheet/Kafka]
   @[https://ronnieroller.com/kafka/cheat-sheet]
   @[https://abdulhadoop.wordpress.com/2017/11/06/kafka-command-cheat-sheet/]
@@ -75,6 +74,7 @@ design patterns.
    to directly, it is not recommended. Higher level
    constructs are recommended.
 
+```
 ┌────────┐              ┌──────────┐               ┌───────────┐
 │PRODUCER│ 1 ←······→ 1 │TOPIC     │ 1 ←···→ 0...N │SUBSCRIBERS│
 │        ··→ stream of··→(CATEGORY)│               │           │
@@ -97,12 +97,12 @@ can wait for ACK.         ↓                          CONSUMER   |    CONSUMER 
       │└Partition 1 replica │2┤│  0 1 2 3         │  ·+···←┤    |       ·    ·    ·
       │┌Partition   replica ├1││  ...             │   ·    |    |       ·    ·    ·     │
       │└Partition   replica │2┤│                  │   |···←┘    |       ·    ·    ·
-      │┌Partition 3 replica ├1││ - Partitions are │  ←┴················←┘    ·    ·     │
+      │┌Partition 3 replica ├1││ * Partitions are │  ←┴················←┘    ·    ·     │
       │└Partition 3 replica │2┤│ independent and  │             |            ·    ·
       │┌Partition   replica ├1││ grow at differn. │             |            ·    ·     │
       │└Partition   replica │2┤│ rates.           │             |            ·    ·
       │┌Partition 5 replica ├1││                  │             |            ·    ·     │
-      │└Partition 5 replica │2┤│ - Records expire │  ←······················←┘    ·
+      │└Partition 5 replica │2┤│ * Records expire │  ←······················←┘    ·
       │┌Partition   replica └1││ and can not be   │             |                 ·     │
       │└Partition   replica  2┘│ deleted manually │  ←···························←┘
       └──↑───────────────────^─┴──────────────────┘ * num. of group instances           │
@@ -111,20 +111,20 @@ can wait for ACK.         ↓                          CONSUMER   |    CONSUMER 
 ┌─────────────────────┴─────────────────┐ │   uniquelly indentifies the record
 ─ Partitions serve several purposes:      │   within the partition.                     │
   ─ allow scaling beyond a single server. │
-  ─ act as the ☞  UNIT OF PARALLELISM .   │  - aG CONSUMER GROUP is a view (state,  ┐   │
+  ─ act as the ☞  UNIT OF PARALLELISM .   │  * aG CONSUMER GROUP is a view (state,  ┐   │
 ─ Partition. RETENTION POLICY  indicates  │    position, or offset) of full LOG.    │
-  how much time records will be available │  - consumer groups enable different     ├───┘
+  how much time records will be available │  * consumer groups enable different     ├───┘
   for compsumption before being discarded.│    apps to have a different view of the │
--  NUMBER OF PARTITIONS IN AN EVENT HUB   │    LOG, and to read independently at    │
+*  NUMBER OF PARTITIONS IN AN EVENT HUB   │    LOG, and to read independently at    │
    DIRECTLY RELATES TO THE NUMBER OF      │    their own pace and with their own    ┘
    CONCURRENT READERS EXPECTED.           │    offsets:
--  TOTAL ORDER  OF EVENTS IS JUST GUARAN- │    * IN A STREAM PROCESSING ARCH,
+*  TOTAL ORDER  OF EVENTS IS JUST GUARAN- │    * IN A STREAM PROCESSING ARCH,
    TEED INSIDE A PARTITION.               │      EACH DOWNSTREAM APPLICATION
    Messages sent by a producer to a given │      EQUATES TO A CONSUMER GROUP
    partition are guaran. to be appended   │
    in the order they were sent.           │
           ┌───────────────────────────────┘
-- Messages sent by a producer to a particular topic partition are guaranteed
+* Messages sent by a producer to a particular topic partition are guaranteed
   to be appended in the order they are sent.
   ┌───────┴────────┐
   PARTITION REPLICA: (fault tolerance mechanism)
@@ -143,14 +143,15 @@ can wait for ACK.         ↓                          CONSUMER   |    CONSUMER 
     server failures without losing any records committed to the log.
 
  *1:
- - Log partitions are (dnyamically) divided over consumer instances so
+ * Log partitions are (dnyamically) divided over consumer instances so
    that each client instance is the exclusive consumer of a "fair share"
    of partitions at any point in time.
- - The consumer group generalizes the queue and publish-subscribe:
-   - As with a queue the consumer group allows you to divide (scale) up
+ * The consumer group generalizes the queue and publish-subscribe:
+   * As with a queue the consumer group allows you to divide (scale) up
      processing over a collection of processes (the members of the consumer group).
-   - As with publish-subscribe, Kafka allows you to broadcast messages to
+   * As with publish-subscribe, Kafka allows you to broadcast messages to
      multiple consumer groups
+```
 [[}]]
 
 # data-schema Support [[{kafka.101,enterprise_patterns,PM.TODO]]
@@ -167,6 +168,7 @@ can wait for ACK.         ↓                          CONSUMER   |    CONSUMER 
 @[https://www.slideshare.net/HadoopSummit/file-format-benchmark-avro-json-orc-parquet]
 
 * Example:
+```
   JAVA Class         ←··→ Avro Schema
   =================       ======================
   public class User {     {
@@ -177,23 +179,24 @@ can wait for ACK.         ↓                          CONSUMER   |    CONSUMER 
                               {"name": "name", "type": "string"}
                             ]
                           }
-
+```
 * No data is null by default                             [million_dolar_mistake]
-
 * Enterprise Patterns:
-  • Define global or by-product dictionary of Business events.
-  • Manage Avro schemas within a Source Control Management ( "Git" )
+  * Define global or by-product dictionary of Business events.
+  * Manage Avro schemas within a Source Control Management ( "Git" )
     (Notice also Avro support for schema evolution)
     "Dump" schemas and topic relations to Confluent Schema Registry
     when new events are validated (or existing events updated).
     event validation: Get sure they are really needed
     (they are NOT a duplicated view of other existing event).
-  • Ideally each kafka topic corresponds to a single schema.
+  * Ideally each kafka topic corresponds to a single schema.
     A (very opinionated)  "HIERARCHICAL TOPIC NAMING" can be similar to:
+    ```
     ${cluster}.${tenant}.${product_or_concern}.${recipient}.${version}
                                                 └────┬────┘
                                               process, person or group in charge
                                               of reacting to event.
+    ```
     This hierarchy also help in classifying different topics into
     different "Service Levels" categories (scalability, partitions, replication
     factor, retention time, ...)
@@ -206,62 +209,64 @@ can wait for ACK.         ↓                          CONSUMER   |    CONSUMER 
 by Jean-Paul Azar
 
 Confluent Schema Registry:
-  - REST API for producers/consumers managing Avro Schemas:
-    - store schemas for keys and values of Kafka records.
-    - List schemas and schema-versions by subject.
-    - Return schema by version or ID.
-    - get the latest version of a schema.
-    - Check if a given schema is compatible with a certain version.
-       - Compatibility level include:
-         - backward: data written with old schema readable with new one.
-         - forward : data written with new schema is readable with old one
-         - full    : backward + forward
-         - none    : Schema is stored by not schema validation is disabled
-                   (  not recommended ).
-       - configured  GLOBALLY OR PER SUBJECT.
+* REST API for producers/consumers managing Avro Schemas:
+  * store schemas for keys and values of Kafka records.
+  * List schemas and schema-versions by subject.
+  * Return schema by version or ID.
+  * get the latest version of a schema.
+  * Check if a given schema is compatible with a certain version.
+     * Compatibility level include:
+       * backward: data written with old schema readable with new one.
+       * forward : data written with new schema is readable with old one
+       * full    : backward + forward
+       * none    : Schema is stored by not schema validation is disabled
+                 (  not recommended ).
+     * configured  GLOBALLY OR PER SUBJECT.
 
-  - Compatibility settings can be set to support EVOLUTION OF SCHEMAS.  [[qa]]
+* Compatibility settings can be set to support EVOLUTION OF SCHEMAS.  [[qa]]
 
-  - Kafka Avro serialization project provides serializers
-    taking schemas as input?
-  - Producers send the schema (unique) ID and consumers fetch (and cache)
-    the full schema from the Schema Registry.
+* Kafka Avro serialization project provides serializers
+  taking schemas as input?
+* Producers send the schema (unique) ID and consumers fetch (and cache)
+  the full schema from the Schema Registry.
 
-  - Producer will create a new Avro record (schema ID, data).
-    Kafka Avro Serializer will register (and cache locally) the associated
-    schema if needed, before serializing the record.
+* Producer will create a new Avro record (schema ID, data).
+  Kafka Avro Serializer will register (and cache locally) the associated
+  schema if needed, before serializing the record.
 
-  - Schema Registry ensures that producer and consumer see compatible
-    schemas and AUTOMATICALLY "TRANSFORM" BETWEEN COMPATIBLE SCHEMAS,
-    TRANSFORMING PAYLOAD VIA AVRO SCHEMA EVOLUTION.
+* Schema Registry ensures that producer and consumer see compatible
+  schemas and AUTOMATICALLY "TRANSFORM" BETWEEN COMPATIBLE SCHEMAS,
+  TRANSFORMING PAYLOAD VIA AVRO SCHEMA EVOLUTION.
 
 # SCHEMA EVOLUTION:
-  Scenario:
-  - Avro schema modified after data has already been written to store
-    with old schema version.
+Scenario:
+* Avro schema modified after data has already been written to store
+  with old schema version.
+  ```
+  IMPORTANT:
+  ☞ From Kafka perspective, SCHEMA EVOLUTION happens only
+    DURING DESERIALIZATION AT THE CONSUMER (READ):
+    If consumer’s schema is different from the producer’s schema,
+    and they are compatible, the value or key is automatically
+    modified during deserialization to conform to the consumer's
+    read schema if possible.
+  ```
 
-  IMPORTANT:  ☞ From Kafka perspective, SCHEMA EVOLUTION happens only
-                DURING DESERIALIZATION AT THE CONSUMER (READ):
-                If consumer’s schema is different from the producer’s schema,
-                and they are compatible, the value or key is automatically
-                modified during deserialization to conform to the consumer's
-                read schema if possible.
+SCHEMA EVOLUTION: ALLOWED COMPATIBLE MODIFICATION
+* change/add field's default value.
+* add new         field with default value.
+* remove existing field with default value.
+* change field's order attribute.
+* add/remove      field-alias (  WARN:  can break consumers depending on the alias).
+* change type → union-containing-original-type.
 
-  SCHEMA EVOLUTION: ALLOWED COMPATIBLE MODIFICATION
-  - change/add field's default value.
-  - add new         field with default value.
-  - remove existing field with default value.
-  - change field's order attribute.
-  - add/remove      field-alias (  WARN:  can break consumers depending on the alias).
-  - change type → union-containing-original-type.
-
-  BEST PATTERNS:
-  - Provide a default value for fields in your schema.
-  - Never change a field's data type.
-  - Do NOT rename an existing field (use aliases instead).
+BEST PATTERNS:
+* Provide a default value for fields in your schema.
+* Never change a field's data type.
+* Do NOT rename an existing field (use aliases instead).
 
   Ex: Original schema v1:
-
+  ```
   {
     "namespace": "com.cloudurable.phonebook",
     "type": "record",
@@ -297,11 +302,10 @@ Confluent Schema Registry:
       }
     ]
   }
-
-- Schema Version 2:
+  ```
+* Schema Version 2:
+  ```
   "age" field, def. value -1, added
-
-
                | KAFKA LOG |
   Producer@v2 →|Employee@v2| ··→ consumer@v.1 ·····→ NoSQL Store
                |           |     ^                    ^
@@ -312,20 +316,20 @@ Confluent Schema Registry:
                |           |     consumer@ver.2 ←..... NoSQL Store
                |           |     ^                     ^
                |           |     age set to -1         'age' missing
-
-
-  REGISTRY REST API USSAGE:
-  └ POST New Schema
-  $ curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" \
-      --data ' { "schema": " { \"type": ... } } ' \
-      http://localhost:8081/subjects/Employee/versions
-
-  └ List all of the schemas:
-
-  $ curl -X GET http://localhost:8081/subjects
-
-    Using Java OkHttp client:
-
+  ```
+* REGISTRY REST API USSAGE:
+  * POST New Schema
+    ```
+    $ curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" \
+        --data ' { "schema": " { \"type": ... } } ' \
+        http://localhost:8081/subjects/Employee/versions
+    ```
+  * List all of the schemas:
+    ```
+    $ curl -X GET http://localhost:8081/subjects
+    ```
+  * Using Java OkHttp client:
+    ```
     package com.cloudurable.kafka.schema;
     import okhttp3.*;
     import java.io.IOException;
@@ -404,29 +408,30 @@ Confluent Schema Registry:
             );
         }
     }
+    ```
+* RUNNING SCHEMA REGISTRY
+  ```
+  $ CONFIG="etc/schema-registry/schema-registry.properties"
+  $ cat ${CONFIG}
+  listeners=http://0.0.0.0:8081
+  kafkastore.connection.url=localhost:2181
+  kafkastore.topic=_schemas
+  debug=false
 
-  RUNNING SCHEMA REGISTRY
-  $ $ CONFIG="etc/schema-registry/schema-registry.properties"
-  $ $ cat ${CONFIG}
-  $ listeners=http://0.0.0.0:8081
-  $ kafkastore.connection.url=localhost:2181
-  $ kafkastore.topic=_schemas
-  $ debug=false
-
-  $ $ .../bin/schema-registry-start ${CONFIG}
-
-  Writing Producers/Consumers with Avro Serializers/Sche.Reg
-
-  └ start up the Sch.Reg. pointing to ZooKeeper(cluster).
-  └ Configure gradle:
+  $ .../bin/schema-registry-start ${CONFIG}
+  ```
+  * Writing Producers/Consumers with Avro Serializers/Sche.Reg
+  ```
+  - start up the Sch.Reg. pointing to ZooKeeper(cluster).
+  - Configure gradle:
     plugins {
       id "com.commercehub.gradle.plugin.avro" version "0.9.0"
     }     └─────────────┬──────────────────┘
     //    http://cloudurable.com/blog/avro/index.html
     //    transform Avro type → Java class
     //    Plugin supports:
-    //    - Avro schema files (.avsc) ("Kafka")
-    //    - Avro RPC IDL (.avdl)
+    //    * Avro schema files (.avsc) ("Kafka")
+    //    * Avro RPC IDL (.avdl)
     // $ $ gradle build  ← generate java classes
 
     group 'cloudurable'
@@ -449,7 +454,9 @@ Confluent Schema Registry:
         createSetters = false
         fieldVisibility = "PRIVATE"
     }
-  └ Setup producer to use   Schema Registry  and   KafkaAvroSerializer
+    ```
+  * Setup producer to use   Schema Registry  and   KafkaAvroSerializer
+    ```
     package com.cloudurable.kafka.schema;
     import com.cloudurable.phonebook.Employee;
     import com.cloudurable.phonebook.PhoneNum;
@@ -498,7 +505,9 @@ Confluent Schema Registry:
             producer.close();
         }
     }
-  └ Setup consumer to use   Schema Registry  and   KafkaAvroSerializer
+    ```
+  * Setup consumer to use   Schema Registry  and   KafkaAvroSerializer
+    ```
     package com.cloudurable.kafka.schema;
     import com.cloudurable.phonebook.Employee;
     import io.confluent.kafka.serializers.KafkaAvroDeserializer;
@@ -549,40 +558,40 @@ Confluent Schema Registry:
           });
       }
     }
-
+    ```
     Notice that just like with the producer, we have to tell the
     consumer where to find the Registry, and we have to configure the
     Kafka Avro Deserializer.
 
-Configuring Schema Registry for the consumer:
-
-//Use Kafka Avro Deserializer.
-
-props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-
-                KafkaAvroDeserializer.class.getName());
-
-//Use Specific Record or else you get Avro GenericRecord.
-
-props.put(KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG, "true"); //Schema registry location.
-props.put(KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG,
-                "http://localhost:8081"); //<----- Run Schema Registry on 8081
-
-An additional step is that we have to tell it to use the generated
+* Configuring Schema Registry for the consumer:
+  ```
+  //Use Kafka Avro Deserializer.
+  
+  props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
+  
+                  KafkaAvroDeserializer.class.getName());
+  
+  //Use Specific Record or else you get Avro GenericRecord.
+  
+  props.put(KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG, "true"); //Schema registry location.
+  props.put(KafkaAvroDeserializerConfig.SCHEMA_REGISTRY_URL_CONFIG,
+                  "http://localhost:8081"); //<----- Run Schema Registry on 8081
+  ```
+  An additional step is that we have to tell it to use the generated
 version of the Employee object. If we did not, then it would use the
 Avro GenericRecord instead of our generated Employee object, which is
 a SpecificRecord. To learn more about using GenericRecord and
 generating code from Avro, read the Avro Kafka tutorial as it has
 examples of both.
 
-
-https://docs.confluent.io/current/schema-registry/index.html
-https://docs.confluent.io/current/schema-registry/schema_registry_tutorial.html
+* <https://docs.confluent.io/current/schema-registry/index.html>
+* <https://docs.confluent.io/current/schema-registry/schema_registry_tutorial.html>
 [[}]]
 
 # API Summary [[{]]
 [[{kafka,PM.ext_resource,02_DOC_HAS.comparative]]
 @[https://medium.com/@stephane.maarek/the-kafka-api-battle-producer-vs-consumer-vs-kafka-connect-vs-kafka-streams-vs-ksql-ef584274c1e]
+```
 ┌──────────────────────────────────────────────────────────────────┐
 │   ┌───────────────┐                           ┌──────────────┐   │
 │   │Schema Registry│                           │Control Center│   │
@@ -616,59 +625,59 @@ https://docs.confluent.io/current/schema-registry/schema_registry_tutorial.html
   ──────────────  ───────────────────────────────────────────────────────
   Streams/KSQL    Apps consuming from Kafka topics and injecting back
                   into Kafka:
-                  - KSQL   : SQL declarative syntax
-                  - Streams: "Complex logic" in programmatic java/...
+                  * KSQL   : SQL declarative syntax
+                  * Streams: "Complex logic" in programmatic java/...
   ──────────────  ───────────────────────────────────────────────────────
   Consumer        Apps consuming a stream,  and perform "real-time" action
                   on it (e.g. send email...)
   ──────────────  ───────────────────────────────────────────────────────
   Connect Sink    Read a stream and store it into a target store
   ──────────────  ───────────────────────────────────────────────────────
+```
 
-Producer API:
-└   extremely simple to use : send data and Wait in callback.
-└   Lot of custom code for ETL alike apps :
-    - How to track the source offsets?
-      (how to properly resume your producer in case of errors)
-    - How to distribute load for your ETL across many producers?
-    ( Kafka Connect Source API recommended in those cases)
+## Producer API
+* extremely simple to use : send data and Wait in callback.
+* Lot of custom code for ETL alike apps :
+  * How to track the source offsets?
+    (how to properly resume your producer in case of errors)
+  * How to distribute load for your ETL across many producers?
+  ( Kafka Connect Source API recommended in those cases)
 
-Connect Source API:
-└ High level API built on top of the Producer API for:
-  -  producer tasks   distribution for parallel processing
-  -  easy mechanism to resume producers
-└  "Lot" of available connectors  out of the box (zero-code).
+## Connect Source API
+* High level API built on top of the Producer API for:
+  *  producer tasks   distribution for parallel processing
+  *  easy mechanism to resume producers
+*  "Lot" of available connectors  out of the box (zero-code).
 
-Consumer API:
-└   KISS API : It uses Consumer Groups. Topics can be consumed in parallel.
-               Care must be put in offset management and commits, as well
-               as rebalances and idempotence constraints, they’re really
-               easy to write.
-               Perfect for stateless workloads  (notifications,...)
-└   Lot of custom code for ETL alike apps :
+## Consumer API
+* KISS API : It uses Consumer Groups. Topics can be consumed in parallel.
+             Care must be put in offset management and commits, as well
+             as rebalances and idempotence constraints, they’re really
+             easy to write.
+             Perfect for stateless workloads  (notifications,...)
+* Lot of custom code for ETL alike apps
 
-Connect Sink API:
-└  built on top of the consumer API.
-└  "Lot" of available connectors  out of the box (zero-code).
+## Connect Sink API
+* built on top of the consumer API.
+* "Lot" of available connectors  out of the box (zero-code).
 
-Streams API:
-└ Support for Java and Scala.
-└ It enables to write either:
-  -  High Level DSL (Apache Spark alike )
-  -  Low Level API  (Apache Storm alike ).
-└ Complicated Coding is still required, but producers/consumers handling
+## Streams API
+* Support for Java and Scala.
+* It enables to write either:
+  *  High Level DSL (Apache Spark alike )
+  *  Low Level API  (Apache Storm alike ).
+* Complicated Coding is still required, but producers/consumers handling
   completely is hidden.
   focussing on stream logic
-└  Support for 'joins', 'aggregations', 'exactly-once' semmantics.
-└  unit test can be difficult  (test-utils library to the rescue).
-└ Use of state stores, when backed up by Kafka topics, will force
+* Support for 'joins', 'aggregations', 'exactly-once' semmantics.
+* unit test can be difficult  (test-utils library to the rescue).
+* Use of state stores, when backed up by Kafka topics, will force
   processing a lot more messages , butB adding support for resilient apps .
 
-
-KSQL :
-└  wrapper on top of Kafka Streams .
-└  It abstract away Stream coding complexity.
-└  Not support for complex transformations, "exploding" arrays,...
+## KSQL :
+*  wrapper on top of Kafka Streams. 
+*  It abstract away Stream coding complexity.
+*  Not support for complex transformations, "exploding" arrays,...
    (as of 2019-11, gaps can be filled)
 [[}]]
 
@@ -678,10 +687,11 @@ KSQL :
 
 # producer [[{kafka,02_DOC_HAS.code_snippet]]
 @[http://kafka.apache.org/11/javadoc/index.html?org/apache/kafka/clients/producer/kafkaproducer.html]
-- send streams of data to topics in the cluster.
-- thread safe → sharing a singleton across threads will generally be faster.
+* send streams of data to topics in the cluster.
+* thread safe → sharing a singleton across threads will generally be faster.
 
-- ex:
+* ex:
+  ```
      import org.apache.kafka.clients.producer.KafkaProducer;
      // pre-setup:
      final properties kafkaconf = new Properties();
@@ -717,75 +727,72 @@ KSQL :
                -"enable.idempotence" setting -
                WARN : avoid application level re-sends in this case.
              See more details in official doc.
+  ```
+  tunning  "linger.ms"  tells producer to wait up to that number of milliseconds
+  before sending a request in hope that more records will arrive to fill up the
+  same batch. This can increase performance by introducing a determenistic delay
+  of at-least "linger.ms".
+  (similar to nagle's algorithm in tcp) .
 
-    tunning  "linger.ms"  tells producer to wait up to that number of milliseconds
-    before sending a request in hope that more records will arrive to fill up the
-    same batch. This can increase performance by introducing a determenistic delay
-    of at-least "linger.ms".
-    (similar to nagle's algorithm in tcp) .
-
-
-  - Kafka 0.11+ transactional producer allows clients to send messages to multiple
-    partitions and topics! atomically (producer.beginTransaction, producer.send,
-    producer.commit, producer.abortTransaction ).
+* Kafka 0.11+ transactional producer allows clients to send messages to multiple
+  partitions and topics! atomically (producer.beginTransaction, producer.send,
+  producer.commit, producer.abortTransaction ).
 
 # config
 see full list @ @[http://kafka.apache.org/documentation/#producerconfigs]
-- cleanup.policy       : "delete"* or "compact" retention policy for old log segments.
-- compression.type     : 'gzip', 'snappy', lz4, 'uncompressed'
-- index.interval.bytes : how frequently kafka adds an index entry to it's offset index.
-- leader.replication.throttled.replicas :  ex:
+* cleanup.policy       : "delete"* or "compact" retention policy for old log segments.
+* compression.type     : 'gzip', 'snappy', lz4, 'uncompressed'
+* index.interval.bytes : how frequently kafka adds an index entry to it's offset index.
+* leader.replication.throttled.replicas :  ex:
                          [partitionid] :[brokerid],[partitionid]:[brokerid]:... or
                          wildcard '*' can be used to throttle all replicas for this topic.
-- max.message.bytes    : largest record batch size allowed
-- message.format.version : valid apiversion ( 0.8.2, 0.9.0.0, 0.10.0, ...)
-- message.timestamp    : max dif allowed between the timestamp when broker receives
+* max.message.bytes    : largest record batch size allowed
+* message.format.version : valid apiversion ( 0.8.2, 0.9.0.0, 0.10.0, ...)
+* message.timestamp    : max dif allowed between the timestamp when broker receives
   .difference.max.ms     a message and timestamp specified in message.
 
-- message.timestamp.type : "createtime"|"logappendtime"
-- min.insync.replicas  : all|-1|"n": number of replicas that must acknowledge a write
+* message.timestamp.type : "createtime"|"logappendtime"
+* min.insync.replicas  : all|-1|"n": number of replicas that must acknowledge a write
                          for it to be considered  successful.
-- retention.ms         : time we will retain a log before old log segments are discarded.
+* retention.ms         : time we will retain a log before old log segments are discarded.
                          sla on how soon consumers must read their data .
 [[}]]
 
-# Consumer [[{api,code_snippet]]
+# Consumer KafkaConsumer<K,V> [[{api,code_snippet]]
 @[http://kafka.apache.org/26/javadoc/index.html?org/apache/kafka/clients/consumer/KafkaConsumer.html]
 @[http://kafka.apache.org/11/javadoc/index.html?org/apache/kafka/streams/KafkaStreams.html]
-
-Class KafkaConsumer<K,V>
-
-- client consuming records from cluster.
-- transparently handles failure of Kafka brokers,
-- transparently adapts as topic partitions it fetches migrate within the cluster.
-- This client also interacts with the broker to
+```
+* client consuming records from cluster.
+* transparently handles failure of Kafka brokers,
+* transparently adapts as topic partitions it fetches migrate within the cluster.
+* This client also interacts with the broker to
   allow consumer-groups to load balance consumption  .
-- consumer   is not thread-safe .
-- Compatible with brokers ver. 0.10.0+.
+* consumer   is not thread-safe .
+* Compatible with brokers ver. 0.10.0+.
 
 Basics:
-- Consumer  Position: offset of the next record that will be given out.
-- Committed position: last offset stored securely. Should the process
+* Consumer  Position: offset of the next record that will be given out.
+* Committed position: last offset stored securely. Should the process
                       fail and restart, this is the offset consumers will
                       recover to.
-  - Consumer can either automatically commit offsets periodically; or
+  * Consumer can either automatically commit offsets periodically; or
     commit it manually.(commitSync, commitAsync).
 
-- Consumer Groups and Topic Subscriptions:
-  - consumer groups: consumer instances sharing same group.id creating a
+* Consumer Groups and Topic Subscriptions:
+  * consumer groups: consumer instances sharing same group.id creating a
                      pool of processes (same or remote machines) to split
                      the processing of records.
-  - Each consumer in a group can dynamically set the list of topics it
+  * Each consumer in a group can dynamically set the list of topics it
     wants to subscribe to through one of the subscribe APIs.
-  - Kafka will deliver each message in the subscribed topics to one process
+  * Kafka will deliver each message in the subscribed topics to one process
     in each consumer group by balancing partitions between all members so that
     each partition is assigned to exactly one consumer in the group .
     (It makes no sense to have more consumers that partititions)
     Group rebalancing (map from partitions to consumer in group) occurs when:
-    - Consumer is added/removed/not-available*1 to pool.
+    * Consumer is added/removed/not-available*1 to pool.
       *1 liveness detection time defined in "max.poll.interval.ms".
-    - partition is added/removed from cluster.
-    - new topic matching a subscribed regex is created.
+    * partition is added/removed from cluster.
+    * new topic matching a subscribed regex is created.
     (Consumer groups just allow to have independent parallel multiprocess
      clients acting as a same app with no need to manual synchronization).
      (additional consumers are actually quite cheap).
@@ -793,9 +800,10 @@ Basics:
     (See official doc for advanced topics on balancing consumer groups)
 
 
-  - Simple Example Consumer: let Kafka dynamically assign a fair share of
+  * Simple Example Consumer: let Kafka dynamically assign a fair share of
                              the partitions for subscribed-to topics
     (See original doc for manual choosing partitions to consume from)
+    ```
     Properties configProps = new Properties();
     configProps.setProperty("bootstrap.servers", "localhost:9092");
     configProps.setProperty("group.id", "test");
@@ -813,44 +821,41 @@ Basics:
                ... ;  consumer.commitSync();  ...
            }
     }
-
-
+    ```
     Use consumer.seek(TopicPartition, long) to skip up to some record.
     Use seekToBeginning(Collection)/seekToEnd(Collection) to go to start/end of partition.
-
-
     See original doc for how to read Transactional Messages.
     See original doc for Multi-threaded Processing.
 
-# Config:
-@[http://kafka.apache.org/documentation/#consumerconfigs]
-@[http://kafka.apache.org/documentation/#newconsumerconfigs]
-@[http://kafka.apache.org/documentation/#oldconsumerconfigs]
+* Links:
+  * <http://kafka.apache.org/documentation/#consumerconfigs>
+  * <http://kafka.apache.org/documentation/#newconsumerconfigs>
+  * <http://kafka.apache.org/documentation/#oldconsumerconfigs>
 [[}]]
 
 [[}]]
 
 # Connect [[{kafka.101,PM.TODO]]
 @[http://kafka.apache.org/11/javadoc/index.html?overview-summary.html]
-(<a TODO href="http://kafka.apache.org/documentation.html#connect">more info</a>)
-- allows reusable producers or consumers that connect Kafka
+* <http://kafka.apache.org/documentation.html#connect>
+* allows reusable producers or consumers that connect Kafka
   topics to existing applications or data systems.
 
 ## Connectors List:
 @[https://docs.confluent.io/current/connect/connectors.html]
 @[https://docs.confluent.io/current/connect/managing/connectors.html]
-- Kafka connectors@github
+* Kafka connectors@github
   @[https://github.com/search?q=kafka+connector]
 
--  HTTP Sink
--  FileStream s (Development and Testing)
--  GitHub Source
--  JDBC (Source and Sink)
--  PostgresSQL Source (Debezium)
--  SQL Server Source (Debezium)
--  Syslog Source
-- AWS|Azure|GCD|Salesforce "*"
-- ...
+*  HTTP Sink
+*  FileStream s (Development and Testing)
+*  GitHub Source
+*  JDBC (Source and Sink)
+*  PostgresSQL Source (Debezium)
+*  SQL Server Source (Debezium)
+*  Syslog Source
+* AWS|Azure|GCD|Salesforce "*"
+* ...
 
 ## Config:
 @[http://kafka.apache.org/documentation/#connectconfigs]
@@ -859,7 +864,7 @@ Basics:
 # AdminClient [[{kafka,PM.TODO]]
 @[http://kafka.apache.org/11/javadoc/index.html?org/apache/kafka/clients/admin/AdminClient.html]
 
-- administrative client for Kafka, which supports managing and inspecting
+* administrative client for Kafka, which supports managing and inspecting
   topics, brokers, configurations and ACLs.
 
 ## Config:
@@ -870,26 +875,21 @@ Basics:
 @[http://kafka.apache.org/25/documentation/streams/]
 See also:
 @[http://kafka.apache.org/11/javadoc/index.html?org/apache/kafka/streams/KafkaStreams.html]
-- Built on top o producer/consumer API.
-
-- simple lightweight embedableB client library , with support for
+* Built on top o producer/consumer API.
+* simple lightweight embedableB client library , with support for
   real-time querying of app state with low level Processor API
   primitives plus high-level DSL.
-
-- transparent load balancing of multiple instances of an application.
+* transparent load balancing of multiple instances of an application.
   using Kafka partitioning model to horizontally scale processing
   while maintaining strong ordering guarantees.
-
-- Supports fault-tolerant local state, which enables very fast and
- efficient stateful operations like windowed joins and aggregations .
-
-- Supports exactly-once processing semantics when there is a
+* Supports fault-tolerant local state, which enables very fast and
+  efficient stateful operations like windowed joins and aggregations .
+* Supports exactly-once processing semantics when there is a
   client|Kafka failure.
-
-- Employs one-record-at-a-time processing to achieve millisecond
+* Employs one-record-at-a-time processing to achieve millisecond
   processing latency, and supports event-time based windowing
   operations with out-of-order arrival of records.
-
+  ```
   import org.apache.kafka.common.serialization.Serdes;
   import org.apache.kafka.common.utils.Bytes;
   import org.apache.kafka.streams.KafkaStreams;
@@ -940,72 +940,62 @@ See also:
       streams.start();
     }
   }
+  ```
 
-  Kafka Streams CORE CONCEPTS
+## Kafka Streams CORE CONCEPTS
 @[http://kafka.apache.org/25/documentation/streams/core-concepts]
 
-  └ Stream    : graph of stream processors (nodes) that
-    Processor   connected by streams (edges).
-    topology
-
-  └ Stream    : It represents an data set unbounded in size / time,
-                ordered, replayable and fault-tolerant inmmutable
-                record set.
-
-  └ Stream    : node processing an step to transform data
-    processor   in streams.
-                - It receives one input record at a time from
-                  upstream processors and produces 1+ output records.
-
-                - Special processors:
-                  - Source Processor: NO upstream processors,
-                    just one or multiple Kafka topics as input.
-
-                  - Sink Processor: no down-stream processors.
-                    Outpus goes to Kafka topic/external system.
-
-  └two ways to define the stream processing topology:
-   - Streams DSL  : map, filter, join and aggregations
-   - Processor API: (low-level) Custom processors. It also allows
-                    to interact with state stores.
-
-  └ Time model : operations like windowing are defined based
+* Stream Processor topology: graph of stream processors (nodes) that
+  connected by streams (edges).
+* Stream    : It represents an data set unbounded in size / time,
+              ordered, replayable and fault-tolerant inmmutable
+              record set.
+* Stream  processor: node processing an step to transform data
+              in streams.
+  * It receives one input record at a time from
+    upstream processors and produces 1+ output records.
+  * Special processors:
+    * Source Processor: NO upstream processors,
+      just one or multiple Kafka topics as input.
+    * Sink Processor: no down-stream processors.
+      Outpus goes to Kafka topic/external system.
+  * two ways to define the stream processing topology:
+    * Streams DSL  : map, filter, join and aggregations
+    * Processor API: (low-level) Custom processors. It also allows
+                     to interact with state stores.
+  * Time model : operations like windowing are defined based
                  on time boundaries.  Common notions of time in
-                streams are:
-    - Event      time:
-    - Ingestion  time: time it's stored into a topic partition.
-    - Processing time: It may be (milli)seconds for real time or
+                 streams are:
+    * Event      time:
+    * Ingestion  time: time it's stored into a topic partition.
+    * Processing time: It may be (milli)seconds for real time or
                        hours for batch time, after event time.
                        real event time.
-
-    - Kafka 0.10.x+ automatically embeds (event or ingestion) time.
+    * Kafka 0.10.x+ automatically embeds (event or ingestion) time.
       Event of ingestion choose can be done at Kafka or topic level
       in configuration.
-    - Kafka Streams assigns a TS to every data record via the
+    * Kafka Streams assigns a TS to every data record via the
       TimestampExtractor interface allowing to describe the "progress"
       of a stream with regards to time and are leveraged by
       time-dependent operations such as window operations.
-
-    - time only "advances" when a new record arrives at the
+    * time only "advances" when a new record arrives at the
       processor.  Concrete implementations of the TimestampExtractor
       interface will provide different semantics to the
       stream time definition.
-
-    - Finally, Kafka Streams sinks will also assign timestamps
+    * Finally, Kafka Streams sinks will also assign timestamps
       in a way that depends on the context:
-      - When output is generated from some input record,
+      * When output is generated from some input record,
         for example, context.forward(), TS is  inherited from input.
-      - When new output record is generated via periodic
+      * When new output record is generated via periodic
         functions such as Punctuator#punctuate(), TS is defined
         as current node internal time (context.timestamp()) .
-      - For aggregations, result update record TS is the max.
+      * For aggregations, result update record TS is the max.
         TS of all input records.
       NOTE: default behavior can be changed in the Processor API
             by assigning timestamps to output records explicitly
             in "#forward()".
-
-
-  └ Aggregation :
+  * Aggregation :
+    ```
     Operation
           INPUT                      OUTPUT
           --------                   ------
@@ -1013,157 +1003,150 @@ See also:
        or KTable
           ^             ^              ^
           DSL         Ex: count/sum  DSL object:
-                                     - new value is considered
+                                     * new value is considered
                                        to overwrite the old value
                                        with the same key in next
                                        steps.
-
-  └ Windowing :  - tracked per record key .
-                 - Available in  Streams DSL .
-                 - window. grace_period  controls
-                   how long Streams clients will wait for
-                   out-of-order data records.
-                 - Records arriving "later" are discarded.
-                   "late" == record.timestamp dictates it belongs
-                             to a window, but current stream time
-                             is greater than the end of the window
-                             plus the grace period.
-
-  └ States    :  - Needed by some streams.
-                 -  state stores  in Stream APIs allows apps to
-                   store and query data, needed by stateful operations.
-                 - Every task in Kafka Streams embeds 1+ state stores
-                   that can be accessed via APIs to store and query
-                   data required for processing. They can be:
-                   - persistent key-value store :
-                   - In-memory hashmap
-                   - "another convenient data structure".
-                 - Kafka Streams offers fault-tolerance and automatic
-                   recovery for local state-stores.
-                 - direct read-only queries of the state stores
-                   is provided to methods, threads, processes or
-                   applications external to the stream processing
-                   app through   Interactive Queries , exposing the
-                   underlying implementation of state-store read
-                   methods.
-
-  └ Processing : - at-least-once delivery
+    ```
+  * Windowing :
+    * tracked per record key .
+    * Available in  Streams DSL .
+    * window. grace_period  controls
+      how long Streams clients will wait for
+      out-of-order data records.
+    * Records arriving "later" are discarded.
+      "late" == record.timestamp dictates it belongs
+                to a window, but current stream time
+                is greater than the end of the window
+                plus the grace period.
+  * States    :  
+    * Needed by some streams.
+    *  state stores  in Stream APIs allows apps to
+      store and query data, needed by stateful operations.
+    * Every task in Kafka Streams embeds 1+ state stores
+      that can be accessed via APIs to store and query
+      data required for processing. They can be:
+      * persistent key-value store :
+      * In-memory hashmap
+      * "another convenient data structure".
+    * Kafka Streams offers fault-tolerance and automatic
+      recovery for local state-stores.
+    * direct read-only queries of the state stores
+      is provided to methods, threads, processes or
+      applications external to the stream processing
+      app through   Interactive Queries , exposing the
+      underlying implementation of state-store read
+      methods.
+  * Processing : 
+    * at-least-once delivery
     Guarantees     (processing.guarantee=exactly_once  in config)
-                 - exactly-once processing semantics (Kafka 0.11+)
-                                                      ^^^^^^^^^^
-                Kafka 0.11.0+ allows producers to send messages to
-                different topic partitions in transactional and
-                idempotent manner.
-                More specifically,Streams client APIguarantees that
-                for any record read from the source Kafka topics,
-                its processing results will be reflected exactly once
-                in the output Kafka topic as well as in the
-                state stores for stateful operations.
-                (KIP-129 lecture recomended)
-
-
-  └ Out-of-Order :
-    Handling
-      - Within topic-partition:
-        - records with larger timestamps but smaller offsets
-          are processed earlier.
-      - Within stream task processing "N" topic-partitions:
-        - If app is   not configured to wait for all partitions
-          to contain some buffered data  and pick from the
-          partition with the smallest timestamp to process
-          the next record, timestamps may be smaller in
-          following records for different partitions.
-          "FIX": Allows applications to wait for longer time
-                  while bookkeeping their states during the wait time.
-                  i.e. making trade-off decisions between latency,
-                 cost, and correctness.
-                 In particular, increase windows grace time.
-              As for Joins some "out-of-order" data cannot be handled
-              by increasing on latency and cost in Streams yet:
-
+    * exactly-once processing semantics.<br/> 
+      Kafka 0.11.0+ allows producers to send messages to
+      different topic partitions in transactional and
+      idempotent manner.
+      More specifically,Streams client APIguarantees that
+      for any record read from the source Kafka topics,
+      its processing results will be reflected exactly once
+      in the output Kafka topic as well as in the
+      state stores for stateful operations.
+      (KIP-129 lecture recomended)
+  * Out-of-Order : Handling
+    * Within topic-partition:
+      * records with larger timestamps but smaller offsets
+        are processed earlier.
+    * Within stream task processing "N" topic-partitions:
+      * If app is   not configured to wait for all partitions
+        to contain some buffered data  and pick from the
+        partition with the smallest timestamp to process
+        the next record, timestamps may be smaller in
+        following records for different partitions.
+        "FIX": Allows applications to wait for longer time
+        while bookkeeping their states during the wait time.
+        i.e. making trade-off decisions between latency,
+        cost, and correctness.
+        In particular, increase windows grace time.
+         As for Joins some "out-of-order" data cannot be handled
+        by increasing on latency and cost in Streams yet:
 
 ## Streams Config:
 See details: @[http://kafka.apache.org/documentation/#streamsconfigs]
-- Core config:
-  - application.id     : string unique within the Kafka cluster
-  - bootstrap.servers  : host1:port1,host2:port2
-                         ^^^^^^^^^^^^^^^^^^^^^^^
-                         No need to add all host. Just a few ones to start sync
-  - replication.factor : int, Default:1
-  - state.dir          : string, Default: /tmp/kafka-streams
-- Other params:
-  - cache.max.bytes.buffering: long, def: 10485760 (max bytes for buffering  across all threads )
-  - client.id          : ID prefix string used for the client IDs of internal consumer,
+* Core config:
+  * application.id     : string unique within the Kafka cluster
+  * bootstrap.servers  : host1:port1,host2:port2 (No need to add all hosts, just a few ones to start sync)
+  * replication.factor : int, Default:1
+  * state.dir          : string, Default: /tmp/kafka-streams
+* Other params:
+  * cache.max.bytes.buffering: long, def: 10485760 (max bytes for buffering  across all threads )
+  * client.id          : ID prefix string used for the client IDs of internal consumer,
                          producer and restore-consumer, with pattern '-StreamThread--'.
                          Default: ""
-  - default.deserialization.exception.handler
-  - default.key  .serde                   : Default serializer / deserializer class
-  - default.value.serde
-  - default.production.exception.handler: Exception handling class
-  - default.timestamp.extractor
-  - max.task.idle.ms : long, Maximum amount of time a stream task will stay idle
+  * default.deserialization.exception.handler
+  * default.key.serde: Default serializer / deserializer class
+  * default.production.exception.handler: Exception handling class
+  * default.timestamp.extractor
+  * max.task.idle.ms : long, Maximum amount of time a stream task will stay idle
                        when not all of its partition buffers contain records,
                        to avoid potential out-of-order record processing
                        across multiple input streams.
-  - num.standby.replicas: int (default to 0)
-  - num.stream.threads :
-  - processing.guarantee: at_least_once (default) | exactly_once.
-                                                    ^^^^^^^^^^^^
-                         - It requires 3+ brokers  in production
-                         - for development it can be changed by
-                           tunning broker setting
-                           - transaction.state.log.replication.factor
-                           - transaction.state.log.min.isr.
-  - security.protocol   : PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
-  - topology.optimization: [none*, all] Set wheher Kafka Streams should optimize the topology
-  - application.server  : Default: "", endpoint used for state store discovery and
+  * num.standby.replicas: int (default to 0)
+  * num.stream.threads :
+  * processing.guarantee: at_least_once (default) | exactly_once.
+    * It requires 3+ brokers  in production
+    * for development it can be changed by
+      tunning broker setting
+      * transaction.state.log.replication.factor
+      * transaction.state.log.min.isr.
+  * security.protocol   : PLAINTEXT, SSL, SASL_PLAINTEXT, SASL_SSL.
+  * topology.optimization: [none*, all] Set wheher Kafka Streams should optimize the topology
+  * application.server  : Default: "", endpoint used for state store discovery and
                           interactive queries on this KafkaStreams instance.
-  - buffered.records.per.partition: int, default to 1000
-  - built.in.metrics.version
-  - commit.interval.ms   : frequency to save the position of the processor.
-                          (default to 100 for exactly_once or 30000 otherwise).
-  - connections.max.idle.ms: Default:    540000
-  - metadata.max.age.ms:
-  - metric.reporters :
-  - metrics.num.samples:
-  - metrics.recording.level: [INFO, DEBUG]
-  - metrics.sample.window.ms
-  - poll.ms  : Amount of time in milliseconds to block waiting for input.
-  - receive.buffer.bytes: int, def: 32768, size of the TCP receive buffer (SO_RCVBUF) to use
+  * buffered.records.per.partition: int, default to 1000
+  * built.in.metrics.version
+  * commit.interval.ms   : frequency to save the position of the processor.
+    (default to 100 for exactly_once or 30000 otherwise).
+  * connections.max.idle.ms: Default:    540000
+  * metadata.max.age.ms:
+  * metric.reporters :
+  * metrics.num.samples:
+  * metrics.recording.level: [INFO, DEBUG]
+  * metrics.sample.window.ms
+  * poll.ms  : Amount of time in milliseconds to block waiting for input.
+  * receive.buffer.bytes: int, def: 32768, size of the TCP receive buffer (SO_RCVBUF) to use
                           when reading  data. Set to -1 to use OS default.
-  - send.buffer.bytes   : in, def: 131072, size of the TCP send   buffer (SO_SNDBUF ) to use
+  * send.buffer.bytes   : in, def: 131072, size of the TCP send   buffer (SO_SNDBUF ) to use
                            when sending data. Set to -1 to use OS default.
-  - reconnect.backoff.max.ms:
-  - reconnect.backoff.ms
-  - request.timeout.ms
-  - retries             : Setting a value greater than zero will cause the client to
+  * reconnect.backoff.max.ms:
+  * reconnect.backoff.ms
+  * request.timeout.ms
+  * retries             : Setting a value greater than zero will cause the client to
                           resend any request that fails with a potentially transient error.
-  - retry.backoff.ms    :
-  - rocksdb.config.setter:
-  - state.cleanup.delay.ms:
-  - upgrade.from :
-  - windowstore.changelog.additional.retention.ms:
+  * retry.backoff.ms    :
+  * rocksdb.config.setter:
+  * state.cleanup.delay.ms:
+  * upgrade.from :
+  * windowstore.changelog.additional.retention.ms:
 
 ## Examples:
 @[https://github.com/confluentinc/kafka-streams-examples]
-  - Examples: Runnable Applications
-  - Examples: Unit Tests
-  - Examples: Integration Tests
-  - Docker Example: Kafka Music demo application
-    Example  docker-compose.yml :
-             └───────┬────────┘
-             Services launched:
-             zookeeper:
-             kafka:
-             schema-registry:
-             kafka-create-topics:
-                 ...  kafka-topics --create --topic play-events ...
-                 ...  kafka-topics --create --topic song-feed   ...
+* Examples: Runnable Applications
+* Examples: Unit Tests
+* Examples: Integration Tests
+* Docker Example: Kafka Music demo application
+  ```
+  Example  docker-compose.yml :
+           └───────┬────────┘
+           Services launched:
+           zookeeper:
+           kafka:
+           schema-registry:
+           kafka-create-topics:
+               ...  kafka-topics --create --topic play-events ...
+               ...  kafka-topics --create --topic song-feed   ...
 
-             kafka-music-data-generator:  ← producer
-             kafka-music-application:     ← consumer
-
-  - Examples: Event Streaming Platform
+           kafka-music-data-generator:  ← producer
+           kafka-music-application:     ← consumer
+  ```
+* Examples: Event Streaming Platform
 [[}]]
 
 # KSQL(ksqlDB) [[{kafka,PM.TODO]]
@@ -1171,32 +1154,31 @@ See details: @[http://kafka.apache.org/documentation/#streamsconfigs]
 @[https://www.confluent.io/blog/ksql-open-source-streaming-sql-for-apache-kafka/]
 
 See also:
-- Pull Queries and Connector Management Added to ksqlDB (KSQL) Event Streaming Database for Kafka (2019-12)
+* Pull Queries and Connector Management Added to ksqlDB (KSQL) Event Streaming Database for Kafka (2019-12)
 @[https://www.infoq.com/news/2019/12/ksql-ksqldb-streaming-database/]
-  - pull queries to allow for data to be read at a specific point in
-    time using a SQL syntax, and Connector management that enables direct
-    control and execution of connectors built to work with Kafka Connect.
-  - Until now KSQL has only been able to query continuous streams
-    ("push queries"). Now it can also read current state of a materialized
-    view using pull queries:
-    These new queries can run with predictable low latency since the
-    materialized views are updated incrementally as soon as new
-    messages arrive.
-  - With the new connector management and its built-in support for a
-    range of connectors, it’s now possible to directly control and
-    execute these connectors with ksqlDB, instead of creating separate
-    solutions using Kafka, Connect, and KSQL to connect to external data
-    sources.
-    The motive for this feature is that the development team
-    believes building applications around event streams   was too complex .
-    Instead, they want to achieve the same simplicity as when building
-    applications using relational databases.
-
-  - Internally, ksqlDB architecture is based on a distributed commit
-    log used to synchronize the data across nodes. To manage state,
-    RocksDB is used to provide a local queryable storage on disk. A
-    commit log is used to update the state in sequences and to provide
-    failover across instances for high availability.
+* pull queries to allow for data to be read at a specific point in
+  time using a SQL syntax, and Connector management that enables direct
+  control and execution of connectors built to work with Kafka Connect.
+* Until now KSQL has only been able to query continuous streams
+  ("push queries"). Now it can also read current state of a materialized
+  view using pull queries:
+  These new queries can run with predictable low latency since the
+  materialized views are updated incrementally as soon as new
+  messages arrive.
+* With the new connector management and its built-in support for a
+  range of connectors, it’s now possible to directly control and
+  execute these connectors with ksqlDB, instead of creating separate
+  solutions using Kafka, Connect, and KSQL to connect to external data
+  sources.
+  The motive for this feature is that the development team
+  believes building applications around event streams   was too complex .
+  Instead, they want to achieve the same simplicity as when building
+  applications using relational databases.
+* Internally, ksqlDB architecture is based on a distributed commit
+  log used to synchronize the data across nodes. To manage state,
+  RocksDB is used to provide a local queryable storage on disk. A
+  commit log is used to update the state in sequences and to provide
+  failover across instances for high availability.
 [[}]]
 
 # Zeebe Streams  [[{enterprise_patterns,kafka,TODO]]
@@ -1220,7 +1202,7 @@ See also:
 
 # Docker Img For Developers [[{kafka,PM.low_code,computing.containerization,]]
 @[https://github.com/lensesio/fast-data-dev]
-- Apache Kafka docker image for developers; with Lenses (lensesio/box)
+* Apache Kafka docker image for developers; with Lenses (lensesio/box)
   or Lenses.io's open source UI tools (lensesio/fast-data-dev). Have a
   full fledged Kafka installation up and running in seconds and top it
   off with a modern streaming platform (only for kafka-lenses-dev),
@@ -1228,6 +1210,7 @@ See also:
   Registry, Lenses.io's Stream Reactor 25+ Connectors and more.
 
   Ex SystemD integration file:
+  ```
   /etc/systemd/system/kafkaDev.service
   | #!/bin/bash
   |
@@ -1248,124 +1231,122 @@ See also:
   |
   | [Install]
   | WantedBy=multi-user.target
+  ```
 [[}]]
 
 # DevOps [[{kafka.devops,PM.TODO]]
 ## Quick start
 @[http://kafka.apache.org/documentation.html#quickstart]
-  PRE-SETUP
-  Download tarball from mirror @[https://kafka.apache.org/downloads],
-  then untar like:
-  $ $ tar -xzf - kafka_2.13-2.5.0.tgz ; cd kafka_2.13-2.5.
+* PRE-SETUP
+  * Download tarball from mirror @[https://kafka.apache.org/downloads],
+    then untar like:
+    ```
+    $ tar -xzf * kafka_2.13-2.5.0.tgz ; cd kafka_2.13-2.5.
+    ```
+  * Start the server
+    ```
+    | $ ~ bin/zookeeper-server-start.sh \                      ← Start Zookeeper
+    |   config/zookeeper.properties 1>zookeeper.log 2>&1 &
+    |
+    | $ ~ bin/kafka-server-start.sh  \                         ← Start Kafka Server
+    |   config/server.properties 1>kafka.log  2>&1 & \
+    |
+    | $ bin/kafka-topics.sh --create --zookeeper \             ← Create   TEST  topic
+    |   localhost:2181  --replication-factor 1 \               (Alt.brokers can be
+    |   --partitions 1 --topic TEST                             configured to  auto-create
+    |                           └──┘                            them when publishing to
+    |                                                           non-existent ones)
+    |
+    | $ bin/kafka-topics.sh --list --zookeeper localhost:2181  ← Check topic
+    | $ TEST                                                   ← Expected output
+    |   └──┘
+    |
+    | $ bin/kafka-console-producer.sh --broker-list            ← Send some messages
+    |   localhost:9092 --topic TEST
+    | This is a message
+    | This is another message
+    | Ctrl+V
+    |
+    | $ bin/kafka-console-consumer.sh --bootstrap-server \     ← Start a consumer
+    | localhost:9092 --topic   test  --from-beginning
+    | This is a message
+    | This is another message
+    ```
 
-  - Start the server
-  $ $ ~ bin/zookeeper-server-start.sh \                      ← Start Zookeeper
-  $   config/zookeeper.properties 1>zookeeper.log 2>&1 &
-
-  $ $ ~ bin/kafka-server-start.sh  \                         ← Start Kafka Server
-  $   config/server.properties 1>kafka.log  2>&1 & \
-
-  $ $ bin/kafka-topics.sh --create --zookeeper \             ← Create   TEST  topic
-  $   localhost:2181  --replication-factor 1 \               (Alt.brokers can be
-  $   --partitions 1 --topic TEST                             configured to  auto-create
-                              └──┘                            them when publishing to
-                                                              non-existent ones)
-
-  $ $ bin/kafka-topics.sh --list --zookeeper localhost:2181  ← Check topic
-  $ $ TEST                                                   ← Expected output
-      └──┘
-
-  $ $ bin/kafka-console-producer.sh --broker-list            ← Send some messages
-  $   localhost:9092 --topic TEST
-  $ This is a message
-  $ This is another message
-  $ Ctrl+V
-
-  $ $ bin/kafka-console-consumer.sh --bootstrap-server \     ← Start a consumer
-  $ localhost:9092 --topic   test  --from-beginning
-  $ This is a message
-  $ This is another message
-
-
-  ********************************
-  * CREATING A 3 BROKERS CLUSTER *
-  ********************************
-  $ $ cp config/server.properties config/server-1.properties  ← Add 2 new broker configs.
-  $ $ cp config/server.properties config/server-2.properties
-                                  └───────────┬────────────┘
-               ┌──────────────────────────────┤
-   ┌───────────┴────────────┐      ┌──────────┴─────────────┐
-   config/server-1.properties:     config/server-2.properties:
-   broker.id=1                     broker.id=2                 ← unique id
-   listeners=PLAINTEXT://:9093     listeners=PLAINTEXT://:9094
-   log.dir=/tmp/kafka-logs-1       log.dir=/tmp/kafka-logs-2   ← avoid overwrite
-
-
-  $ $ bin/kafka-server-start.sh config/server-1.properties ...  ← Start 2nd cluser
-  $ $ bin/kafka-server-start.sh config/server-2.properties ...  ← Start 3rd cluser
-
-  $ $ bin/kafka-topics.sh --create --zookeeper localhost:2181\  ← Create new topic with
-  $   --replication-factor 3 --partitions 1                       replication factor of
-  $   --topic  topic02
-
-  $ $ bin/kafka-topics.sh --describe \                          ← Check know which broker
-  $   --zookeeper localhost:2181 --topic topic02                  is doing what
-   (output will be similar to)
-   Topic: topic02  PartitionCount:1  ReplicationFactor:3 Configs:         ← summary
-       Topic: topic02 Partition:0 Leader:1  Replicas: 1,2,0 Isr: 1,2,0 ← Partition 0
-                                                            └┬┘
-                                            set of "in-sync" replicas.
-                                           (subset of "replicas" currently
-                                            alive and in sync with "leader")
+### CREATING A 3 BROKERS CLUSTER
+  ```
+  |  $ cp config/server.properties config/server-1.properties  ← Add 2 new broker configs.
+  |  $ cp config/server.properties config/server-2.properties
+  |                                └───────────┬────────────┘
+  |             ┌──────────────────────────────┤
+  | ┌───────────┴────────────┐      ┌──────────┴─────────────┐
+  | config/server-1.properties:     config/server-2.properties:
+  | broker.id=1                     broker.id=2                 ← unique id
+  | listeners=PLAINTEXT://:9093     listeners=PLAINTEXT://:9094
+  | log.dir=/tmp/kafka-logs-1       log.dir=/tmp/kafka-logs-2   ← avoid overwrite
 
 
-  *****************************************
-  * Using Kafka Connect to import/export  *
-  * data using simple connectors          *
-  *****************************************
+  |  $ bin/kafka-server-start.sh config/server-1.properties ...  ← Start 2nd cluser
+  |  $ bin/kafka-server-start.sh config/server-2.properties ...  ← Start 3rd cluser
 
-  PRE-SETUP
-  $ $ echo -e "foo\nbar" &gt; test.txt         ← Prepare (input)test data
+  |  $ bin/kafka-topics.sh --create --zookeeper localhost:2181\  ← Create new topic with
+  |    --replication-factor 3 --partitions 1                       replication factor of
+  |    --topic  topic02
 
-  - SETUP source/sink Connectors:
-    config/connect-file-srcs.properties ← unique_connector_id, connector class,
-    config/connect-file-sink.properties   ...
+  |  $ bin/kafka-topics.sh --describe \                          ← Check know which broker
+  |    --zookeeper localhost:2181 --topic topic02                  is doing what
+  | (output will be similar to)
+  | Topic: topic02  PartitionCount:1  ReplicationFactor:3 Configs:         ← summary
+  |     Topic: topic02 Partition:0 Leader:1  Replicas: 1,2,0 Isr: 1,2,0 ← Partition 0
+  |                                                          └┬┘
+  |                                          set of "in-sync" replicas.
+  |                                         (subset of "replicas" currently
+  |                                          alive and in sync with "leader")
+  ```
 
-  $ $ bin/connect-standalone.sh \              ← Start   two connectors  running in
-  $   \                                          standalone mode (dedicated process)
-  $   config/connect-standalone.properties \   ← 1st param is common Kafka-Connect config
-  $   \                                          (brokers, serialization format ,...)
-  $   config/connect-file-srcs.properties  \
-  $   config/connect-file-sink.properties
-    └─────────────────┬────────────────────┘
-    examples in kafka distribution set the "pipeline" like:
-    "test.txt" → connect-test  → sink connector → "test.sink.txt"
+###  Using Kafka Connect to import/export data using simple connectors
 
+* PRE-SETUP
+  ```
+    $ echo -e "foo\nbar" &gt; test.txt         ← Prepare (input)test data
+  ```
+* SETUP source/sink Connectors:
+  ```
+  config/connect-file-srcs.properties ← unique_connector_id, connector class,
+  config/connect-file-sink.properties   ...
 
+  $ bin/connect-standalone.sh \              ← Start   two connectors  running in
+    \                                          standalone mode (dedicated process)
+    config/connect-standalone.properties \   ← 1st param is common Kafka-Connect config
+    \                                          (brokers, serialization format ,...)
+    config/connect-file-srcs.properties  \
+    config/connect-file-sink.properties
+  └─────────────────┬────────────────────┘
+  examples in kafka distribution set the "pipeline" like:
+  "test.txt" → connect-test  → sink connector → "test.sink.txt"
+  ```
 * See also: Ansible Install:
 @[https://github.com/confluentinc/cp-ansible]
 @[https://docs.confluent.io/current/installation/cp-ansible/index.html]
-  - Installs Confluent Platform packages.
-    - ZooKeeper
-    - Kafka
-    - Schema Registry
-    - REST Proxy
-    - Confluent Control Center
-    - Kafka Connect (distributed mode)
-    - KSQL Server
-
-  - systemd Integration
-
-  - Configuration options for:
-     plaintext, SSL, SASL_SSL, and Kerberos.
+* Installs Confluent Platform packages.
+  * ZooKeeper
+  * Kafka
+  * Schema Registry
+  * REST Proxy
+  * Confluent Control Center
+  * Kafka Connect (distributed mode)
+  * KSQL Server
+* systemd Integration
+* Configuration options for:
+   plaintext, SSL, SASL_SSL, and Kerberos.
 
 # Configuration
 ## Broker Config:
 @[http://kafka.apache.org/documentation/#configuration]
-  Main params:
-  - broker.id
-  - log.dirs
-  - zookeeper.connect
+Main params:
+* broker.id
+* log.dirs
+* zookeeper.connect
 
 ## Topics config
  @[http://kafka.apache.org/documentation/#topicconfigs"
@@ -1390,17 +1371,14 @@ http://kafka.apache.org/documentation.html#compaction
 [[}]]
 
 # Pulsar vs Kafka [[{architecture.event_stream.pulsar,kafka,02_DOC_HAS.comparative,PM.TODO]]
-- Pulsar is a younger project   inspired and informed by Kafka .
+* Pulsar is a younger project   inspired and informed by Kafka .
   Kafka on the other side has a bigger community.
-
-- Pulsar Webinars                                          [resource]
+* Pulsar Webinars                                          [resource]
 @[https://streamnative.io/resource#pulsar]
 
-  Pulsas "PRO"s over Kafka
-  ========================
-@[https://kafkaesque.io/7-reasons-we-choose-apache-pulsar-over-apache-kafka/]
-@[https://kesque.com/5-more-reasons-to-choose-apache-pulsar-over-kafka/]
-
+* Pulsas "PRO"s over Kafka
+  @[https://kafkaesque.io/7-reasons-we-choose-apache-pulsar-over-apache-kafka/]
+  @[https://kesque.com/5-more-reasons-to-choose-apache-pulsar-over-kafka/]
 1. Streaming and queuing Come together:
    Pulsar supports standard message queuing patterns, such as
    competing consumers, fail-over subscriptions, and easy message
@@ -1408,7 +1386,6 @@ http://kafka.apache.org/documentation.html#compaction
    and stores that information in its high-performance distributed
    ledger, Apache BookKeeper, handling many of the use cases of a
    traditional queuing system, like RabbitMQ.
-
 2. Simpler ussage:
    If you don't need partition you don't have to worry about them.
    "If you just need a topic, then use a topic". Do not worry about
@@ -1419,7 +1396,6 @@ http://kafka.apache.org/documentation.html#compaction
    distribute the load between multiple consumers.
    Pulsar has partitioned topics if you need them, but
    only if you need them .
-
 3. Fitting a log on a single server becomes a challenge (Disk full,
    remote copy o large logs can take a long time.
    More info at "Adding a New Broker Results in Terrible Performance"
@@ -1431,7 +1407,6 @@ http://kafka.apache.org/documentation.html#compaction
    single server is never a bottleneck. Failure scenarios are easier to
    deal with and   scaling out is a snap: Just add another server.
    No rebalancing needed.
-
 4. Stateless Brokers:
    In Kafka each broker contains the complete log for each of
    its partitions. If load gets too high, you can't simply add
@@ -1441,27 +1416,22 @@ http://kafka.apache.org/documentation.html#compaction
    to consumers, but the data is stored in Apache BookKeeper.
    If load gets high, just add another broker.
    It starts up quickly and gets to work right away.
-
 5. Geo-replication is a first-class feature in Pulsar.
    (vs proprietary add-on).
    Configuring it is easy and it just works. No PhD needed.
-
 6. Consistently Faster
    Pulsar delivers higher throughput along with lower and more
    consistent latency.
-
 7. All Apache Open Source
    input and output connectors (Pulsar IO), SQL-based topic queries
    (Pulsar SQL), schema registry,...
    (vs Kafka open-source features controlled by a commercial entity)
-
 8. Pulsar can have multiple tenants and those tenants can have
    multiple namespaces to keep things all organized. Add to that
    access controls, quotas, and rate-limiting for each namespace
    and you can imagine a future where we can all get along using
    just this one cluster.
    (WiP or Kafka in KIP-37).
-
 9. Replication
    You want to make sure your messages never get lost. In Kakfa
    you configure 2 or 3 replicas of each message in case
@@ -1475,7 +1445,6 @@ http://kafka.apache.org/documentation.html#compaction
    are equal giving more consistent latency behavior over time.
  @[https://kafkaesque.io/performance-comparison-between-apache-pulsar-and-kafka-latency/]
    (Kafka quorum is also a WiP in KIP-250)
-
 10.Tiered storage.
    What if you like to store messages forever (event-sourcing)?
    It can get expensive on main high-performance SSDs.
@@ -1483,12 +1452,10 @@ http://kafka.apache.org/documentation.html#compaction
    into practically infinite, cheap cloud storage (S3) and retrieve them
    just like you do those newer, fresh-as-a-daisy messages.
    (Kafka describes this feature in KIP-405).
-
 11.End-to-end encryption
    Producer Java client can encrypt message using shared keys with
    the consumer. (hidden info to broker).
    Kafka is in feature-request state (KIP-317).
-
 12.When an (stateless) Pulsar broker gets overloaded, pulsar rebalance
    request from clients automatically.
    It monitors the broker ussage of CPU, memory, and network (vs disk, since
@@ -1497,7 +1464,6 @@ http://kafka.apache.org/documentation.html#compaction
    In Kafka load-balancing is done by  installing another package
    such as LinkedIn's Cruise Control or paying for Confluent's rebalancer
    tool.
-
 — See also: [TODO]
 @[https://streamnative.io/blog/tech/pulsar-vs-kafka-part-1]
 [[}]]
@@ -1514,9 +1480,9 @@ http://kafka.apache.org/documentation.html#compaction
   cluster on a standalone workstation for testing purposes can be a
   challenge.
 * KubeMQ messaging service is built from the ground up with Kubernetes in mind:
-  - It is Statless  and Ephemeral.
-  - When config. changes are needed, nodes are shut down and replaced requiring
-  - Container images is "just" 30MB, suitable for local development.
+  * It is Statless  and Ephemeral.
+  * When config. changes are needed, nodes are shut down and replaced requiring
+  * Container images is "just" 30MB, suitable for local development.
     zero -configuration setup or post-install tweaking :
     A 'channel' is the only object developers need to create (forget about
     brokers, exchanges, orchestrators ... KubeMQ's Raft replaces ZooKeeper).
@@ -1536,55 +1502,54 @@ http://kafka.apache.org/documentation.html#compaction
 
 # Akka+Kotlin:Data Pipes [[{kafka.akka,PM.TODO]]
 @[https://www.kotlindevelopment.com/data-pipelines-kotlin-akka-kafka/]
-- Objective:
+* Objective:
   Create a "GitHub monitor" that build an analytics component that
   polls one of your services (GitHub), writes data into a message queue
   for later analysis, then, after post-processing, updates statistics in
   a SQL database.
-
-- Tooling: Akka Streams + Alpakka connector collection
-
-- "Architecture":
-  1) polls GitHub Event API for kotlin activity
-  2) writes all events into a Kafka topic for later use
-  3) reads events from Kafka and filters out PushEvents
-  4) updates a Postgres database with:
-     - who pushed changes
-     - when
-     - into which repository.
-
-- Akka summary: data is moving from Sources to Sinks.
+* Tooling: Akka Streams + Alpakka connector collection
+* "Architecture":
+  1. polls GitHub Event API for kotlin activity
+  2. writes all events into a Kafka topic for later use
+  3. reads events from Kafka and filters out PushEvents
+  4. updates a Postgres database with:
+     * who pushed changes
+     * when
+     * into which repository.
+* Akka summary: data is moving from Sources to Sinks.
   (Observable and Sink in RxJava)
 
  ENTRY POINT
-(standard main function)
-  fun main(vararg args: String) {
-    val system = ActorSystem.create()                          // "boilerplate" for using Akka and Akka Streams
-    val materializer = ActorMaterializer.create(system)
-    val gitHubClient = GitHubClient(system, materializer)      // instance used to poll the GitHub events API
-    val eventsProducer = EventsProducer(system, materializer)  // instance used to write events into Kafka
-    val eventsConsumer = EventsConsumer(system)                // instance used to read events from Kafka
-    val pushEventProcessor = PushEventProcessor(materializer)  // instance used to filter PushEvents and update the database
+ ```
+ | (standard main function)
+ |  fun main(vararg args: String) {
+ |    val system = ActorSystem.create()                          // "boilerplate" for using Akka and Akka Streams
+ |    val materializer = ActorMaterializer.create(system)
+ |    val gitHubClient = GitHubClient(system, materializer)      // instance used to poll the GitHub events API
+ |    val eventsProducer = EventsProducer(system, materializer)  // instance used to write events into Kafka
+ |    val eventsConsumer = EventsConsumer(system)                // instance used to read events from Kafka
+ |    val pushEventProcessor = PushEventProcessor(materializer)  // instance used to filter PushEvents and update the database
 
-    eventsProducer.write(gitHubClient.events())                // put things in motion.
-    pushEventProcessor.run(eventsConsumer.read())
-  }
+ |    eventsProducer.write(gitHubClient.events())                // put things in motion.
+ |    pushEventProcessor.run(eventsConsumer.read())
+ |  }
 
-  Each time we receive a response from GitHub, we parse it and send individual events downstream.
-  fun events(): Source<JsonNode, NotUsed> =
-    poll().flatMapConcat { response ->
-      response.nodesOpt
-        .map { nodes -> Source.from(nodes) }
-        .orElse(Source.empty())
-    }
-
+ |  Each time we receive a response from GitHub, we parse it and send individual events downstream.
+ |  fun events(): Source<JsonNode, NotUsed> =
+ |    poll().flatMapConcat { response ->
+ |      response.nodesOpt
+ |        .map { nodes -> Source.from(nodes) }
+ |        .orElse(Source.empty())
+ |    }
+ ```
  EventsProducer and EventsConsumer
 (the "power" of Akka Streams and Alpakka)
 
-- Akka-Streams-Kafka greatly reduces the amount of code
+* Akka-Streams-Kafka greatly reduces the amount of code
   that we have to write for integrating with Kafka.
   Publishing events into a Kafka topic look like:
 
+  ```
   fun write(events: Source<JsonNode, NotUsed>)
       : CompletionStage<Done>
         =  events.map {                                        // ← maps GitHub event to(Kafka)ProducerRecord
@@ -1595,11 +1560,12 @@ http://kafka.apache.org/documentation.html#compaction
       }.runWith(                        // ← connects Source Sink
           Producer.plainSink(settings), materializer)
           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        - defined@Akka Streams Kafka
-        - takes care of communicating with Kafka
+        * defined@Akka Streams Kafka
+        * takes care of communicating with Kafka
+  ```
+* The other way around, reading from Kafka, is also super simple.
 
-- The other way around, reading from Kafka, is also super simple.
-
+  ```
   fun read(): Source<JsonNode, NotUsed> =
     Consumer.plainSource(
         settings,
@@ -1607,14 +1573,16 @@ http://kafka.apache.org/documentation.html#compaction
             TopicPartition("kotlin-events", 0), 0L))
        .map { record -> objectMapper.readTree(record.value()) }
        .mapMaterializedValue { NotUsed.getInstance() }
+  ```
 
   At this point, we have a copy of GitHub's events feed for github.com/Kotlin stored in Kafka,
-so we can time travel and run different analytics jobs on our local dataset.
+  so we can time travel and run different analytics jobs on our local dataset.
 
- PushEventProcessor
+* PushEventProcessor
  we want to filter out PushEvents from the stream
  and update a Postgres database with the results.
- - Alpakka Slick (JDBC) Connector is used to connect to PostgreSQL.
+ * Alpakka Slick (JDBC) Connector is used to connect to PostgreSQL.
+   ```
    fun createTableIfNotExists(): Source<Int, NotUsed> {
      val ddl =
        """
@@ -1630,9 +1598,9 @@ so we can time travel and run different analytics jobs on our local dataset.
        """.trimMargin()
      return Slick.source(session, ddl, { _ -> 0 })
    }
-
- - Similarly, the function to update the database looks like this.
-
+   ```
+ * Similarly, the function to update the database looks like this.
+   ```
    fun Source<PushEvent, NotUsed>.updateDatabase() :
        CompletionStage<Done> =
            createTableIfNotExists().flatMapConcat { this }
@@ -1651,28 +1619,26 @@ so we can time travel and run different analytics jobs on our local dataset.
            |ON CONFLICT DO NOTHING
          """.trimMargin()
        }), materializer)
-
+   ```
    We are almost done, what's left is filtering and mapping from JsonNode to
    PushEvent and composing the methods together.
-
+   ```
    fun Source<JsonNode, NotUsed>.filterPushEvents(): Source<PushEvent, NotUsed> =
      filter { node -> node["type"].asText() == "PushEvent" }
        .map { node -> objectMapper.convertValue(node, PushEvent::class.java) }
-
+   ```
    And finally, all the functions composed together look like this.
+   ```
    fun run(events: Source<JsonNode, NotUsed>): CompletionStage<Done> =
      events
        .filterPushEvents()
        .updateDatabase()
-
+   ```
   This is why we've used the extension methods above, so we can describe
   transformations like this, simply chained together.
   That's it, after running the app for a while (gradle app:run) we can see
   the activities around different Kotlin repositories.
-
-
-You can find the complete source code on GitHub.
-
+  (complete source code on GitHub)
     A very nice property of using Akka Streams and Alpakka is that it makes
   really easy to migrate/reuse your code, e.g. in case you want to store data
   in Cassandra later on instead of Postgres. All you would have to do is define
@@ -1698,7 +1664,7 @@ You can find the complete source code on GitHub.
 [[}]]
 ## Kafka Backup [[{]]
 @[https://github.com/itadventurer/kafka-backup]
-- Kafka Backup is a tool to back up and restore your Kafka data
+* Kafka Backup is a tool to back up and restore your Kafka data
   including all (configurable) topic data and especially also consumer
   group offsets. To the best of our knowledge, Kafka Backup is the only
   viable solution to take a cold backup of your Kafka data and restore
@@ -1706,13 +1672,13 @@ You can find the complete source code on GitHub.
 [[}]]
 ## Leasson Learned
 @[https://www.confluent.io/blog/stories-front-lessons-learned-supporting-apache-kafka/]
-  - Under-replicated Partitions Continue to Grow Inexplicably
-  - Kafka Liveness Check and Automation Causes Full Cluster Down
-  - Adding a New Broker Results in Terrible Performance
+  * Under-replicated Partitions Continue to Grow Inexplicably
+  * Kafka Liveness Check and Automation Causes Full Cluster Down
+  * Adding a New Broker Results in Terrible Performance
 
 ## Faust (Python Streams)
 @[https://github.com/robinhood/faust]
-  - Faust provides both stream processing and event processing, sharing
+  * Faust provides both stream processing and event processing, sharing
     similarity with tools such as Kafka Streams, Apache
     Spark/Storm/Samza/Flink,
 
