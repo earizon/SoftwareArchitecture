@@ -1,9 +1,5 @@
-## Apropos:
-  Content is versioned in git.  commits, issues and pull-requests welcome!
-@[https://www.github.com/earizon/SoftwareArchitecture]
-
-
-[[{Enterprise_Patterns]]
+[[{qa.enterprise_patterns]]
+# Enterprise Patters 
 
 # ESB Architecture:[[{enterprise_patterns.101,data.integration]]
 - Can be defined by next feautes:
@@ -43,7 +39,7 @@ s   |
 
 # Apache NiFi: Data Routing [[{enterprise_patterns,data.integration,architecture.event_stream]]
                             [[PM.low_code,ui,architecture.decoupled,kafka,]]
-@[https://nifi.apache.org]
+<https://nifi.apache.org>
 - no-code, .drag-and-drop Web-GUI to build pipelines for
   data route+transform (99% NiFi users will never see a line of code)
 - Deployed as a standalone application  (vs framework, api or library)
@@ -78,13 +74,13 @@ s   |
     authorization/policy management
 
 - DevOps:
-@[https://dzone.com/articles/setting-apache-nifi-on-docker-containers]
+<https://dzone.com/articles/setting-apache-nifi-on-docker-containers>
 REFS:
 - NiFi+Spark:
-@[https://blogs.apache.org/nifi/entry/stream_processing_nifi_and_spark"]
+<https://blogs.apache.org/nifi/entry/stream_processing_nifi_and_spark">
 
 - Nifi "vs" Cammel: [comparative]
-@[https://stackoverflow.com/questions/65625166/apache-camel-vs-apache-nifi]
+<https://stackoverflow.com/questions/65625166/apache-camel-vs-apache-nifi>
 [[}]]
 
 # GraphQL Engine: [[{data.analytics,PM.low_code,PM.TODO]]
@@ -107,7 +103,7 @@ REFS:
 [[}]]
 
 # NoCoDB: DDBB to spreedsheet:  [[{data.analytics,PM.low_code,PM.TODO]]
-@[https://www.nocodb.com/]
+<https://www.nocodb.com/>
 ## Second position in GitHub for Top 32 Automatic Api Open Source Projects on Github (
 
 https://awesomeopensource.com/projects/automatic-api
@@ -163,10 +159,10 @@ https://github.com/metabase/metabase
 [[}]]
 
 # Business Data charts: [[{enterprise_patterns.101]]
-@[https://www.forbes.com/sites/bernardmarr/2017/07/20/the-7-best-data-visualization-tools-in-2017/#643a48726c30]
+<https://www.forbes.com/sites/bernardmarr/2017/07/20/the-7-best-data-visualization-tools-in-2017/#643a48726c30>
 
 ## Apache Superset [[{]]
-  @[https://www.phoronix.com/scan.php?page=news_item&px=Apache-Superset-Top-Level]
+  <https://www.phoronix.com/scan.php?page=news_item&px=Apache-Superset-Top-Level>
   Superset is the project's big data visualization and business
   intelligence web solution. Apache Superset allows for big data
   exploration and visualization with data from a variety of databases
@@ -191,7 +187,7 @@ https://github.com/metabase/metabase
   |  numbers
 
 # TOGAF  [[{enterprise_patterns,PM.TODO]]
-@[https://en.wikipedia.org/wiki/The_Open_Group_Architecture_Framework]
+<https://en.wikipedia.org/wiki/The_Open_Group_Architecture_Framework>
 The Open Group Architecture Framework (TOGAF) is a framework for enterprise
 architecture that provides an approach for designing, planning, implementing,
 and governing an enterprise information technology architecture.[2] TOGAF is
@@ -204,7 +200,7 @@ TOGAF was developed starting 1995 by The Open Group, based on DoD's TAFIM. As
 of 2016, The Open Group claims that TOGAF is employed by 80% of Global 50
 companies and 60% of Fortune 500 companies.[3]
 
-Summary from @[https://www.redhat.com/architect/TOGAF-importance]
+Summary from <https://www.redhat.com/architect/TOGAF-importance>
 ## organization created in 1996. 850-global members as of 2021-11
   advancing in technology standards services, certifications,
   research, and training.
@@ -239,7 +235,7 @@ Summary from @[https://www.redhat.com/architect/TOGAF-importance]
 [[}]]
 
 # KOGITO: [[{PM.low_code,architecture,PM.TODO]]
-@[http://kie.org/]
+<http://kie.org/>
 
 # Kogito == Drools + jBPM + OptaPlanner
 # Drools
@@ -250,37 +246,4 @@ Summary from @[https://www.redhat.com/architect/TOGAF-importance]
     Also use in other projects like https://www.shopizer.com/, and OOSS
     java ecommerce solution based on Spring/Hibernate/Drools/Elastic.
 
-# jBPM
-@[https://www.jbpm.org/]
-  - toolkit for building business applications to help automate business
-    processes and decisions.
-  - jBPM originates from BPM (Business Process Management) but it has
-    evolved to enable users to pick their own path in business
-    automation. It provides various capabilities that simplify and
-    externalize business logic into reusable assets such as cases,
-    processes, decision tables and more.
-    - business processes (BPMN2)
-    - case management (BPMN2 and CMMN)
-    - decision management (DMN)
-    - business rules (DRL)
-    - business optimisation (Solver)
-
-  - jBPM can be used as standalone service or embedded in custom
-    service. It does not mandate any of the frameworks to be used, it can
-    be successfully used in
-    - traditional JEE applications - war/ear deployments
-    - SpringBoot, Thorntail, ... deployments
-    - standalone java programs
-
-# OptaPlanner              [[{enterprise_patterns.optimization]]
-  OptaPlanner is an AI constraint solver. It optimizes planning and
-  scheduling problems, such as the Vehicle Routing Problem, Employee
-  Rostering, Maintenance Scheduling, Task Assignment, School
-  Timetabling, Cloud Optimization, Conference Scheduling, Job Shop
-  Scheduling, Bin Packing and many more. Every organization faces such
-  challenges: assign a limited set of constrained resources (employees,
-  assets, time and/or money) to provide products or services.
-  OptaPlanner delivers more efficient plans, which reduce costs and
-  improve service quality.  [[}]]
-[[}]]
-[[Enterprise_Patterns}]]
+[[qa.enterprise_patterns}]]

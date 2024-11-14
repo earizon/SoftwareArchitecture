@@ -1,11 +1,11 @@
-<pre zoom labels="big_data.hadoop,storage.distributed,devops,PM.low_code,">
+<pre zoom labels="bigdata.hadoop,storage.distributed,devops,PM.low_code,">
 <span xsmall>Ambari: Hadoop Cluster Provision</span>
-@[https://projects.apache.org/project.html?ambari]
+<https://projects.apache.org/project.html?ambari>
 Apache Ambari makes Hadoop cluster provisioning, managing, and monitoring dead simple.
 </pre>
 
 # Hadoop "vs" Spark: [[{]]
-@[https://www.infoworld.com/article/3014440/big-data/five-things-you-need-to-know-about-hadoop-v-apache-spark.html]
+<https://www.infoworld.com/article/3014440/big-data/five-things-you-need-to-know-about-hadoop-v-apache-spark.html>
 Hadoop is essentially a distributed data infrastructure:
  -It distributes massive data collections across multiple nodes
   within a cluster of commodity servers
@@ -54,7 +54,7 @@ recovery from faults or failures," Borne pointed out.
 [[}]]
 
 # Hive: Data WareHouse on top of Hadoop
-@[https://projects.apache.org/project.html?hive]
+<https://projects.apache.org/project.html?hive>
 - querying and managing utilities for large datasets
   residing in distributed storage built on top of Hadoop
 - easy data extract/transform/load (ETL)
@@ -63,4 +63,4 @@ recovery from faults or failures," Borne pointed out.
   systems such as Apache HBase (TM)
 
 - HiveMQ Broker: MQTT+Kafka for IoT:
-@[https://www.infoq.com/news/2019/04/hivemq-extension-kafka-mqtt/]
+<https://www.infoq.com/news/2019/04/hivemq-extension-kafka-mqtt/>

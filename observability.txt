@@ -1,129 +1,160 @@
-# OBSERVABILITY = LOGING + MONITORING + TRACING [[{observability.101]]
+[[{observability.101]]
+# OBSERVABILITY: LOGING+MONITORING+TRACING
 
-## Distributed request-tracing with Zipkin b3 standard [[{tracing.distributed.b3,standards.b3,PM.low_code]]
+* Observability is about inferring the internal state of an app    [[{PM.101}]]
+  from its external outputs.
+* Manageability is about changing internal state and output from
+  external inputs.
+* In both cases, the application artifact is never changed.
+  It's immutable.
+* The Observability Engineering team at Twitter identifies four pillars
+  of observability:
+  * Monitoring: Monitoring is about measuring specific aspects of an
+    application to get information on its overall health and identify
+    failures.
+    (e.g:  export to Prometheus of relevant metrics about the
+    application).
+  * Alerting/visualization: When a failure is identified while monitoring
+    an application, an alert should be triggered, and some action should
+    be taken to handle it.  (email, grafana, ...)
+  * Distributed systems tracing infrastructure: trace the data flowing
+    through the different subsystems. (e.g: Spring Cloud Sleuth integrated with Jaeger)
+  * Log aggregation/analytics: Keeping track of the main events in an
+    application is critical to infer the software’s behavior and debug
+    it if something goes wrong.
+      In a cloud nativesystem, logs should be aggregated and collected to
+    provide a better picture of the system behavior and have the possibility
+    of running analytics to mine information from thosedata.
+    E.g: ELK (Elastic, Logstash, Kibana) or  EFK (Elastic, Fluentd, Kibana)
 
-The b3 standards allows to automatically trace distributed calls
-with zero-code
+[[{tracing.distributed.B3,tracing.standards.B3,monitoring.HTTP,rest,architecture.distributed,DISTRIBUTED.101,PM.low_code]]
+## Zipkin B3 request-tracing Standard
 
-    TraceContext    Request Headers
-    @Client+Server
-    Tracer
-    ─────────────
-    TraceId         X-B3-TraceId      : (128|64) bits shared by every span
-                                         (32|16) lower-hex character encoding.
-    ParentSpanId    X-B3-ParentSpanId : 64 bits, position of parent  operation in trace tree
-                                        ("empty" for root)
-    SpanId          X-B3-SpanId       : 64 bits,      position of current operation in trace tree
+* identifiers used to place an operation in a TRACE TREE.
+* These attributes are propagated in-process, and eventually 
+downstream (often via http headers), to ensure all activity 
+originating from the same root are collected together.
+* A sampling decision is made at the root of the trace, and this 
+indicates if trace details should be collected and reported to the 
+tracing system (usually Zipkin) or not.
 
-    Sampling        X-B3-Sampled       <·· (Optional, can be sent alone), otherwise it always refer
-      decision                             to the trace ID (vs span ID)
-    └───┬────┘                             e.g:
-        ·                                  X-B3-Sampled: 0 <·· Deny (NoOp@Server Tracer)
-        ·                                  X-B3-Sampled: 1 <·· Accept
-  * Defer  : (absence of sampling state)
-             Used by proxies,... for pre-provisioning trace identifiers.
-             (not yet sent to tracer)
-  * Deny   : achieve probabilistic rate or prevent certain paths from tracing (health checks,...).
-  * Accept : Ensure that certain paths are always traced (in a probablistic way,..),
-  * Debug: : `X-B3-Flags: 1` (least common use case) like Accept, but additionally reporting
-             `Span.debug = true` for each span in the trace.
+# Overall Process
+## use-case 1: copy trace-context from client··>server request.
+* same span ID is used
+  ```
+  => client and server end up in the same node in the trace tree.
+  ```
+* Ex flow: (Assumption: HTTP request carries the propagated trace)
+  ```
+  |  TraceContext    Request Headers
+  |  @Client+Server
+  |  Tracer
+  |  ─────────────
+  |  TraceId         X-B3-TraceId      : (128|64) bits shared by every span
+  |                                       (32|16) lower-hex character encoding.
+  |  ParentSpanId    X-B3-ParentSpanId : 64 bits, position of parent  operation in trace tree
+  |                                      ("empty" for root)
+  |  SpanId          X-B3-SpanId       : 64 bits, position of current operation in trace tree
 
-# B3 Encodings (done by libraries/frameworks/proxies) include :
-*  multi-header HTTP headers (2012): X-B3-... headers
-* single-header HTTP:                X-B3-${name}
-* [binary encoding]
+  |  Sampling        X-B3-Sampled       <·· (Optional, can be sent alone), otherwise it always
+  |  decision                                refer to the trace ID (vs span ID)
+  |  └────┬─────┘                            e.g:
+  |       ·                                  X-B3-Sampled: 0 <·· Deny (NoOp@Server Tracer)
+  |       ·                                  X-B3-Sampled: 1 <·· Accept
+  |*Defer  : (absence of sampling state)
+  |          Used by proxies,... for pre-provisioning trace identifiers.
+  |          (not yet sent to tracer)
+  |*Deny   : achieve probabilistic rate or prevent certain paths from tracing (health checks,...).
+  |*Accept : Ensure that certain paths are always traced (in a probablistic way,..),
+  |*Debug: : `X-B3-Flags: 1` (least common use case) like Accept, but additionally reporting
+  |          `Span.debug = true` for each span in the trace.
+  ```
+
+## B3 Encodings
+It is done by libraries/frameworks/proxies include
+*  multi-header HTTP : `X-B3-...` headers (2012)
+  ```
+  |X-B3-TraceId: 80f...
+  |X-B3-ParentSpanId: 05e3...
+  |X-B3-SpanId: e457b5a2e4d86bd1
+  |X-B3-Sampled: 1
+   ------------
+   case-insensitive for HTTP,
+   case-  sensitive for other transports.
+  ```
+* single-header HTTP :
+  ```
+  |b3: 0                                <·· single sampling decision,
+  |                                         header still named `b3`
+  |b3: 80f...-e457b5a2e4d86bd1-1-05e3...
+  |    └─────────────┬─────────────────┘
+  |   {TraceId}-{SpanId}-{SamplingState}-{ParentSpanId}
+  |   └───┬───┘ 
+  |   non-128b: 
+  |   128-bits: 
+  |   epoch128: 128-bit prefixed with  32 bits epoch seconds
+                It can  be translated into an Amazon Web Services ID.
+                that can pass through ELBs for example.
+  ```
+* binary encoding
 * Custom Encodings
-
-Note: Http headers are case-insensitive, other transports are NOT. Default ot lowercase keys.
-
-## Single Header
-`b3={TraceId}-{SpanId}-{SamplingState}-{ParentSpanId}`
-
-For example, the following state encoded in multiple headers:
-```
-X-B3-TraceId: 80f...
-X-B3-ParentSpanId: 05e3...
-X-B3-SpanId: e457b5a2e4d86bd1
-X-B3-Sampled: 1
-```
-
-Becomes one `b3` header, for example:
-```
-b3: 80f...-e457b5a2e4d86bd1-1-05e3...
-```
-
-*Note:* When only propagating a sampling decision, the header is still named `b3`, but only contains the sampling state.
-
-A deny decision encodes as:
-```
-b3: 0
-```
-
-## 128-bit trace ID:
-* supported:  Can start traces with 128-bit trace IDs, propagates and reports them as 128-bits
-* epoch128: Can start traces with 128-bit trace IDs which are prefixed with epoch seconds
-
-NOTE: When trace ID is 128-bits and the first 32 bits are epoch seconds,
-      the ID can be translated into an Amazon Web Services ID.
-      Tracers who do this can tunnel through ELBs, for example.
-
-See also:
-* [w3c standard](https://www.w3.org/blog/2019/12/trace-context-enters-proposed-recommendation/)
-[[}]]
+* See also: 
+  * <https://www.w3.org/blog/2019/12/trace-context-enters-proposed-recommendation/>
+[[architecture.distributed.b3}]]
 
 ## OpenTelemetry [[{]]
-@[https://opentelemetry.io/]
-- Emerging suite of standards for (Cloud Native) Observability.
-- integration with modern observability SaaS providers like
+<https://opentelemetry.io/>
+* Emerging suite of standards for (Cloud Native) Observability.
+* integration with modern observability SaaS providers like
   Honeycomb, Datadog, Stackdriver, ...
 
+* Ver también: <https://www.infoq.com/news/2023/11/otel-logging-stable/>
+
 ## OpenTelemetry Announces Roadmap for Metrics Specification:
-@[https://www.infoq.com/news/2021/03/opentelemetry-metrics-roadmap/]
+<https://www.infoq.com/news/2021/03/opentelemetry-metrics-roadmap/>
   The OpenTelemetry project announced its roadmap for its metrics
   specification. The roadmap includes a stable metrics API/SDK, metrics
   data model and protocol, and compatibility with Prometheus.
 [[}]]
 
 ## Zipkin [[{tracing.distributed,PM.low_code,PM.TODO]]
-@[https://zipkin.io/]
+<https://zipkin.io/>
 [[}]]
 
 ## Autometrics!! [[{low_code,qa.UX]]
-@[https://github.com/autometrics-dev]
+<https://github.com/autometrics-dev>
 * Why Autometrics?  Simplifying code-level observability
-
-Many modern observability tools promise to make life "easy for
-developers" by automatically instrumenting your code with an agent or
-eBPF. Others ingest tons of logs or traces -- and charge high fees
-for the processing and storage.
-
-Most of these tools treat your system as a black box and use complex
-and pricey processing to build up a model of your system. This,
-however, means that you need to map their model onto your mental
-model of the system in order to navigate the mountains of data.
-
-Autometrics takes the opposite approach. Instead of throwing away
-valuable context and then using compute power to recreate it, it
-starts inside your code. It enables you to understand your production
-system at one of the most fundamental levels: from the function:
-  It makes it easy to instrument any function with the most useful
-metrics: request rate, error rate, and latency. Autometrics uses
-instrumented function names to generate Prometheus queries so you
-don't need to hand-write complicated PromQL.
-
-   │instrument code with  │··>│Write queries│
-   │function─level metrics│   │automatically│
-                                   ·
-    ┌·····························─┘
-    ·
-    ├··>│ Insert links to│··┐
-    ·   │ charts in IDE  │  ·
-    ·                       ·     │ Easier debugging │
-    ├··>│ Easily define  │  ├····>│ for developers   │
-    ·   │ alerts/SLOs    │  ·     │ & more reliable  │
-    ·                       ·     │ software for     │
-    └··>│ Dashboards to  │··┘     │ users            │
-        │ Visualize data │
+* Many modern observability tools promise to make life "easy for
+  developers" by automatically instrumenting your code with an agent or
+  eBPF. Others ingest tons of logs or traces -- and charge high fees
+  for the processing and storage.
+* Most of these tools treat your system as a black box and use complex
+  and pricey processing to build up a model of your system. This,
+  however, means that you need to map their model onto your mental
+  model of the system in order to navigate the mountains of data.
+* Autometrics takes the opposite approach. Instead of throwing away
+  valuable context and then using compute power to recreate it, it
+  starts inside your code. It enables you to understand your production
+  system at one of the most fundamental levels: from the function:
+    It makes it easy to instrument any function with the most useful
+  metrics: request rate, error rate, and latency. Autometrics uses
+  instrumented function names to generate Prometheus queries so you
+  don't need to hand-write complicated PromQL.
+  ```
+  | │instrument code with  │··>│Write queries│
+  | │function─level metrics│   │automatically│
+  |                                 ·
+  |  ┌·····························─┘
+  |  ·
+  |  ├··>│ Insert links to│··┐
+  |  ·   │ charts in IDE  │  ·
+  |  ·                       ·     │ Easier debugging │
+  |  ├··>│ Easily define  │  ├····>│ for developers   │
+  |  ·   │ alerts/SLOs    │  ·     │ & more reliable  │
+  |  ·                       ·     │ software for     │
+  |  └··>│ Dashboards to  │··┘     │ users            │
+  |      │ Visualize data │
+  ```
 
 [[}]]
 [[observability.101}]]

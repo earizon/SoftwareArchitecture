@@ -1,4 +1,4 @@
-# GraphQL: [[{protocol.graphql,qa.standards,api,protocol.client_server,data.integration,PM.low_code,PM.TODO]]
+# GraphQL: [[{protocol.graphql,qa.standards,api_mng.graphql,protocol.client_server,data.integration,PM.low_code,PM.TODO]]
 
 ## KEY-POINT:
 > STOP thinking about data in terms of resource URLs, secondary keys, or join tables;
@@ -16,7 +16,7 @@ GraphQL:
 * Removes the need for custom (vs DDBB) caches.
 
 ## When GraphQL is NOT for you [[{PM.risks]]
-@[https://betterprogramming.pub/graphql-from-excitement-to-deception-f81f7c95b7cf]
+<https://betterprogramming.pub/graphql-from-excitement-to-deception-f81f7c95b7cf>
 * GraphQL doesn’t play well with documents.
 * Types must be defined in both GraphQL, backend and mobile apps.
   Possible solutions include:
@@ -97,7 +97,7 @@ GraphQL:
                                 StepZen
                                 MuleSoft
 
-* Federation ("Apollo") assumes a company’s schema should be a distributed responsibility.
+ Federation ("Apollo") assumes a company’s schema should be a distributed responsibility.
   ```
     User       Products    Reviews
   Subgraph     Subgraph    Subgraph
@@ -125,13 +125,14 @@ GraphQL:
 [[}]]
 
 
-# Hasura GraphQL Engine [[{data.analytics,PM.low_code,PM.low_code,QA.UX,PM.TODO]]
+# Hasura GraphQL Engine [[{data.analytics,PM.low_code,PM.low_code,QA.UX,PM.TODO.NOW]]
 (Related: https://github.com/facebook/relay, similar but React focused)
 * Blazing fast, instant realtime GraphQL APIs for DB with fine
   grained access control, also trigger webhooks on database events.
 * POLE POSITION in GitHub for Top 32 Automatic API OOSS Projects
   https://awesomeopensource.com/projects/automatic-api
 * Example:
+  ```
   PostgreSQL data                   GraphQL SUBSCRIPTION                      UI (Web, Mobile, ...)
 
   ORDERS TABLE                       subscription fetchOrder {    ··········> event pushed to update UI
@@ -142,6 +143,7 @@ GraphQL:
   ---------+--------+-----------         dispatched
   ...                                  }
                                      }
+  ```
 [[}]]
 
 ## Mock Service Worker [[{]]
@@ -249,11 +251,11 @@ https://github.com/hasura/graphql-engine
 
 # Apollo GraphQL  [[{ENTERPRISE_PATTERNS.OPTIMIZATION]]
 * Schema Combiner:
-@[https://www.apollographql.com/]
+<https://www.apollographql.com/>
 * Simplify app development by combining APIs, databases and microservices
   into a single data graph that can be queried with GraphQL.
 
-@[https://www.infoq.com/news/2020/06/apollo-platform-graphql/]
+<https://www.infoq.com/news/2020/06/apollo-platform-graphql/>
   Apollo Data Graph Platform: A GraphQL Middleware Layer for the Enterprise
 [[}]]
 

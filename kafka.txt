@@ -1,17 +1,17 @@
 ## Apropos:
   Content is versioned in git.  commits, issues and pull-requests welcome!
-@[https://www.github.com/earizon/SoftwareArchitecture]
-[[{kafka]]
-
+<https://www.github.com/earizon/SoftwareArchitecture>
 # Event Based Architecture: [[{]]
-@[https://www.infoq.com/news/2017/11/jonas-reactive-summit-keynote]
+
+* <https://www.infoq.com/news/2017/11/jonas-reactive-summit-keynote>
+
 Jonas Boner ... talked about event driven services (EDA) and
 event stream processing (ESP)... on distributed systems.
 
 ... background on EDA evolution over time:
 * Tuxedo, Terracotta and Staged Event Driven Architecture (SEDA).
 
-Events represent facts
+Events represent facts [[{doc_has.keypoint}]]
 * Events drive autonomy in the system and help to reduce risk.
 * increase loose coupling, scalability, resilience, and traceability.
 * ... basically inverts the control flow in the system
@@ -45,27 +45,32 @@ Kafka Streams, Apache Gearpump and Apache Beam can be used to implement these
 design patterns.
 [[}]]
 
+## When NOT to use Apache Kafka? [[{PM.TODO}]]
+* <https://www.kai-waehner.de/blog/2022/01/04/when-not-to-use-apache-kafka/>
+
+
+
 # Kafka Summary [[{]]
 * External Links:
-  * @[http://kafka.apache.org/documentation/]
+  * <http://kafka.apache.org/documentation/>
   * Clients: (Java,C/C--,Python,Go,...)
-    @[https://cwiki.apache.org/confluence/display/KAFKA/Clients]
+    <https://cwiki.apache.org/confluence/display/KAFKA/Clients>
   * Official JAVA JavaDoc API:
-    @[http://kafka.apache.org/11/javadoc/overview-summary.html]
+    <http://kafka.apache.org/11/javadoc/overview-summary.html>
   * Papers, ppts, ecosystem, system tools, ...:
-    @[https://cwiki.apache.org/confluence/display/KAFKA/Index]
+    <https://cwiki.apache.org/confluence/display/KAFKA/Index>
   * Kafka Improvement Proposals (KIP)
-    @[https://cwiki.apache.org/confluence/display/KAFKA/Kafka+Improvement+Proposals]
+    <https://cwiki.apache.org/confluence/display/KAFKA/Kafka+Improvement+Proposals>
   * Data pipelines with Kotlin+Kafka+(async)Akka
-    @[../JAVA/kotlin_map.html?query=data+pipelines+kafka]
+    <../JAVA/kotlin_map.html?query=data+pipelines+kafka>
  * Cheatsheets:
-  @[https://lzone.de/cheat-sheet/Kafka]
-  @[https://ronnieroller.com/kafka/cheat-sheet]
-  @[https://abdulhadoop.wordpress.com/2017/11/06/kafka-command-cheat-sheet/]
-  @[https://github.com/Landoop/kafka-cheat-sheet]
+  <https://lzone.de/cheat-sheet/Kafka>
+  <https://ronnieroller.com/kafka/cheat-sheet>
+  <https://abdulhadoop.wordpress.com/2017/11/06/kafka-command-cheat-sheet/>
+  <https://github.com/Landoop/kafka-cheat-sheet>
 
 
-# Global Diagram [[{kafka,101,02_DOC_HAS.diagram]]
+# Global Diagram [[{101,DOC_HAS.diagram]]
 (one+ server in 1+ datacenters)
 
 ☞  best practice : publishers must be unaware of underlying
@@ -106,13 +111,13 @@ can wait for ACK.         ↓                          CONSUMER   |    CONSUMER 
       │┌Partition   replica └1││ and can not be   │             |                 ·     │
       │└Partition   replica  2┘│ deleted manually │  ←···························←┘
       └──↑───────────────────^─┴──────────────────┘ * num. of group instances           │
-                      │      │    ←── offset ─→       must be <= # partitions
+                      │      │    <── offset ─>       must be <= # partitions
                       │      └────────────┐   record.offset (sequential id)             │
 ┌─────────────────────┴─────────────────┐ │   uniquelly indentifies the record
-─ Partitions serve several purposes:      │   within the partition.                     │
-  ─ allow scaling beyond a single server. │
-  ─ act as the ☞  UNIT OF PARALLELISM .   │  * aG CONSUMER GROUP is a view (state,  ┐   │
-─ Partition. RETENTION POLICY  indicates  │    position, or offset) of full LOG.    │
+- Partitions serve several purposes:      │   within the partition.                     │
+  - allow scaling beyond a single server. │
+  - act as the  !!UNIT OF PARALLELISM!!   │  * a CONSUMER GROUP is a view (state,   ┐   │
+- Partition. RETENTION POLICY  indicates  │    position, or offset) of full LOG.    │
   how much time records will be available │  * consumer groups enable different     ├───┘
   for compsumption before being discarded.│    apps to have a different view of the │
 *  NUMBER OF PARTITIONS IN AN EVENT HUB   │    LOG, and to read independently at    │
@@ -154,7 +159,7 @@ can wait for ACK.         ↓                          CONSUMER   |    CONSUMER 
 ```
 [[}]]
 
-# data-schema Support [[{kafka.101,enterprise_patterns,PM.TODO]]
+# data-schema Support [[{101,PM.TODO]]
 # Apache AVRO format
 * Efficient compac way to store data in disk.
 * "Imported" from Hadoop's World.
@@ -165,7 +170,7 @@ can wait for ACK.         ↓                          CONSUMER   |    CONSUMER 
 * Support for on-demand deserialization of columns (vs full data) .
 * It's not a column store (like Parquet, supporting better compression and insertion    [comparative]
   predicates), but it adapts better to big fragments of data.
-@[https://www.slideshare.net/HadoopSummit/file-format-benchmark-avro-json-orc-parquet]
+<https://www.slideshare.net/HadoopSummit/file-format-benchmark-avro-json-orc-parquet>
 
 * Example:
 ```
@@ -181,7 +186,7 @@ can wait for ACK.         ↓                          CONSUMER   |    CONSUMER 
                           }
 ```
 * No data is null by default                             [million_dolar_mistake]
-* Enterprise Patterns:
+* Enterprise Patterns: [[{qa.best_patterns]]
   * Define global or by-product dictionary of Business events.
   * Manage Avro schemas within a Source Control Management ( "Git" )
     (Notice also Avro support for schema evolution)
@@ -200,12 +205,13 @@ can wait for ACK.         ↓                          CONSUMER   |    CONSUMER 
     This hierarchy also help in classifying different topics into
     different "Service Levels" categories (scalability, partitions, replication
     factor, retention time, ...)
+[[qa.best_patterns}]]
 
-@[https://shravan-kuchkula.github.io/kafka-schemas/#understand-why-data-schemas-are-a-critical-part-of-a-real-world-stream-processing-application]
+<https://shravan-kuchkula.github.io/kafka-schemas/#understand-why-data-schemas-are-a-critical-part-of-a-real-world-stream-processing-application>
 
 # Kafka Schema Registry
   DZone Intro Summary
-@[https://dzone.com/articles/kafka-avro-serialization-and-the-schema-registry]
+<https://dzone.com/articles/kafka-avro-serialization-and-the-schema-registry>
 by Jean-Paul Azar
 
 Confluent Schema Registry:
@@ -588,9 +594,9 @@ examples of both.
 * <https://docs.confluent.io/current/schema-registry/schema_registry_tutorial.html>
 [[}]]
 
-# API Summary [[{]]
-[[{kafka,PM.ext_resource,02_DOC_HAS.comparative]]
-@[https://medium.com/@stephane.maarek/the-kafka-api-battle-producer-vs-consumer-vs-kafka-connect-vs-kafka-streams-vs-ksql-ef584274c1e]
+# API Summary <!-- { API Summary -->
+[[{PM.ext_resource,DOC_HAS.comparative]]
+<https://medium.com/@stephane.maarek/the-kafka-api-battle-producer-vs-consumer-vs-kafka-connect-vs-kafka-streams-vs-ksql-ef584274c1e>
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │   ┌───────────────┐                           ┌──────────────┐   │
@@ -681,12 +687,12 @@ examples of both.
    (as of 2019-11, gaps can be filled)
 [[}]]
 
-# Message Delivery Semantics  [[{kafka,PM.TODO]]
-@[http://kafka.apache.org/documentation.html#semantics]
+# Message Delivery Semantics  [[{PM.TODO]]
+<http://kafka.apache.org/documentation.html#semantics>
 [[}]]
 
-# producer [[{kafka,02_DOC_HAS.code_snippet]]
-@[http://kafka.apache.org/11/javadoc/index.html?org/apache/kafka/clients/producer/kafkaproducer.html]
+# producer [[{DOC_HAS.code_snippet]]
+<http://kafka.apache.org/11/javadoc/index.html?org/apache/kafka/clients/producer/kafkaproducer.html>
 * send streams of data to topics in the cluster.
 * thread safe → sharing a singleton across threads will generally be faster.
 
@@ -739,7 +745,7 @@ examples of both.
   producer.commit, producer.abortTransaction ).
 
 # config
-see full list @ @[http://kafka.apache.org/documentation/#producerconfigs]
+see full list @ <http://kafka.apache.org/documentation/#producerconfigs>
 * cleanup.policy       : "delete"* or "compact" retention policy for old log segments.
 * compression.type     : 'gzip', 'snappy', lz4, 'uncompressed'
 * index.interval.bytes : how frequently kafka adds an index entry to it's offset index.
@@ -758,10 +764,10 @@ see full list @ @[http://kafka.apache.org/documentation/#producerconfigs]
                          sla on how soon consumers must read their data .
 [[}]]
 
-# Consumer KafkaConsumer<K,V> [[{api,code_snippet]]
-@[http://kafka.apache.org/26/javadoc/index.html?org/apache/kafka/clients/consumer/KafkaConsumer.html]
-@[http://kafka.apache.org/11/javadoc/index.html?org/apache/kafka/streams/KafkaStreams.html]
-```
+# Consumer KafkaConsumer<K,V> [[{101.api.consumer,DOC_HAS.code_snippet]]
+<http://kafka.apache.org/26/javadoc/index.html?org/apache/kafka/clients/consumer/KafkaConsumer.html>
+<http://kafka.apache.org/11/javadoc/index.html?org/apache/kafka/streams/KafkaStreams.html>
+
 * client consuming records from cluster.
 * transparently handles failure of Kafka brokers,
 * transparently adapts as topic partitions it fetches migrate within the cluster.
@@ -833,19 +839,19 @@ Basics:
   * <http://kafka.apache.org/documentation/#oldconsumerconfigs>
 [[}]]
 
-[[}]]
+<!-- API Summary } -->
 
-# Connect [[{kafka.101,PM.TODO]]
-@[http://kafka.apache.org/11/javadoc/index.html?overview-summary.html]
+# Connect [[{101,PM.TODO]]
+<http://kafka.apache.org/11/javadoc/index.html?overview-summary.html>
 * <http://kafka.apache.org/documentation.html#connect>
 * allows reusable producers or consumers that connect Kafka
   topics to existing applications or data systems.
 
 ## Connectors List:
-@[https://docs.confluent.io/current/connect/connectors.html]
-@[https://docs.confluent.io/current/connect/managing/connectors.html]
+<https://docs.confluent.io/current/connect/connectors.html>
+<https://docs.confluent.io/current/connect/managing/connectors.html>
 * Kafka connectors@github
-  @[https://github.com/search?q=kafka+connector]
+  <https://github.com/search?q=kafka+connector>
 
 *  HTTP Sink
 *  FileStream s (Development and Testing)
@@ -857,24 +863,24 @@ Basics:
 * AWS|Azure|GCD|Salesforce "*"
 * ...
 
-## Config:
-@[http://kafka.apache.org/documentation/#connectconfigs]
+## Config
+* <http://kafka.apache.org/documentation/#connectconfigs>
 [[}]]
 
-# AdminClient [[{kafka,PM.TODO]]
-@[http://kafka.apache.org/11/javadoc/index.html?org/apache/kafka/clients/admin/AdminClient.html]
+# AdminClient [[{PM.TODO]]
+<http://kafka.apache.org/11/javadoc/index.html?org/apache/kafka/clients/admin/AdminClient.html>
 
 * administrative client for Kafka, which supports managing and inspecting
   topics, brokers, configurations and ACLs.
 
-## Config:
-@[http://kafka.apache.org/documentation/#adminclientconfigs]
+## Config
+* <http://kafka.apache.org/documentation/#adminclientconfigs>
 [[}]]
 
-# Streams [[{kafka,architecture.event_stream,PM.TODO]]
-@[http://kafka.apache.org/25/documentation/streams/]
+# Streams [[{architecture.event_stream,PM.TODO]]
+<http://kafka.apache.org/25/documentation/streams/>
 See also:
-@[http://kafka.apache.org/11/javadoc/index.html?org/apache/kafka/streams/KafkaStreams.html]
+<http://kafka.apache.org/11/javadoc/index.html?org/apache/kafka/streams/KafkaStreams.html>
 * Built on top o producer/consumer API.
 * simple lightweight embedableB client library , with support for
   real-time querying of app state with low level Processor API
@@ -943,7 +949,7 @@ See also:
   ```
 
 ## Kafka Streams CORE CONCEPTS
-@[http://kafka.apache.org/25/documentation/streams/core-concepts]
+<http://kafka.apache.org/25/documentation/streams/core-concepts>
 
 * Stream Processor topology: graph of stream processors (nodes) that
   connected by streams (edges).
@@ -1069,7 +1075,7 @@ See also:
         by increasing on latency and cost in Streams yet:
 
 ## Streams Config:
-See details: @[http://kafka.apache.org/documentation/#streamsconfigs]
+See details: <http://kafka.apache.org/documentation/#streamsconfigs>
 * Core config:
   * application.id     : string unique within the Kafka cluster
   * bootstrap.servers  : host1:port1,host2:port2 (No need to add all hosts, just a few ones to start sync)
@@ -1127,7 +1133,7 @@ See details: @[http://kafka.apache.org/documentation/#streamsconfigs]
   * windowstore.changelog.additional.retention.ms:
 
 ## Examples:
-@[https://github.com/confluentinc/kafka-streams-examples]
+<https://github.com/confluentinc/kafka-streams-examples>
 * Examples: Runnable Applications
 * Examples: Unit Tests
 * Examples: Integration Tests
@@ -1149,13 +1155,13 @@ See details: @[http://kafka.apache.org/documentation/#streamsconfigs]
 * Examples: Event Streaming Platform
 [[}]]
 
-# KSQL(ksqlDB) [[{kafka,PM.TODO]]
-@[https://www.confluent.io/]
-@[https://www.confluent.io/blog/ksql-open-source-streaming-sql-for-apache-kafka/]
+# KSQL(ksqlDB) [[{PM.TODO]]
+<https://www.confluent.io/>
+<https://www.confluent.io/blog/ksql-open-source-streaming-sql-for-apache-kafka/>
 
 See also:
 * Pull Queries and Connector Management Added to ksqlDB (KSQL) Event Streaming Database for Kafka (2019-12)
-@[https://www.infoq.com/news/2019/12/ksql-ksqldb-streaming-database/]
+<https://www.infoq.com/news/2019/12/ksql-ksqldb-streaming-database/>
 * pull queries to allow for data to be read at a specific point in
   time using a SQL syntax, and Connector management that enables direct
   control and execution of connectors built to work with Kafka Connect.
@@ -1181,8 +1187,8 @@ See also:
   failover across instances for high availability.
 [[}]]
 
-# Zeebe Streams  [[{enterprise_patterns,kafka,TODO]]
-@[https://www.infoq.com/news/2019/05/kafka-zeebe-streams-workflows]
+# Zeebe Streams  [[{qa.enterprise_patterns,architecture.microservices]]
+<https://www.infoq.com/news/2019/05/kafka-zeebe-streams-workflows>
 * Kafka events are sometimes part of a business process with tasks
   spread over several microservices. To handle complex business
   processes a workflow engine can be used, but to match Kafka it must
@@ -1191,17 +1197,17 @@ See also:
   meet these scalability requirements.
 [[}]]
 
-# Developer Tools  [[{kafka,PM.low_code,protocol.client_server,PM.TODO]]
+# Developer Tools  [[{PM.low_code,PM.TODO]]
 ## Pixy dual API (gRPC,REST) proxy for Kafka
-@[https://github.com/mailgun/kafka-pixy]
-  Kafka-Pixy is a dual API (gRPC and REST) proxy for Kafka with
+<https://github.com/mailgun/kafka-pixy>
+* Kafka-Pixy is a dual API (gRPC and REST) proxy for Kafka with
   automatic consumer group control. It is designed to hide the
   complexity of the Kafka client protocol and provide a stupid simple
   API that is trivial to implement in any language.
 [[}]]
 
-# Docker Img For Developers [[{kafka,PM.low_code,computing.containerization,]]
-@[https://github.com/lensesio/fast-data-dev]
+# Docker Img For Developers [[{PM.low_code,DevOps.containerization,]]
+<https://github.com/lensesio/fast-data-dev>
 * Apache Kafka docker image for developers; with Lenses (lensesio/box)
   or Lenses.io's open source UI tools (lensesio/fast-data-dev). Have a
   full fledged Kafka installation up and running in seconds and top it
@@ -1234,11 +1240,11 @@ See also:
   ```
 [[}]]
 
-# DevOps [[{kafka.devops,PM.TODO]]
+# DevOps [[{devops,PM.TODO]]
 ## Quick start
-@[http://kafka.apache.org/documentation.html#quickstart]
+<http://kafka.apache.org/documentation.html#quickstart>
 * PRE-SETUP
-  * Download tarball from mirror @[https://kafka.apache.org/downloads],
+  * Download tarball from mirror <https://kafka.apache.org/downloads>,
     then untar like:
     ```
     $ tar -xzf * kafka_2.13-2.5.0.tgz ; cd kafka_2.13-2.5.
@@ -1326,8 +1332,8 @@ See also:
   "test.txt" → connect-test  → sink connector → "test.sink.txt"
   ```
 * See also: Ansible Install:
-@[https://github.com/confluentinc/cp-ansible]
-@[https://docs.confluent.io/current/installation/cp-ansible/index.html]
+<https://github.com/confluentinc/cp-ansible>
+<https://docs.confluent.io/current/installation/cp-ansible/index.html>
 * Installs Confluent Platform packages.
   * ZooKeeper
   * Kafka
@@ -1341,8 +1347,8 @@ See also:
    plaintext, SSL, SASL_SSL, and Kerberos.
 
 # Configuration
-## Broker Config:
-@[http://kafka.apache.org/documentation/#configuration]
+## Broker Config
+* <http://kafka.apache.org/documentation/#configuration>
 Main params:
 * broker.id
 * log.dirs
@@ -1355,30 +1361,52 @@ Main params:
 http://kafka.apache.org/documentation.html#compaction
 [[}]]
 
-# Strimzi k8s Operator [[{kafka.devops.k8s,PM.low_code,kafka.security,PM.TODO]]
+# EXT4 -> XFS 82% Latency reduction  [[{scalability.XFS,troubleshooting,]]
+* <https://www.infoq.com/news/2024/04/allegro-kafka-producer-latency/>
+Maciej Mościcki and Piotr Rżysko, software engineers at Allegro, using the 
+(eBPF based) ext4slower, async-profiler and eBPF tools like ebpf_explorer
+discovered, after tracing individual requests, Lock Contentions in EXT4 
+in the Kafka Producer.
+NOTE: The eBPF-based metrics were exporte do Prometheus format in order to
+visualize them with Grafana.
+* Using writeback journaling mode in EXT4 improved p999 latency to 800
+milliseconds (from 3000msec) and enabling the fast commit, a newer 
+journaling mechanism, introduced in Linux 5.10, achieved 500 milliseconds.
+
+ ```
+ EXT4:     ├─── waiting for a lock ──────┤├─ write ─┤
+ ──────────┼────────────────────────────────────────┼────────> time
+        request arrival                        request end
+ ```
+* Switching to XFS improved with an 82% reduction in Kafka producer latency 
+  outliers (exceeding the SLO of 65 milliseconds).
+[[scalability.XFS}]]
+
+# Strimzi k8s Operator [[{devops.k8s,PM.low_code,security,PM.TODO]]
   "Kafka on K8s in a few minutes"
 * Strimzi: RedHat OOSS project that provides container images and
   operators for running production-ready Kafka on k8s and OpenShift.
 * K8s native experience, using kubectl to manage the Kafka cluster and GitOps.
 * Monitoring and observability integration with Prometheus.
 * TODO:
-@[https://developers.redhat.com/blog/2019/06/06/accessing-apache-kafka-in-strimzi-part-1-introduction/]
-@[https://developers.redhat.com/blog/2019/06/07/accessing-apache-kafka-in-strimzi-part-2-node-ports/]
-@[https://developers.redhat.com/blog/2019/06/10/accessing-apache-kafka-in-strimzi-part-3-red-hat-openshift-routes/]
-@[https://developers.redhat.com/blog/2019/06/11/accessing-apache-kafka-in-strimzi-part-4-load-balancers/]
-@[https://developers.redhat.com/blog/2019/06/12/accessing-apache-kafka-in-strimzi-part-5-ingress/]
+<https://developers.redhat.com/blog/2019/06/06/accessing-apache-kafka-in-strimzi-part-1-introduction/>
+<https://developers.redhat.com/blog/2019/06/07/accessing-apache-kafka-in-strimzi-part-2-node-ports/>
+<https://developers.redhat.com/blog/2019/06/10/accessing-apache-kafka-in-strimzi-part-3-red-hat-openshift-routes/>
+<https://developers.redhat.com/blog/2019/06/11/accessing-apache-kafka-in-strimzi-part-4-load-balancers/>
+<https://developers.redhat.com/blog/2019/06/12/accessing-apache-kafka-in-strimzi-part-5-ingress/>
 
 [[}]]
 
-# Pulsar vs Kafka [[{architecture.event_stream.pulsar,kafka,02_DOC_HAS.comparative,PM.TODO]]
+# Alternatives to Kafka
+## Pulsar vs Kafka [[{architecture.event_stream,DOC_HAS.comparative,PM.TODO]]
 * Pulsar is a younger project   inspired and informed by Kafka .
   Kafka on the other side has a bigger community.
 * Pulsar Webinars                                          [resource]
-@[https://streamnative.io/resource#pulsar]
+<https://streamnative.io/resource#pulsar>
 
 * Pulsas "PRO"s over Kafka
-  @[https://kafkaesque.io/7-reasons-we-choose-apache-pulsar-over-apache-kafka/]
-  @[https://kesque.com/5-more-reasons-to-choose-apache-pulsar-over-kafka/]
+  <https://kafkaesque.io/7-reasons-we-choose-apache-pulsar-over-apache-kafka/>
+  <https://kesque.com/5-more-reasons-to-choose-apache-pulsar-over-kafka/>
 1. Streaming and queuing Come together:
    Pulsar supports standard message queuing patterns, such as
    competing consumers, fail-over subscriptions, and easy message
@@ -1399,7 +1427,7 @@ http://kafka.apache.org/documentation.html#compaction
 3. Fitting a log on a single server becomes a challenge (Disk full,
    remote copy o large logs can take a long time.
    More info at "Adding a New Broker Results in Terrible Performance"
- @[https://www.confluent.io/blog/stories-front-lessons-learned-supporting-apache-kafka/]
+ <https://www.confluent.io/blog/stories-front-lessons-learned-supporting-apache-kafka/>
    Apache Pulsar breaks logs into segments and distributes them across
    multiple servers while the data is being written by using BookKeeper
    as its storage layer.
@@ -1443,7 +1471,7 @@ http://kafka.apache.org/documentation.html#compaction
    bunch of nodes, and once enough of them acknowledge they've
    got it, "Pulsar is happy". Majority always wins, and all votes
    are equal giving more consistent latency behavior over time.
- @[https://kafkaesque.io/performance-comparison-between-apache-pulsar-and-kafka-latency/]
+ <https://kafkaesque.io/performance-comparison-between-apache-pulsar-and-kafka-latency/>
    (Kafka quorum is also a WiP in KIP-250)
 10.Tiered storage.
    What if you like to store messages forever (event-sourcing)?
@@ -1465,16 +1493,16 @@ http://kafka.apache.org/documentation.html#compaction
    such as LinkedIn's Cruise Control or paying for Confluent's rebalancer
    tool.
 — See also: [TODO]
-@[https://streamnative.io/blog/tech/pulsar-vs-kafka-part-1]
+<https://streamnative.io/blog/tech/pulsar-vs-kafka-part-1>
 [[}]]
 
-# KubeMQ: Kafka alternative [[{kafka.devops,02_DOC_HAS.comparative,PM.TODO]]
-@[https://dzone.com/articles/seamless-migration-from-kafka-to-kubemq?edition=699391]
+## KubeMQ vs Kafka [[{devops,DOC_HAS.comparative,PM.TODO]]
+<https://dzone.com/articles/seamless-migration-from-kafka-to-kubemq?edition=699391>
 * Non free product.
-  · Free for stand alone single pod.
-  · Professional for SMBs: Deploy on up to 20 k8s clusters.
-  · Professional for Dist. product: Corporate license .
-  · Enterprise: Enhanced SLA spport.
+  * Free for stand alone single pod.
+  * Professional for SMBs: Deploy on up to 20 k8s clusters.
+  * Professional for Dist. product: Corporate license .
+  * Enterprise: Enhanced SLA spport.
 * Kafka monolithic architecture is more suited for on-premise
   clusters or high-end multi-VM setups. Spinning up a multi-node
   cluster on a standalone workstation for testing purposes can be a
@@ -1500,8 +1528,8 @@ http://kafka.apache.org/documentation.html#compaction
   migration from Kafka.
 [[}]]
 
-# Akka+Kotlin:Data Pipes [[{kafka.akka,PM.TODO]]
-@[https://www.kotlindevelopment.com/data-pipelines-kotlin-akka-kafka/]
+# Akka+Kotlin:Data Pipes [[{architecture.event_stream.akka,PM.TODO]]
+<https://www.kotlindevelopment.com/data-pipelines-kotlin-akka-kafka/>
 * Objective:
   Create a "GitHub monitor" that build an analytics component that
   polls one of your services (GitHub), writes data into a message queue
@@ -1649,12 +1677,40 @@ http://kafka.apache.org/documentation.html#compaction
 [[}]]
 
 
-# Unordered [[{PM.TODO]]
-## Security     : https://kafka.apache.org/documentation/#security
-## Burrow Monit : @[https://dzone.com/articles/kafka-monitoring-with-burrow]
-## Best Pracites: @[https://www.infoq.com/articles/apache-kafka-best-practices-to-optimize-your-deployment]
+# Unordered <!-- { PM.TODO -->
+
+## Kafka 3.3 Replaces ZooKeeper with New KRaft Consensus Protocol [[{PM.TODO.NOW]]
+  https://www.infoq.com/news/2022/10/apache-kafka-kraft/
+
+  KRaft is the consensus protocol developed to allow metadata
+  management directly in Apache Kafka. This greatly simplifies
+  Kafka’s architecture by consolidating responsibility for metadata
+  into Kafka itself without the requirement of a third-party tool like
+  Apache ZooKeeper. This new KRaft mode improves partition scalability
+  and resiliency while simplifying deployments of Apache Kafka that now
+  can be deployed standalone.
+
+  The image below shows a much faster shutdown of a Kafka cluster with
+  two million partitions using the new quorum controller versus
+  ZooKeeper.The new KRaft consensus and quorum controller enables Kafka
+  clusters to scale to millions of partitions through improved control
+  plane performance with the new metadata management; improves
+  stability, and makes it easier to monitor, administer, and support
+  Kafka; allows Kafka to have a single security model for the whole
+  system and makes controller failover near-instantaneous.
+
+  The Kafka community plans to deprecate ZooKeeper in the next release
+  (3.4) and then remove it entirely in version 4.0.
+[[}]]
+
+## Security
+* <https://kafka.apache.org/documentation/#security>
+## Burrow Monit
+* <https://dzone.com/articles/kafka-monitoring-with-burrow>
+## Best Pracites [[{qa.best_practices}]]
+<https://www.infoq.com/articles/apache-kafka-best-practices-to-optimize-your-deployment>
 ## Mirror Maker (geo-replica): [[{scalability,security]]
-@[https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=27846330]
+* <https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=27846330>
   fka's mirroring feature makes it possible to maintain a replica of an
   existing Kafka cluster. The following diagram shows how to use the
   MirrorMaker tool to mirror a source Kafka cluster into a target
@@ -1663,34 +1719,106 @@ http://kafka.apache.org/documentation.html#compaction
   the local (target) cluster using an embedded Kafka producer.
 [[}]]
 ## Kafka Backup [[{]]
-@[https://github.com/itadventurer/kafka-backup]
+* <https://github.com/itadventurer/kafka-backup>
 * Kafka Backup is a tool to back up and restore your Kafka data
   including all (configurable) topic data and especially also consumer
   group offsets. To the best of our knowledge, Kafka Backup is the only
   viable solution to take a cold backup of your Kafka data and restore
   it correctly.
 [[}]]
-## Leasson Learned
-@[https://www.confluent.io/blog/stories-front-lessons-learned-supporting-apache-kafka/]
+## Leasson Learned [[{qa.best_practices}]]
+* <https://www.confluent.io/blog/stories-front-lessons-learned-supporting-apache-kafka/>
   * Under-replicated Partitions Continue to Grow Inexplicably
   * Kafka Liveness Check and Automation Causes Full Cluster Down
   * Adding a New Broker Results in Terrible Performance
 
 ## Faust (Python Streams)
-@[https://github.com/robinhood/faust]
-  * Faust provides both stream processing and event processing, sharing
-    similarity with tools such as Kafka Streams, Apache
-    Spark/Storm/Samza/Flink,
+* <https://github.com/robinhood/faust>
+* Faust provides both stream processing and event processing, sharing
+  similarity with tools such as Kafka Streams, Apache
+  Spark/Storm/Samza/Flink,
 
 ## Confluent Schema Registry
-  https://docs.confluent.io/current/schema-registry/index.html
-  Confluent Schema Registry provides a serving layer for your metadata. It
-  provides a RESTful interface for storing and retrieving Apache Avro® schemas.
-  It stores a versioned history of all schemas based on a specified subject name
-  strategy, provides multiple compatibility settings and allows evolution of
-  schemas according to the configured compatibility settings and expanded Avro
-  support. It provides serializers that plug into Apache Kafka® clients that
-  handle schema storage and retrieval for Kafka messages that are sent in the
-  Avro format.
-[[}]]
-[[kafka}]]
+* <https://docs.confluent.io/current/schema-registry/index.html>
+
+ Confluent Schema Registry provides a serving layer for your metadata. It
+provides a RESTful interface for storing and retrieving Apache Avro® schemas.
+It stores a versioned history of all schemas based on a specified subject name
+strategy, provides multiple compatibility settings and allows evolution of
+schemas according to the configured compatibility settings and expanded Avro
+support. It provides serializers that plug into Apache Kafka® clients that
+handle schema storage and retrieval for Kafka messages that are sent in the
+Avro format.
+
+## Multi.Region Kafka
+https://www.infoq.com/news/2021/01/uber-multi-region-kafka/
+
+## CMAK (previously known as Kafka Manager) 
+* tool for managing Apache Kafka clusters:
+https://github.com/yahoo/CMAK
+* Manage multiple clusters
+* Easy inspection of cluster state (topics, consumers, offsets,
+  brokers, replica distribution, partition distribution)
+* Run preferred replica election
+* Generate partition assignments with option to select brokers to use
+* Run reassignment of partition (based on generated assignments)
+* Create a topic with optional topic configs (0.8.1.1 has different configs than 0.8.2+)
+* Delete topic (only supported on 0.8.2+ and remember set delete.topic.enable=true in broker config)
+* Topic list now indicates topics marked for deletion (only supported on 0.8.2+)
+* Batch generate partition assignments for multiple topics with option to select brokers to use
+* Batch run reassignment of partition for multiple topics
+* Add partitions to existing topic
+* Update config for existing topic
+* Optionally enable JMX polling for broker level and topic level metrics.
+* Optionally filter out consumers that do not have ids/ owners/ & offsets/ directories in zookeeper.
+
+## Apache Kafka producer and consumer tool.
+  https://github.com/edenhill/kafkacat.
+  https://github.com/tldr-pages/tldr/blob/master/pages/common/kafkacat.md
+
+## Kafka Topicmappr
+  Topicmappr replaces and extends the kafka-reassign-partition tool bundled with Kafka.
+   It allows for minimal movement broker replacements, cluster storage
+   rebalancing/partition bin-packing, leadership optimization, many-at-once topic management,
+   and more—all with rack awareness support.
+   https://github.com/DataDog/kafka-kit
+
+## registry: gRPC+HTTP API service for Kafka that allows granular resource
+   (topics, brokers) lookup and management with custom tagging support.
+
+## autothrottle: 
+  service that automatically paces Kafka replication/recovery throttle rates,
+  powered with metrics using the Datadog API.
+
+## metricsfetcher:
+   utility to fetch metrics via Datadog API for Kafka storage rebalancing
+   and partition mapping with topicmappr.
+
+## Why is Kafka fast (see image diagram) 
+* <https://pbs.twimg.com/media/FOi-gjZVgAQdG9B?format=jpg&name=900x900>
+* READ WITHOUT ZERO-COPY:
+  ```
+  | procuder -> Kafk.Application buffer: writes dataKafka.Application buffer -> OS BUffer: writer to RAM
+  | OS Buffer -> Disk : (Periodically) sync to disk
+  | Disk -> OS Buffer: Load dataOS Buffer -> kakfa.application buffer: copy dataKafa.app buffer -> Socket Buffer: Copy data
+  | Socket Buffer -> NIC Buffer: Copy data
+  | NIC Buffer -> Consumer: Send to consumer
+  ```
+
+* READ WITH ZERO COPY:
+  ```
+  | cProducer -> Kakfa : write dataKafka.OS BUffer: wirte to RAM
+  | cOS Buffer - NIC Buffer: Direct Copy !!!!
+  | cNIC Buffer: Send to consumer
+  ```
+
+## Kafka: Removing Zookeeper Dependency: kafka.zookeeper,PM.TODO
+https://www.infoq.com/podcasts/kafka-zookeeper-removing-dependency/
+
+## Soft. arch: Tales of Kafka @Cloudflare: Lessons Learnt on the Way to 1 Trillion Messages
+https://www.infoq.com/presentations/kafka-cloudflare/
+
+
+
+
+<!--  PM.TODO } -->

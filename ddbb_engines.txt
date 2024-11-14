@@ -12,7 +12,7 @@
   quality assurance,redis,serverless,service registry,storage,time series,
   troubleshooting,wide column store,
 
-[[{db_engine.101,distributed,consensus,02_doc_has.comparative]]
+[[{db_engine.101,distributed,consensus,doc_has.comparative]]
 # EVENTUAL/STRONG CONSISTENCY MODELS  IN DISTRIBUTED DB 
 
 CONTEXT: DATABASE WITH MULTIPLE REPLICAS:
@@ -40,9 +40,9 @@ CONTEXT: DATABASE WITH MULTIPLE REPLICAS:
       cost of higher latency.
 [[}]]
 
-[[{db_engine.101,02_doc_has.comparative]]
+[[{db_engine.101,doc_has.comparative]]
 # DB ENGINES TYPES
-  * DATA TOPOLOGY MODELS COMPARED: [[{db_engine.101,02_doc_has.diagram,02_doc_has.comparative]]
+  * DATA TOPOLOGY MODELS COMPARED: [[{db_engine.101,doc_has.diagram,doc_has.comparative]]
     Different engine types are more/less friendly to different DATA TOPOLOGY MODELS and
     different data topologies are more/less friendly to different data storage/retrieval patterns.
 
@@ -199,10 +199,16 @@ CONTEXT: DATABASE WITH MULTIPLE REPLICAS:
       single table entry.
     * DEEPLY INTEGRATED INTO PYTHON AND R FOR EFFICIENT INTERACTIVE
       DATA ANALYSIS WITH APIS FOR JAVA, C, C++, AND OTHERS.
+    NOTE: DuckDB also provides a backend fo PostgreSQL:<br/>
+    <https://github.com/duckdb/pg_duckdb><br/>
+    "... pg_duckdb is a Postgres extension that embeds DuckDB's
+     columnar-vectorized analytics engine and features into Postgres.
+     We recommend using pg_duckdb to build high performance analytics 
+     and data-intensive applications...."
 [[}]]
 
 
-## GRAPH DBMS [[{db_engine.graph_db,02_doc_has.comparative]]
+## GRAPH DBMS [[{db_engine.graph_db,doc_has.comparative]]
 * Most general data modeling type.
 * Represent data in graph structures of nodes (entities) and edges(relations).
 * Graph represent the most general topology. Any state of any real/mathematical model can be
@@ -221,7 +227,7 @@ CONTEXT: DATABASE WITH MULTIPLE REPLICAS:
   * PROCESSING ENGINE:
     * index-free adjacency: ("true graph ddbb"), connected  nodes  physically
       "point"  to  each  other  in  the  database.
-      MUCH FASTER WHEN DOING GRAPH-LIKE QUERIES. Query performance           [[{02_doc_has.comparative,scalability]]
+      MUCH FASTER WHEN DOING GRAPH-LIKE QUERIES. Query performance           [[{doc_has.comparative,scalability]]
       remains (aproximately) constant in "many-joins" scenarios, while RDBMs
       degrades exponentially with JOINs. [[}]]
       Time is proportional to the size of the path/s traversed by the query,
@@ -273,7 +279,7 @@ CONTEXT: DATABASE WITH MULTIPLE REPLICAS:
     * Mengraph
     * inGraph
     * Cypher.PL
-  * PRIMARY IMPLEMENTATIONS CLASSIFICATION OF GRAPH DB ENGINES  [[{02_doc_has.comparative]]
+  * PRIMARY IMPLEMENTATIONS CLASSIFICATION OF GRAPH DB ENGINES  [[{doc_has.comparative]]
     include PROPERTY GRAPHS (PG) and "triple store" graphs.
     * PG resemble conventional data structures in an isolated
       application or use case, whereas RDF are originally designed
@@ -381,7 +387,7 @@ CONTEXT: DATABASE WITH MULTIPLE REPLICAS:
       |                                                            Mercedes is an instance of a car, and the
       |                                                            2nd is an instance of a person
       ```
-      [[{02_doc_has.comparative}]]
+      [[{doc_has.comparative}]]
 
 * Incomplete but still persistent list of implementations:
   * Neo4j
@@ -457,7 +463,7 @@ Challenge 1, Celebrity nodes:
 [[scalability}]]
 [[}]]
 
-## KEY-VALUE DBMS [[{db_engine.key_value,02_doc_has.comparative]]
+## KEY-VALUE DBMS [[{db_engine.key_value,doc_has.comparative]]
 * SIMPLEST form of DBMS (other than CSV-like systems
   that are mostly a low level storage pattern than a real
   DB engine).
@@ -475,7 +481,7 @@ Challenge 1, Celebrity nodes:
 * Incomplete but still persistent list of implementations:
   * Redis: Cache/RAM-Memory oriented.
     * Not strong cluster consistency like etcd/Consul/Zookeeper.
-    * Compared to etcd:              [[{02_doc_has.comparative]]
+    * Compared to etcd:              [[{doc_has.comparative]]
       * 'etcd' is designed with high availability and read-consistency
         through node-failures in mind, being distributed by default
         focusing on the "quality of data".
@@ -553,7 +559,7 @@ Challenge 1, Celebrity nodes:
   * Zinc: Light-weight Golang alternative to ElasticSearch
     using "bluge" (vs Lucens) as core underlying indexing library.
     See notes <./ZincSearch.txt]
-  * Elasticsearch: Both are built on top of Lucene.       [[{02_doc_has.comparative]]
+  * Elasticsearch: Both are built on top of Lucene.       [[{doc_has.comparative]]
     Solr           adding server, cluster and escalability features.
                    * When compared, Elasticsearch is simpler to use
                      and integrates with Kibana graphics.
@@ -576,7 +582,7 @@ Challenge 1, Celebrity nodes:
       the graph incrementally on change.
 [[}]]
 
-## Time Series  [[{db_engine.timeseries,02_doc_has.comparative]]
+## Time Series  [[{db_engine.timeseries,doc_has.comparative]]
 * designed to efficiently collect, store and query TS.
 * Ex use-case:
   ```
@@ -595,7 +601,7 @@ Challenge 1, Celebrity nodes:
   * Greykite LinkedIn
     * Opensourced in 2021, https://www.infoq.com/news/2021/06/greykite-open-sourced/
     * Built to be flexible, intuitive and fast.
-    * LinkedIn team demonstrated that it performed 4xbetter than FB's prophet [[{02_doc_has.comparative]]
+    * LinkedIn team demonstrated that it performed 4xbetter than FB's prophet [[{doc_has.comparative]]
       providing more accurate results for 1-day and 7-day forecasts.[[}]]
     * LinkedIn use-cases were resource-planning, performance-management,
       optimization and ecosystem insight generation. More concretely, a
@@ -675,7 +681,7 @@ Challenge 1, Celebrity nodes:
 <https://www.techrepublic.com/article/why-time-series-databases-are-exploding-in-popularity/>
 [[}]]
 
-## Configuration&service registry/discovery [[{db_engine.service_registry,02_doc_has.comparative]]
+## Configuration&service registry/discovery [[{db_engine.service_registry,doc_has.comparative]]
 * Specialized key/value DBMS:
 * TWO PROCESSES MUST EXISTS:
   * SERVICE REGISTRATION PROCESS storing final-app-service (host,port,...)
@@ -777,7 +783,7 @@ Challenge 1, Celebrity nodes:
     reading relevant data from disk. It may compress data by 6 to 10 times
     to reduce space requirements for data archive.
   * SCYLLA!!! ("Cassandra++"):
-    * compatible with Cassandra (same CQL and Thrift protocols, and same [[{02_doc_has.comparative]]
+    * compatible with Cassandra (same CQL and Thrift protocols, and same [[{doc_has.comparative]]
       SSTable file formats) with  higher throughputs+lower latencies (10x).
     * C++14 (vs Cassandra Java)
     * custom network management that minimizes resources bypassing
@@ -797,7 +803,7 @@ Challenge 1, Celebrity nodes:
     * Features: Schema, SQL ,Consistency ,Availability ,Scalability ,Replication
 [[}]]
 
-## DOCUMENT STORES [[{db_engine.document_store,02_doc_has.comparative]]
+## DOCUMENT STORES [[{db_engine.document_store,doc_has.comparative]]
 * also called document-oriented DBMS.
 * schema-free:
   * different records may have different columns
@@ -808,14 +814,14 @@ Challenge 1, Celebrity nodes:
 * features: secondary indexes in (JSON) objects
 
 * Incomplete but still persistent list of implementations:
-* MongoDB <#mongo_summary]
+  * MongoDB
   * Amazon DynamoDB
-  * Couchbase
+  * Couchbase (Not to be confused with CouchDB), is optimized for interactive
+    applications favoring in-memory caches.
   * Cosmos DB
-  * CouchDB:
-    Note from https://www.xplenty.com/blog/couchdb-vs-mongodb/
-    *  CouchDB prioritizes availability, MongoDB prioritizes consistency.
-       [[{02_doc_has.comparative}]]
+  * CouchDB:<br/> [[{doc_has.comparative}]]
+    <https://www.xplenty.com/blog/couchdb-vs-mongodb/>
+    * CouchDB prioritizes availability, MongoDB prioritizes consistency.
     * Reviews: MongoDB seems to have somewhat better reviews than CouchDB.
   * PouchDB (web/mobile, CouchDB like JS lib for Web/Mobile). [[{]]  #[pouchdb_summary]
     [[db_engine.document_store.pouchdb,architecture.mobile]]
@@ -832,7 +838,7 @@ Challenge 1, Celebrity nodes:
 [[}]]
 
 
-## DATA(LOG) COLLECT [[{db_engine.log_collect,02_doc_has.comparative]]
+## DATA(LOG) COLLECT [[{db_engine.log_collect,doc_has.comparative]]
 * Incomplete but still persistent list of implementations:
   * FluentD "Improved" logstat (https://www.fluentd.org/)
     * data collector for unified logging layer
@@ -880,7 +886,7 @@ Challenge 1, Celebrity nodes:
 [[}]]
 
 # Logreduce IA filter: [[{db_engine.search,db_engine.timeseries,db_engine.log_collect]]
-                       [[qa,security.monitoring,aaa,security.ia,PM.TODO.NOW]]
+                       [[qa,security.monitoring,security.aaa,security.ia,PM.TODO.NOW]]
   https://opensource.com/article/18/9/quiet-log-noise-python-and-machine-learning
   https://pypi.org/project/logreduce/
   * Quiet log noise with Python and machine learning
@@ -1074,7 +1080,7 @@ structured sources of data such as corporate databases.[1]
 [[}]]
 [[}]]
 
-# Apache Rya:[[{db_engine.graph.rdf.rya,big_data.spark]]
+# Apache Rya:[[{db_engine.graph.rdf.rya,bigdata.spark]]
 <https://searchdatamanagement.techtarget.com/news/252472464/Apache-Rya-matures-open-source-triple-store-database>
 * Started by Adina Crainiceanu, associate professor of computer science at
   the U.S.  Naval Academy. Initial research paper published in 2012

@@ -1,7 +1,8 @@
-Example / Reference Architectures:
+# Example/Reference Architectures <!-- { -->
 
-# FILE INTEGRITY MONITORING AT SCALE: (RSA Conf)
-  REF: https://www.rsaconference.com/writable/presentations/file_upload/csv-r14-fim-and-system-call-auditing-at-scale-in-a-large-container-deployment.pdf
+## FILE INTEGRITY MONITORING AT SCALE (RSA Conf) [[{architecture.reference.RSA_file_monitoring]]
+* <https://www.rsaconference.com/writable/presentations/file_upload/csv-r14-fim-and-system-call-auditing-at-scale-in-a-large-container-deployment.pdf>
+  ```
   KEYPOINT: AUDITING LOG TO GAIN INSIGHTS AT SCALE
 
                            ┌─> Pagerduty
@@ -19,317 +20,275 @@ Example / Reference Architectures:
     Kernel │        socket           ^
            │          ^              │
                       └─  Kauditd ───┘
+  ```
+[[architecture.reference.RSA_file_monitoring}]] 
+
+[[{architecture.reference.adidas,testing.bdd,api_mng.documentation]]
+## Adidas Reference Architecture 
+Source <https://adidas.github.io>
+## UI:
+* Working with latest JS technologies ... building an stable ecosystem.
+  analyzing and testing many framework.,
+* ... back in 2015 we used code which is better not to speak about,
+  Now (2019), we use frameworks like React/Vue and modern tooling.
+* WEBPACK: DE-FACTO TOOL FOR SHIPPING APPLICATIONS:
+
+## API MANAGEMENT.  [[{api_management]]
+* APIARY: used for collaborative designing, documenting and governing
+    API's helping to adopt API first approach with templates and best
+    practices.
+  * Out Platform is strongly integrated with our API guidelines, helping us
+    to achieve consistency of all our API's.
+  * Out Platform is strongly integrated with our API guidelines, helping us
+  * speeds up and simplifies the development and testing phase by providing  [[qa.testing]]
+    API mock services and automation of API testing.
+* MASHERY: delivers key API management capabilities.
+  * Features include:
+    API creation, packaging, testing, and management of your API's and
+    community of users.
+* API SECURITY: provided via an embedded or optional on-premise API gateway.
+* RUNSCOPE: continuous monitoring platform for all our API's
+  * It monitors uptime, performance and validates the data.
+  * tightly integrated with Slack and Opsgenie in order to alert and
+    create incident if things are going wrong way.
+  * Runscope can quickly detect any issues with our API's [[qa.SLA]]
+  [[}]]
+## KAFKA: core of our "Fast Data Platform".
+* "... The more we work with it, the more versatile we perceived it was..."
+* Implement the pub-sub pattern in a very efficient way, enabling for:
+  * Data Streaming cases.
+* The fan-out is the pub-sub pattern is implemented in a really efficient
+  way, allowing to achieve high thought in production and consumption.
+* It also enables capabilities like "Data Extraction" and "Data Modeling",
+  as long as Stateful Event Processing.
+* Together with STORM, Kafka STREAMS and ELK it provides the perfect toolset
+  to integrate our digital applications in a modern self-service way.
+## ACID:
+* Jenkins: "de facto standard for continuous integration/continuous delivery".
+* ACID is a 100% docker powered by Kubernetes that allows to create
+  Jenkins-as-a-Service platform allowing for:
+  * easy way to generate an isolated Jenkins environment per team while
+    while keeping a shared basic configuration and a central management dashboard.
+## SerenityBDD: ACCEPTANCE+REGRESSION TESTING:
+* "Our default for automation in test solution".
+* Built on top of Selenium and Cucumber.
+* provides archetypes for frontend (web) and backend (API).
+
+## NEOLOAD: PERFORMANCE TESTING.
+* easy-to-use interface with powerful recording capabilities.
+* supports for dockerized load generators.
+
+## END-TO-END MONITORING:
+* Prometheus: alerting monitoring, completely integrated with Kubernetes.
+* ICINGA    : infrastructure monitoring.
+  " we have hundreds of custom scripts and graphite as timeseries database".
+* Instana   : APM monitoring, making easy-and-fast to monitor the applications
+              and identify bottlenecks.
+* Runscope  : API testing-and-monitoring.
+* Grafana   : visualization tool.
+  * Easy integration with with Prometheus, Instana, Elasticsearch, Graphite, etc.
+* LOGGING Collection and Monitoring:
+  * ELK stack running on-premises and AWS Kubernetes.
+    custom components for processing and alerting.
+  KEYPOINT: The goal of monitoring is troubleshooting.
+            all these tools have integration with Opsgenie
+            where we have defined escalation policies for
+            alerting and notifications.
+## MOBILE STACK: "...Native is where we live..."
+* Kotlin for Android and Swift for iOS.
+* Build and testing: Jenkins and Fastlane.
+[[architecture.reference.adidas}]]
+
+[[{architecture.reference.AWS_Serverless]]
+## 100% Serverless Architecture with AWS!
+* <https://medium.com/serverless-transformation/what-a-typical-100-serverless-architecture-looks-like-in-aws-40f252cd0ecb>
+[[architecture.reference.AWS_Serverless}]]
+
+[[{architecture.reference.data_store]]
+## DATA STORE Example Architecture
+Mix data store model based on:
+* Git: fine grained versioning
+  * Git+LFS: Git + "big" file support (backed by a document store)
+* Cepth:
+  * POSIX Filesystem scaling to Petabytes.
+* Document store:
+  * MongoDB        : Store and manage objects directly as documents, keeping their structure intact.
+                     Avoiding Object Relational Mapping in RDMS.
+  * MongoDB-GridFS : storage system supports efficient querying and storage of binary files.
+                     (videos, ...). Avoid the need fo blob storage structures.
+* Graph database ("Hyper-relational" ddbb)
+  * Neo4j          : Allows for complex queries for highly linked data, stored data as nodes and links.
+* Spring Data module repositories: used to "match" Java codebase with underlying data store.
+  Allows mapping java objects to MongoDB with minimal effort.
+[[architecture.reference.data_store}]]
 
 
-# Adidas Reference Architecture:[[{testing.bdd,qa.documentation.api]]
-Source @[https://adidas.github.io]
- └ UI:
-   - Working with latest JS technologies ... building an stable ecosystem.
-     analyzing and testing many framework.,
+## Badoo: 20 billion Events/day social network  [[{architecture.reference.20billion_events/day]]
+* <https://www.infoq.com/news/2019/08/badoo-20-billion-events-per-day/>
+* business goal (of the intelligence department): collect,process and report user event information
+  to create insights to help the company make formed decisions.
+* events go through a lifecycle:
+  1. Receive: Using Protobuf, events from clients are streamed through LSD, an OOSS streaming daemon
+    which is used to filter and route the events.
+    ```
+    ┌─ KEYPOINT: ─────────────────────────────────────────────────
+    │ Badoo batches the data hourly rather than doing so in realtime.
+    │ This is because, in the event of failure, Kazanov believes that
+    │ re-loading a batch is easier, as it’s simple to compare against
+    │ the target database to see if it was written correctly.
+    └──────────────────────────────────────────────────────────────
+    ```
+  2. Store: Data is stored in a data lake in ORC file format, running on HDFS.
+            (ORC is columnar-orientated, strong compression, supported by multiple applications,
+            can be queried using Hive, database on top of Hadoop with SQL-like language).
+            Events with schemas are stored in Exasol, a columnar distributed analytics database
+            with SQL query-syntax and able to store terrabytes of data.
+  3. Process: Data is processed using an "Spark cluster".
+  4. Report: "microstrategy" reporting tool is used which allows Exasol to be queried using
+            dashboards and reports.<br/>
+            In addition, a custom tool called CubeDB is used, designed to run queries faster
+            for technical reporting.
 
-   - ... back in 2015 we used code which is better not to speak about,
-     Now (2019), we use frameworks like React/Vue and modern tooling.
+* PRE-SETUP:
+  1. business analyst creates a schema for a given event.
+  2. From this schema Protobuf client libraries are generated for various platforms.
+[[architecture.reference.20billion_events/day}]]
 
-   - WEBPACK: DE-FACTO TOOL FOR SHIPPING APPLICATIONS:
-
- └ API MANAGEMENT.  [[{api_management]]
-   - APIARY: used for collaborative designing, documenting and governing
-       API's helping to adopt API first approach with templates and best
-       practices.
-     - Out Platform is strongly integrated with our API guidelines, helping us
-       to achieve consistency of all our API's.
-     - Out Platform is strongly integrated with our API guidelines, helping us
-     - speeds up and simplifies the development and testing phase by providing  [[qa.testing]]
-       API mock services and automation of API testing.
-
-   - MASHERY: delivers key API management capabilities.
-     - Features include:
-       API creation, packaging, testing, and management of your API's and
-       community of users.
-   - API SECURITY: provided via an embedded or optional on-premise API gateway.
-
-   - RUNSCOPE: continuous monitoring platform for all our API's
-     - It monitors uptime, performance and validates the data.
-     - tightly integrated with Slack and Opsgenie in order to alert and
-       create incident if things are going wrong way.
-     - Runscope can quickly detect any issues with our API's [[qa.SLA]]
-   [[}]]
-
- └ KAFKA: core of our "Fast Data Platform".
-   - "... The more we work with it, the more versatile we perceived it was..."
-
-   - Implement the pub-sub pattern in a very efficient way, enabling for:
-      - Data Streaming cases.
-   - The fan-out is the pub-sub pattern is implemented in a really efficient
-     way, allowing to achieve high thought in production and consumption.
-
-   - It also enables capabilities like "Data Extraction" and "Data Modeling",
-     as long as Stateful Event Processing.
-
-   - Together with STORM, Kafka STREAMS and ELK it provides the perfect toolset
-     to integrate our digital applications in a modern self-service way.
-
- └ ACID:
-   - Jenkins: "de facto standard for continuous integration/continuous delivery".
-   - ACID is a 100% docker powered by Kubernetes that allows to create
-     Jenkins-as-a-Service platform allowing for:
-     - easy way to generate an isolated Jenkins environment per team while
-       while keeping a shared basic configuration and a central management dashboard.
-
- └ SerenityBDD: ACCEPTANCE+REGRESSION TESTING:
-   - "Our default for automation in test solution".
-   - Built on top of Selenium and Cucumber.
-   - provides archetypes for frontend (web) and backend (API).
-
- └ NEOLOAD: PERFORMANCE TESTING.
-   - easy-to-use interface with powerful recording capabilities.
-   - supports for dockerized load generators.
-
- └ END-TO-END MONITORING:
-   - Prometheus: alerting monitoring, completely integrated with Kubernetes.
-   - ICINGA    : infrastructure monitoring.
-     " we have hundreds of custom scripts and graphite as timeseries database".
-   - Instana   : APM monitoring, making easy-and-fast to monitor the applications
-                 and identify bottlenecks.
-   - Runscope  : API testing-and-monitoring.
-   - Grafana   : visualization tool.
-     - Easy integration with with Prometheus, Instana, Elasticsearch, Graphite, etc.
-   - LOGGING Collection and Monitoring:
-     - ELK stack running on-premises and AWS Kubernetes.
-       custom components for processing and alerting.
-     KEYPOINT: The goal of monitoring is troubleshooting.
-               all these tools have integration with Opsgenie
-               where we have defined escalation policies for
-               alerting and notifications.
- - MOBILE STACK: "...Native is where we live..."
-   - Kotlin for Android and Swift for iOS.
-   - Build and testing: Jenkins and Fastlane.
-[[}]]
-
-
-# What a typical 100% Serverless Architecture  [[{PM.TODO]]
-  looks like in AWS!
-  @[https://medium.com/serverless-transformation/what-a-typical-100-serverless-architecture-looks-like-in-aws-40f252cd0ecb]
-[[}]]
-
-
-# EXAMPLE DATA STORE ARCHITECTURE:
-- Mix data store model based on:
-  └ Document store:
-    - MongoDB        : Store and manage objects directly as documents, keeping their structure intact.
-                       Avoiding Object Relational Mapping in RDMS.
-    - MongoDB-GridFS : storage system supports efficient querying and storage of binary files.
-                       (videos, ...). Avoid the need fo blob storage structures.
-  └ Graph database ("Hyper-relational" ddbb)
-    - Neo4j          : Allows for complex queries for highly linked data, stored data as nodes and links.
-
-  └ Spring Data module repositories: used to "match" Java codebase with underlying data store.
-    - Allows mapping java objects to MongoDB with minimal effort.
-
-
-# Badoo: dating social network with 20 billion Events/day [[{]]
-@[https://www.infoq.com/news/2019/08/badoo-20-billion-events-per-day/]
-  - business goal (of the intelligence department): collect,process and report user event information
-    to create insights to help the company make formed decisions.
-
-  - events go through a lifecycle:
-    - Receive: Using Protobuf, events from clients are streamed through LSD, an OOSS streaming daemon
-      which is used to filter and route the events.
-      ┌─ KEYPOINT: ─────────────────────────────────────────────────
-      │ Badoo batches the data hourly rather than doing so in realtime.
-      │ This is because, in the event of failure, Kazanov believes that
-      │ re─loading a batch is easier, as it’s simple to compare against
-      │ the target database to see if it was written correctly.
-      └──────────────────────────────────────────────────────────────
-    -   Store: Data is stored in a data lake in ORC file format, running on HDFS.
-               (ORC is columnar-orientated, strong compression, supported by multiple applications,
-                can be queried using Hive, database on top of Hadoop with SQL-like language).
-               Events with schemas are stored in Exasol, a columnar distributed analytics database
-               with SQL query-syntax and able to store terrabytes of data.
-    - Process: Data is processed using an "Spark cluster".
-    -  Report: "microstrategy" reporting tool is used which allows Exasol to be queried using
-               dashboards and reports.
-               In addition, a custom tool called CubeDB is used, designed to run queries faster
-               for technical reporting.
-
-  PRE-SETUP:
-  1) business analyst creates a schema for a given event.
-  2) From this schema Protobuf client libraries are generated for various platforms.
-
-[[}]]
-
-# Logging@Coinbase [[{]]
-@[https://www.infoq.com/news/2019/02/metrics-logging-coinbase]
-
- INITIALLY:                  -> moved to··············>  FINAL VERSION:
- SELF-MANAGED ELK CLUSTER                                MANAGED-AWS-ELK:
- - log-analysis                                          -  log aggregation
- - metrics-visualization                                 DATADOG
-                                                         - metrics collection
-
- PROBLEMS:                                               SOLUTIONS:
- - Load peaks required cluster's restarts.               - AWS's managed Elasticsearch is logically sharded
- - vulnerable to expensive queries.                        by use case using an nginx proxy in front, solving
- - It was also impossible to collect diagnostic            the problem of scalability, routing requests to
-   data unless the cluster was restarted.                  the correct Kibana dashboard based on the incoming
- - The team discovered that the largest applications       request, and also performs authentication against
-   were responsible for consuming the most ELK capacity,   Coinbase’s internal single sign-on (SSO) service.
-   forced to reduce the log retention period.
- - alerting solutions like ElastAlert and Watcher that
-   work off ElasticSearch "don't allow engineers to
-   interactively build alerts" and were difficult to
-   integrate with third party tools.
-
-
-(AWS Cloudwatch does expose OS metrics, but these would have been
- available in a separate dashboard from the custom metrics)
-
-- For Datadog the team added some security barriers like building their own Docker container (vs
-  provided one) or running on a separate network bridge.
-
-- THE TEAM ALSO WRAPPED THE STANDARD DOCKER SOCKET WITH A PROXY TO PREVENT
+## Logging@Coinbase [[{architecture.reference.coinbase_logging]]
+* <https://www.infoq.com/news/2019/02/metrics-logging-coinbase>
+  ```
+  | INITIALLY:                 ····>  moved to  ····>  FINAL VERSION:
+  | ------------------------                           ---------------------
+  | SELF-MANAGED ELK CLUSTER                           MANAGED-AWS-ELK:
+  | - log-analysis                                     -  log aggregation
+  | - metrics-visualization                            DATADOG
+  |                                                    - metrics collection
+  |
+  |
+  | PROBLEMS:                                         SOLUTIONS:
+  | - Load peaks required cluster's restarts.         - AWS's managed Elasticsearch is logically sharded
+  | - vulnerable to expensive queries.                  by use case using an nginx proxy in front, solving
+  | - impossible to collect diagnostic data             the problem of scalability, routing requests to
+  |   without restarting the cluster.                   the correct Kibana dashboard based on the incoming
+  | - team discovered that largest applications         request, and also performs authentication against
+  |   were responsible for consuming most of ELK        Coinbase’s internal single sign-on (SSO) service.
+  |   capacity, forced to reduce log retention period.
+  | - alerting solutions like ElastAlert and Watcher 
+  |   that work off ElasticSearch "don't allow engineers
+  |   to interactively build alerts and were difficult
+  |   to integrate with third party tools.
+  ```
+* AWS Cloudwatch does expose OS metrics, but these would have been
+  available in a separate dashboard from the custom metrics.
+* For Datadog the team added some security barriers like building 
+  their own Docker container (vs provided one) or running on a
+  separate network bridge.
+* THE TEAM ALSO WRAPPED THE STANDARD DOCKER SOCKET WITH A PROXY TO PREVENT
   POSSIBLE ACCESS TO ENVIRONMENT VARIABLES BY THE AGENT.
+* The Coinbase team defined service level indicators (SLIs) around the 
+  new metrics, with the relevant time series graphs for each.
+* ... However, it is not clear how the correlation between logs and metrics 
+  happen, since they are collected by different third party services.
+[[architecture.reference.coinbase_logging}]]
 
-- The Coinbase team defined service level indicators (SLIs) around the new metrics,
-  with the relevant time series graphs for each.
-
-... However, it is not clear how the correlation between logs and metrics happen,
- since they are collected by different third party services.
-[[}]]
-
-
-- An Introduction to Time Series with Team Apache [[{]]
-  https://www.safaribooksonline.com/library/view/an-introduction-to/9781491934951/
+## Introduction to Time Series with Team Apache [[{architecture.reference.time_series]]
+* <https://www.safaribooksonline.com/library/view/an-introduction-to/9781491934951/>
   Apache Cassandra evangelist Patrick McFadin shows how to solve time-series data
   problems with technologies from Team Apache: Kafka, Spark and Cassandra.
-  - Kafka: handle real-time data feeds with this "message broker"
-  - Spark: parallel processing framework that can quickly and efficiently
+  * Kafka: handle real-time data feeds with this "message broker"
+  * Spark: parallel processing framework that can quickly and efficiently
            analyze massive amounts of data.
-  - Spark Streaming: perform effective stream analysis by ingesting data
-           in micro-batches.
-  - Cassandra: distributed database where scaling and uptime are critical
-  - Cassandra Query Language (CQL): navigate create/update your data and data-models
-  - Spark+Cassandra: perform expressive analytics over large volumes of data
+  * Spark Streaming: perform effective stream analysis by ingesting data in micro-batches.
+  * Cassandra: distributed database where scaling and uptime are critical.
+  * Cassandra Query Language (CQL): navigate create/update your data and data-models
+  * Spark+Cassandra: perform expressive analytics over large volumes of data.
+[[architecture.reference.time_series}]]
 
-# LinkedIn Marketing Versioned API Framework:
+[[{architecture.reference.linkedin_versioned_API,api_mgn.versioning,qa.best_patterns]]
+## LinkedIn Marketing Versioned API Framework:
 https://www.infoq.com/news/2022/08/linkedin-api-versioning/
-  - LEGACY ARCHITECTURE:
-    various business lines and exposed externally via Rest.li API gateway.
-    PROBLEM: The APIs were not versioned and everything implemented for
-             the internal APIs was published to the external customers
-             directly blocking customers from accessing the latest features
-             and causing internal challenges with new feature development.
+* LEGACY ARCHITECTURE:<br/>
+  various business lines and exposed externally via Rest.li API gateway.
+  * PROBLEM: The APIs were not versioned and everything implemented for
+    the internal APIs was published to the external customers
+    directly blocking customers from accessing the latest features
+    and causing internal challenges with new feature development.
+  "allow external partners to migrate to newer versions at their own pace"
 
-    "allow external partners to migrate to newer versions at their own pace"
+* NEW ARCHITECTURE:
+  Each API-product exposes its versioned models and APIs through a
+  mid-tier that serves APIs for external partners to effectively
+  isolate external applications from changes and allow partners
+  to migrate to new versions at their own pace.
+  Whenever an external application requests a specific API version,
+  the API gateway translates the request and forwards it to the
+  appropriate mid-tier.
 
-  - NEW ARCHITECTURE:
-    Each API-product exposes its versioned models and APIs through a
-    mid-tier that serves APIs for external partners to effectively
-    isolate external applications from changes and allow partners
-    to migrate to new versions at their own pace.
-    Whenever an external application requests a specific API version,
-    the API gateway translates the request and forwards it to the
-    appropriate mid-tier.
+  "... Like any other API gateway, it brings authentication,
+    request Mapping, throttling control, authorization, anti-abuse
+    control, and request dispatching..."
 
-    "..  Like any other API gateway, it brings authentication,
-      request Mapping, throttling control, authorization, anti-abuse
-      control, and request dispatching..."
+  * To avoid services having to maintain version-specific logic
+    in code the "VERSIONING EXECUTION FRAMEWORK" LIBRARY was
+    created to:
+    1. STEP 1) convert requests to the latest possible version via
+       USER-DEFINED TRANSFORMATION.
+    2. STEP 2) convert STEP 1) output to the latest available
+       internal model via the USER-DEFINED INTERNAL MODEL CONVERTER.
+[[architecture.reference.linkedin_versioned_API}]]
 
-    - To avoid services having to maintain version-specific logic
-      in code the "VERSIONING EXECUTION FRAMEWORK" LIBRARY was
-      created to:
-      STEP 1) convert requests to the latest possible version via
-         USER-DEFINED TRANSFORMATION.
-      STEP 2) convert STEP 1) output to the latest available
-         internal model via the USER-DEFINED INTERNAL MODEL CONVERTER.
-[[}]]
-
-
-# Owl by Meta: 700 petabytes/day to millions-of-clients [[{ARCHITECTURE.P2P,CACHE.DISTRIBUTED.OWL,ARCHITECTURE.DISTRIBUTED,SCALABILITY.DISTRIBUTED]]
- https://www.infoq.com/news/2022/08/owl-meta-hot-content-distribute/
-
- https://engineering.fb.com/2022/07/14/data-infrastructure/owl-distributing-content-at-meta-scale/
-
-  high-fanout distribution of large data objects to hosts in Meta’s private cloud.
-  - It improved download speeds and cache hit rate by a factor of 2-3x over
+[[{architecture.reference.meta_owl,ARCHITECTURE.P2P,CACHE.DISTRIBUTED.OWL,ARCHITECTURE.DISTRIBUTED,SCALABILITY.DISTRIBUTED,bigdata]]
+## Owl(Meta), 700 petabytes/day, millions-of-clients
+* <https://www.infoq.com/news/2022/08/owl-meta-hot-content-distribute/>
+* <https://engineering.fb.com/2022/07/14/data-infrastructure/owl-distributing-content-at-meta-scale/>
+* high-fanout distribution of large data objects to hosts in Meta’s private cloud.
+  * It improved download speeds and cache hit rate by a factor of 2-3x over
      BitTorrent and other prior systems used for distribution at Meta.
-  - THREE DIMENSIONS TO DISTRIBUTION:
-    -  Fanout: The same content may be read by a handful of clients or by
-                millions of processes running in data centers around the globe.
-    -    Size: Objects size range from around 1 MB to a few TBs.
-    - Hotness: Clients may read an object within a few seconds of each other,
-               or their reads may be spread over hours.
-  [[}]]
+  * THREE DIMENSIONS TO DISTRIBUTION:
+    * Fanout : The same content may be read by a handful of clients or by
+       millions of processes running in data centers around the globe.
+    *    Size: Objects size range from around 1 MB to a few TBs.
+    * Hotness: Clients may read an object within a few seconds of each other,
+      or their reads may be spread over hours.
+[[architecture.reference.meta_owl}]]
 
-# How LinkedIn Serves Over 4.8 Million Member Profiles per Second [[{]]
-https://www.infoq.com/news/2023/07/linkedin-member-profile-caching/
+[[{architecture.reference.linkedin_caching,cache.couchbase]]
+## LinkedIn: 4.8+ Million Member Profiles per Second
+* <https://www.infoq.com/news/2023/07/linkedin-member-profile-caching/>
+* <https://engineering.linkedin.com/blog/2023/upscaling-profile-datastore-while-reducing-costs>
 
-LinkedIn introduced Couchbase as a centralized caching tier for
-scaling member profile reads to handle increasing traffic that had
-outgrown their existing database cluster. The new solution achieved
-over 99% hit rate, and helped reduce tail latencies by more than 60%
-and costs by 10% annually.
+* Old arch: member profiles served directly from Espresso document platform,
+  built on top of MySQL and using Avro for serialization, Apache Helix,
+  and Databus (LinkedIn’s change-capture system).
+  * Espresso routers handle profile requests directing read/write requests
+    to the correct storage node and use an off-heap cache (OHC) for hot keys.
+  * The Espresso cluster reached its scalability limitations.
 
-For many years, LinkedIn has been serving member profiles directly
-from their Espresso document platform, which is built on top of MySQL
-and uses Avro for serialization, Apache Helix, and Databus
-(LinkedIn’s change capture system). Espresso routers handle profile
-requests directing read/write requests to the correct storage node
-and use an off-heap cache (OHC) for hot keys.
-
-Source:
-https://engineering.linkedin.com/blog/2023/upscaling-profile-datastore
--while-reducing-costs
-
-With storage requests doubling yearly and peaking at over 4.8 million
-requests per second, the Espresso cluster serving member profiles has
-reached its scalability limitations. Rather than reworking the core
-components of the Espresso platform, the team decided to introduce a
-caching tier using Couchbase, considering that over 99% of requests
-are reads.
-
-Estella Pham and Guanlin Lu, staff software engineers at LinkedIn,
-explain why the team chose Couchbase for caching:
-
-    At LinkedIn, we have used Couchbase as a distributed key-value
-cache for various applications. It is chosen for the enhancements
-that it confers over memcached, including data persistence between
-server restarts, replication such that one node can fail out of a
-cluster with all documents still being available, and dynamic
-scalability in that nodes can be added or removed with no downtime.
-
-The new caching layer, combining OCH and Couchbase caches, is
-integrated into Espresso to avoid client-side changes. The design
-focuses on resilience against Couchbase failures, cache data
-availability, and data divergence prevention. Espresso routers retry
-requests in case of transient failures and monitor Couchbase health
-to avoid dispatching requests to unhealthy buckets. Profile data is
-replicated three times, and routers fail over to one of the follower
-replicas if the leader replica is unavailable.
-
-All profile data is cached in every data center and updated by Apache
-Samza jobs in near real-time based on write operations captured by
-Espresso, and periodically based on database snapshots. All cache
-updates use Couchbase Compare-And-Swap (CAS) to detect concurrent
-updates and retry the update if necessary.
-
-Source:
-https://engineering.linkedin.com/blog/2023/upscaling-profile-datastore
--while-reducing-costs
-
-Following the changes, the Profile Backend service became responsible
-for some operations that Espresso previously handled. It dynamically
-evaluates field projections and returns a subset of profile data from
-the complete profile stored in the cache. It also deals with Avro
-schema conversions, fetching schema versions from the registry at
-runtime if necessary.
-
-The LinkedIn team has implemented further performance optimizations,
-streamlining reading data from Avro/binary format, and achieved
-around 30% improvement in deserialization times. The introduction of
-the new hybrid caching approach allowed the reduction of Espresso
-nodes by 90%. Considering the new infrastructure required to run the
-Couchebase cluster, cache update jobs, and increased compute
-resources for backend services, the overall costs for servicing
-member profile requests have dropped by 10% annually.
-[[}]]
+* New Arch: Couchbase distributed key-value used as centralized caching
+  tier for member profile reads since over 99% of requests are reads.
+  (vs using the original database cluster).  The new solution achieved
+  over 99% hit rate, reducing tail latencies 60+% and reducing cost by 10%.
+* Couchbase was chosen for the enhancements over memcached, including 
+  data persistence between server restarts, replication and dynamic
+  scalability (nodes can be added or removed with no downtime).
+*  The new caching layer, combining OCH and Couchbase caches, is
+  integrated into Espresso to avoid client-side changes. 
+* Espresso routers retry requests in case of transient failures and
+  monitor Couchbase health to avoid dispatching requests to unhealthy
+  buckets. 
+* The new hibrid solution allowed the reduction of Espresso nodes by 90%.
+* Profile data is replicated three times, and routers fail over to one
+  of the follower replicas if the leader replica is unavailable.
+* All profile data is cached in every data center and updated by Apache
+  Samza jobs in near real-time based on write operations captured by
+  Espresso, and periodically based on database snapshots. All cache
+  updates use Couchbase Compare-And-Swap (CAS) to detect concurrent
+  updates and retry the update if necessary.
+* Following the changes, the Profile Backend service became responsible
+  for some operations that Espresso previously handled. It dynamically
+  evaluates field projections and returns a subset of profile data from
+  the complete profile stored in the cache. It also deals with Avro
+  schema conversions, fetching schema versions from the registry at
+  runtime if necessary.
+[[architecture.reference.linkedin_caching}]]
+<!-- } -->

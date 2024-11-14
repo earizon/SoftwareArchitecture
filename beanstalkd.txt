@@ -1,0 +1,16 @@
+## beanstalkd: simple, fast work queue [[{PM.low_code]]
+
+* <https://beanstalkd.github.io/.>
+
+* https://github.com/tldr-pages/tldr/blob/master/pages/common/beanstalkd.md
+  A simple and generic work-queue server.
+
+* very light KISS work queue, with features to prioritize the tasks, delete job
+  on completion, bury job on failure, give ttr(time to run) to job
+  and can push job in tube(queue) with delay. 
+* Inspired from Memcached.  
+*  Many monitoring tools are contributed by the Community.
+ originally designed for reducing the latency of page views in
+  high-volume web applications by running time-consuming tasks
+  asynchronously.
+[[}]]

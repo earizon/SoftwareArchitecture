@@ -1,7 +1,7 @@
 ## Apropos:
   Content is versioned in git.  commits, issues and pull-requests welcome!
 
-@[https://www.github.com/earizon/SoftwareArchitecture]
+<https://www.github.com/earizon/SoftwareArchitecture>
 
 # ZERO-CODE Automated Tests [[testing.101,REST,SOAP,Kafka]] @ma
   https://github.com/authorjapps/zerocode

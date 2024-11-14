@@ -1,20 +1,22 @@
+# CAMEL
+
 ## External Links:
-<http://camel.apache.org/manual.html>
-<http://camel.apache.org/user-guide.html>
-<http://camel.apache.org/books.html>
-<http://camel.apache.org/tutorials.html>
-<http://camel.apache.org/examples.html>
-<http://camel.apache.org/cookbook.html>
-<http://camel.apache.org/dsl.html>
-<http://camel.apache.org/components.html>
-<http://camel.apache.org/data-format.html>
-<http://camel.apache.org/languages.html>
-<http://camel.apache.org/security.html>
-<http://camel.apache.org/security-advisories.html>
-<http://camel.apache.org/enterprise-integration-patterns.html>
+* <http://camel.apache.org/manual.html>
+* <http://camel.apache.org/user-guide.html>
+* <http://camel.apache.org/books.html>
+* <http://camel.apache.org/tutorials.html>
+* <http://camel.apache.org/examples.html>
+* <http://camel.apache.org/cookbook.html>
+* <http://camel.apache.org/dsl.html>
+* <http://camel.apache.org/components.html>
+* <http://camel.apache.org/data-format.html>
+* <http://camel.apache.org/languages.html>
+* <http://camel.apache.org/security.html>
+* <http://camel.apache.org/security-advisories.html>
+* <http://camel.apache.org/enterprise-integration-patterns.html>
 
 ## Camel "vs" NiFi [[{PM.low_code]]
-<https://stackoverflow.com/questions/65625166/apache-camel-vs-apache-nifi>
+* <https://stackoverflow.com/questions/65625166/apache-camel-vs-apache-nifi>
 
 * NiFi: no-code application. 99% of NiFi users will never see a
   line of code. It is a web based GUI with a drag and drop
@@ -60,7 +62,7 @@ designed very differently:
 [[}]]
 
 
-# Architecture: [[{101.architecture,PM.TODO]]
+# Camel Architecture [[{101.architecture,PM.TODO]]
 <http://camel.apache.org/architecture.html>
 
 """In a Camel-based app, you create (Camel wrappers around) some endpoints
@@ -304,13 +306,13 @@ Graceful shutdowns:
   (Many time a user will limit to define such routing rules)
 * Start the context with
   ```
-  cammelContextInstance.start(); // ← Does not block indefinitely
+  camelContextInstance.start(); // ← Does not block indefinitely
                                       rather, starts internal threads
                                       to each Component and Endpoint
   ```
 * Eventually invoke the:
   ```
-  cammelContextInstance.stop(); // ← Waits for all internal Component
+  camelContextInstance.stop(); // ← Waits for all internal Component
                                       and Endpoint threads to stop
   ```
 ## FULL JOURNEY-(programatically)

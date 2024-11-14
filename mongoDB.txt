@@ -1,6 +1,6 @@
 ## Apropos:
   Content is versioned in git.  commits, issues and pull-requests welcome!
-@[https://www.github.com/earizon/XXXXXX]
+<https://www.github.com/earizon/XXXXXX>
 
 # MongoDB Summary   [[{db_engine.document_store.mongo]] #[mongo_summary]
 
